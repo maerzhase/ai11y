@@ -45,6 +45,9 @@ importers:
         specifier: '>=18'
         version: 18.3.0(react@18.3.0)
     devDependencies:
+      '@tsconfig/create-react-app':
+        specifier: 2.0.7
+        version: 2.0.7
       tsdown:
         specifier: 0.15.5
         version: 0.15.5(typescript@5.9.2)
@@ -504,6 +507,9 @@ packages:
     resolution: {integrity: sha512-zGIbEVVXVtauFgl3MRwGWEN36P5ZGenHRMgNw88X5wEhEBpq0XrMEZwOn07+ICrwM17XO5xfMZqh0OldCH5VTA==}
     cpu: [x64]
     os: [win32]
+
+  '@tsconfig/create-react-app@2.0.7':
+    resolution: {integrity: sha512-gSui0f0bjRi824CzbUWdTaTrmQCCu23X/duAZLcYiJWmSok3aKAfBwg5lq1x/aBj3AuL9XQwE7RmvYxW5GG/Mg==}
 
   '@tybys/wasm-util@0.10.1':
     resolution: {integrity: sha512-9tTaPJLSiejZKx+Bmog4uSubteqTvFrVrURwkmHixBo0G4seD0zUxp98E1DzUBJxLQ3NPwXrGKDiVjwx/DpPsg==}
@@ -1197,6 +1203,8 @@ snapshots:
 
   '@rollup/rollup-win32-x64-msvc@4.52.3':
     optional: true
+
+  '@tsconfig/create-react-app@2.0.7': {}
 
   '@tybys/wasm-util@0.10.1':
     dependencies:
