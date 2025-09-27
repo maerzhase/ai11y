@@ -69,7 +69,9 @@ function createQuestManager(): QuestManager {
 			const next = readState(entry.root);
 			if (!equalState(entry.state, next)) {
 				entry.state = next;
-				entry.subs.forEach((fn) => fn(next));
+				entry.subs.forEach((fn) => {
+					fn(next);
+				});
 			}
 		});
 	};
@@ -146,7 +148,9 @@ function createQuestManager(): QuestManager {
 	const getRootIds = () => Array.from(roots.keys());
 
 	const stop = () => {
-		roots.forEach((e) => e.dispose());
+		roots.forEach((e) => {
+			e.dispose();
+		});
 		// keep state/subscribers but no listeners;
 		// useful if you want to re-enable later by re-adding roots
 	};
