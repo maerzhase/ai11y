@@ -1,0 +1,21 @@
+{
+  "extends": "@tsconfig/create-react-app/tsconfig.json",
+  "include": [
+    "src/**/*",
+  ],
+  "exclude": [
+    "node_modules"
+  ],
+  "compilerOptions": {
+    "noImplicitReturns": true,
+    "rootDir": "src",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    },
+    "outDir": "dist",
+    "target": "ES2022",
+    "noUnusedLocals": false
+  }
+}

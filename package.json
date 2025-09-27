@@ -1,0 +1,8 @@
+{
+  "name": "react-quest-mono",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm -C packages/playground dev",
+    "build": "pnpm -C packages/react-quest build"
+  }
+}
