@@ -1,1 +1,1 @@
-export * from "./isWindow"
+export * from "./isWindow";

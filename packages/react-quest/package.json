@@ -1,29 +1,30 @@
 {
-  "name": "react-quest",
-  "version": "0.0.0",
-  "type": "module",
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
-    }
-  },
-  "sideEffects": false,
-  "peerDependencies": {
-    "react": ">=18",
-    "react-dom": ">=18"
-  },
-  "scripts": {
-    "build": "tsdown",
-    "watch": "tsdown --watch"
-  },
-  "devDependencies": {
-    "@tsconfig/create-react-app": "2.0.7",
-    "tsdown": "0.15.5",
-    "typescript": "5.9.2"
-  }
+	"name": "react-quest",
+	"author": "maerzhase3000",
+	"version": "0.0.0",
+	"type": "module",
+	"main": "./dist/index.cjs",
+	"module": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js",
+			"require": "./dist/index.cjs"
+		}
+	},
+	"sideEffects": false,
+	"peerDependencies": {
+		"react": ">=18",
+		"react-dom": ">=18"
+	},
+	"scripts": {
+		"build": "tsdown",
+		"watch": "tsdown --watch"
+	},
+	"devDependencies": {
+		"@tsconfig/create-react-app": "2.0.7",
+		"tsdown": "0.15.5",
+		"typescript": "5.9.2"
+	}
 }

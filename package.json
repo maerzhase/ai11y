@@ -1,8 +1,12 @@
 {
-  "name": "react-quest-mono",
-  "private": true,
-  "scripts": {
-    "dev": "pnpm -C packages/playground dev",
-    "build": "pnpm -C packages/react-quest build"
-  }
+	"name": "react-quest-mono",
+	"author": "maerzhase3000",
+	"private": true,
+	"scripts": {
+		"dev": "pnpm -C packages/playground dev",
+		"build": "pnpm -C packages/react-quest build"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.2.4"
+	}
 }
