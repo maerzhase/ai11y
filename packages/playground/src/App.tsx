@@ -40,6 +40,8 @@ function AppWithRouter() {
 			}
 		: null;
 
+	console.log(llmConfig);
+
 	return (
 		<AssistProvider
 			onNavigate={(route) => {

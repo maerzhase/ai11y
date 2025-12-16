@@ -7,5 +7,5 @@ export default defineConfig({
 	dts: true,
 	clean: true,
 	outDir: "dist",
-	external: ["react", "react-dom", "react/jsx-runtime"],
+	external: ["react", "react-dom", "react/jsx-runtime", "openai"],
 });
