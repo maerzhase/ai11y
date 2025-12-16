@@ -14,19 +14,27 @@ export function Mark({ id, label, intent, action, children }: MarkProps) {
 	const elementRef = useRef<HTMLElement | null>(null);
 
 	useEffect(() => {
-		if (!elementRef.current) {
-			return;
-		}
+		// Wait for element to be available
+		const checkAndRegister = () => {
+			if (elementRef.current) {
+				registerMarker({
+					id,
+					label,
+					intent,
+					action,
+					element: elementRef.current,
+				});
+			}
+		};
 
-		registerMarker({
-			id,
-			label,
-			intent,
-			action,
-			element: elementRef.current,
-		});
+		// Try immediately
+		checkAndRegister();
+
+		// Also try on next frame in case element isn't ready yet
+		const raf = requestAnimationFrame(checkAndRegister);
 
 		return () => {
+			cancelAnimationFrame(raf);
 			unregisterMarker(id);
 		};
 	}, [id, label, intent, action, registerMarker, unregisterMarker]);
