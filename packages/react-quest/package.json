@@ -24,7 +24,14 @@
 	},
 	"devDependencies": {
 		"@tsconfig/create-react-app": "2.0.7",
+		"@types/react": ">=18",
+		"@types/react-dom": ">=18",
+		"react": ">=18",
+		"react-dom": ">=18",
 		"tsdown": "0.15.5",
 		"typescript": "5.9.2"
+	},
+	"dependencies": {
+		"react-intersection-observer": "10.0.0"
 	}
 }
