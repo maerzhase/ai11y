@@ -2,6 +2,7 @@ export { AssistProvider, useAssist } from "./AssistProvider";
 export { Mark } from "./Mark";
 export { AssistPanel } from "./AssistPanel";
 export { runAgent } from "./agent";
+export { runLLMAgent } from "./llm-agent";
 export type {
 	ToolCall,
 	AgentResponse,
@@ -10,5 +11,6 @@ export type {
 	AssistEvent,
 	AssistError,
 	AssistContext,
+	LLMAgentConfig,
 } from "./types";
 

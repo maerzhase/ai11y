@@ -46,3 +46,9 @@ export interface AssistContext {
 	}>;
 }
 
+export interface LLMAgentConfig {
+	apiKey: string;
+	model?: string;
+	baseURL?: string;
+}
+

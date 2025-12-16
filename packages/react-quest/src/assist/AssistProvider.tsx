@@ -11,6 +11,7 @@ import type {
 	AssistError,
 	AssistEvent,
 	AssistState,
+	LLMAgentConfig,
 	MarkerMetadata,
 } from "./types";
 
@@ -39,6 +40,9 @@ interface AssistContextValue {
 
 	// Context for agent
 	getContext: () => AssistContext;
+
+	// LLM config
+	llmConfig: LLMAgentConfig | null;
 }
 
 const AssistContext = createContext<AssistContextValue | null>(null);
@@ -55,12 +59,14 @@ interface AssistProviderProps {
 	children: React.ReactNode;
 	initialState?: AssistState;
 	onNavigate?: (route: string) => void;
+	llmConfig?: LLMAgentConfig;
 }
 
 export function AssistProvider({
 	children,
 	initialState = {},
 	onNavigate,
+	llmConfig = null,
 }: AssistProviderProps) {
 	const [assistState, setAssistState] = useState<AssistState>(initialState);
 	const [currentRoute, setCurrentRoute] = useState<string>("/");
@@ -216,6 +222,7 @@ export function AssistProvider({
 		isPanelOpen,
 		setIsPanelOpen,
 		getContext,
+		llmConfig,
 	};
 
 	return (

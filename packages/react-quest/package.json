@@ -33,5 +33,8 @@
 	},
 	"dependencies": {
 		"react-intersection-observer": "10.0.0"
+	},
+	"optionalDependencies": {
+		"openai": "^4.28.0"
 	}
 }

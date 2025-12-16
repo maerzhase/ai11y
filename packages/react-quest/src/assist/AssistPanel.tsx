@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useAssist } from "./AssistProvider";
 import { runAgent } from "./agent";
+import { runLLMAgent } from "./llm-agent";
 import type { ToolCall } from "./types";
 
 interface Message {
@@ -19,6 +20,7 @@ export function AssistPanel() {
 		highlight,
 		click,
 		track,
+		llmConfig,
 	} = useAssist();
 	const [messages, setMessages] = useState<Message[]>([
 		{
@@ -93,26 +95,43 @@ export function AssistPanel() {
 
 		// Get context and run agent
 		const context = getContext();
-		const response = runAgent(userMessage, context);
+		
+		try {
+			// Use LLM agent if configured, otherwise use rule-based
+			const response = llmConfig
+				? await runLLMAgent(userMessage, context, llmConfig)
+				: runAgent(userMessage, context);
 
-		// Add assistant reply
-		const assistantMsg: Message = {
-			id: `assistant-${Date.now()}`,
-			type: "assistant",
-			content: response.reply,
-			timestamp: Date.now(),
-		};
-		setMessages((prev) => [...prev, assistantMsg]);
+			// Add assistant reply
+			const assistantMsg: Message = {
+				id: `assistant-${Date.now()}`,
+				type: "assistant",
+				content: response.reply,
+				timestamp: Date.now(),
+			};
+			setMessages((prev) => [...prev, assistantMsg]);
 
-		// Execute tool calls
-		if (response.toolCalls) {
-			for (const toolCall of response.toolCalls) {
-				executeToolCall(toolCall);
+			// Execute tool calls
+			if (response.toolCalls) {
+				for (const toolCall of response.toolCalls) {
+					executeToolCall(toolCall);
+				}
 			}
-		}
 
-		track("assistant_message", { input: userMessage, response });
-		setIsProcessing(false);
+			track("assistant_message", { input: userMessage, response });
+		} catch (error) {
+			// Handle errors gracefully
+			const errorMsg: Message = {
+				id: `error-${Date.now()}`,
+				type: "assistant",
+				content: `Sorry, I encountered an error: ${error instanceof Error ? error.message : "Unknown error"}. Please try again.`,
+				timestamp: Date.now(),
+			};
+			setMessages((prev) => [...prev, errorMsg]);
+			track("assistant_error", { input: userMessage, error });
+		} finally {
+			setIsProcessing(false);
+		}
 	};
 
 	if (!isPanelOpen) {

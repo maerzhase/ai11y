@@ -61,7 +61,22 @@ A floating chat panel in the bottom-right corner that provides:
 
 ### 4. Agent Brain
 
-For the MVP, the agent is **rule-based and local** (no external LLM). It parses commands and returns replies with tool calls:
+The SDK supports **two agent modes**:
+
+#### LLM Agent (Recommended)
+
+The SDK includes full OpenAI integration with function calling. When configured, the agent uses GPT models to understand natural language and intelligently interact with your app.
+
+**Features:**
+- Natural language understanding
+- Context-aware responses
+- Intelligent tool selection (navigate, click, highlight)
+- Error explanation and recovery suggestions
+- Conversational interactions
+
+#### Rule-Based Agent (Fallback)
+
+If no LLM configuration is provided, the SDK falls back to a **rule-based local agent** that parses commands using pattern matching:
 
 ```typescript
 function runAgent(input: string, context: AssistContext): AgentResponse
@@ -73,7 +88,7 @@ function runAgent(input: string, context: AssistContext): AgentResponse
 - `"highlight X"` / `"show X"` → Highlight a marked element
 - Error handling: If an error exists, explains it and suggests retry
 
-This is a placeholder for a future LLM integration.
+The rule-based agent is useful for development and testing, or when you don't want to use an external API.
 
 ### 5. Tool Calls
 
@@ -108,6 +123,8 @@ When an error is reported:
 
 ### Basic Setup
 
+#### With Rule-Based Agent (Default)
+
 ```tsx
 import { AssistProvider, AssistPanel, Mark } from "react-quest";
 
@@ -120,6 +137,35 @@ function App() {
   );
 }
 ```
+
+#### With LLM Agent (OpenAI)
+
+```tsx
+import { AssistProvider, AssistPanel, Mark } from "react-quest";
+
+function App() {
+  const llmConfig = {
+    apiKey: process.env.REACT_APP_OPENAI_API_KEY || "",
+    model: "gpt-4o-mini", // Optional, defaults to gpt-4o-mini
+    // baseURL: "https://api.openai.com/v1", // Optional, for custom endpoints
+  };
+
+  return (
+    <AssistProvider 
+      onNavigate={(route) => navigate(route)}
+      llmConfig={llmConfig}
+    >
+      <YourApp />
+      <AssistPanel />
+    </AssistProvider>
+  );
+}
+```
+
+**Important:** 
+- The `openai` package is an optional dependency. Install it with: `pnpm add openai`
+- Never commit your API key to version control. Use environment variables.
+- The LLM agent automatically falls back to rule-based if OpenAI is unavailable or misconfigured.
 
 ### Marking Elements
 
@@ -179,8 +225,9 @@ The playground (`packages/playground/`) demonstrates:
 ### Running the Demo
 
 ```bash
-# Install dependencies
+# Install dependencies (including optional OpenAI package)
 pnpm install
+pnpm add openai  # Optional: for LLM support
 
 # Build the SDK
 cd packages/react-quest
@@ -190,6 +237,15 @@ pnpm build
 cd ../playground
 pnpm dev
 ```
+
+**To enable LLM in the demo:**
+
+1. Create a `.env` file in `packages/playground/`:
+   ```
+   VITE_OPENAI_API_KEY=your-api-key-here
+   ```
+
+2. Uncomment the LLM configuration in `packages/playground/src/App.tsx`
 
 ## UX Features
 
@@ -212,15 +268,41 @@ This feels like a real product primitive, not a demo chatbot.
 ## Technical Details
 
 - **TypeScript**: Strict mode enabled
-- **No External Dependencies**: Core SDK only depends on React
+- **Minimal Dependencies**: Core SDK only depends on React (OpenAI is optional)
 - **Refs-Based**: Uses React refs for element access (no CSS selectors)
 - **Memory-Only**: No persistence beyond runtime
-- **Rule-Based Agent**: Simple pattern matching (placeholder for future LLM)
+- **Dual Agent Mode**: LLM agent (OpenAI) with rule-based fallback
+- **Function Calling**: Uses OpenAI's function calling API for structured tool execution
+
+## LLM Configuration
+
+The LLM agent uses OpenAI's API with function calling. It supports:
+
+- **Models**: Any OpenAI-compatible model (defaults to `gpt-4o-mini`)
+- **Custom Endpoints**: Use `baseURL` for OpenAI-compatible APIs (e.g., local proxies, other providers)
+- **Error Handling**: Automatically falls back to rule-based agent on errors
+- **Context Awareness**: Automatically includes current route, errors, markers, and app state
+
+### Environment Variables
+
+For security, always use environment variables for API keys:
+
+```bash
+# .env
+VITE_OPENAI_API_KEY=sk-...
+```
+
+```tsx
+const llmConfig = {
+  apiKey: import.meta.env.VITE_OPENAI_API_KEY,
+};
+```
 
 ## Future Enhancements
 
-- Replace rule-based agent with real LLM integration
+- Support for other LLM providers (Anthropic, local models, etc.)
 - Add persistence layer for state/events
 - Add analytics dashboard
 - Add authentication
 - Add backend API for agent processing
+- Streaming responses for better UX

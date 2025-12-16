@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from "react-router-dom";
+import {
+	BrowserRouter,
+	Routes,
+	Route,
+	Link,
+	useLocation,
+	useNavigate,
+} from "react-router-dom";
 import { AssistProvider, AssistPanel, Mark, useAssist } from "react-quest";
 
 function App() {
@@ -22,6 +29,17 @@ function AppWithRouter() {
 		locationRef.current = location.pathname;
 	}, [navigate, location.pathname]);
 
+	// Optional: Configure LLM agent
+	// To use OpenAI:
+	// 1. Create a .env file in packages/playground/ with: VITE_OPENAI_API_KEY=your-key-here
+	// 2. Uncomment the lines below
+	const llmConfig = import.meta.env.VITE_OPENAI_API_KEY
+		? {
+				apiKey: import.meta.env.VITE_OPENAI_API_KEY,
+				model: "gpt-4o-mini", // Optional, defaults to gpt-4o-mini
+			}
+		: null;
+
 	return (
 		<AssistProvider
 			onNavigate={(route) => {
@@ -30,6 +48,7 @@ function AppWithRouter() {
 					navigateRef.current(route);
 				}
 			}}
+			llmConfig={llmConfig || undefined}
 		>
 			<AppContent />
 		</AssistProvider>
@@ -57,9 +76,7 @@ function AppContent() {
 					alignItems: "center",
 				}}
 			>
-				<h1 style={{ margin: 0, fontSize: 20, fontWeight: 600 }}>
-					Demo App
-				</h1>
+				<h1 style={{ margin: 0, fontSize: 20, fontWeight: 600 }}>Demo App</h1>
 				<div style={{ display: "flex", gap: 16 }}>
 					<Link
 						to="/"
@@ -85,7 +102,8 @@ function AppContent() {
 						to="/integrations"
 						style={{
 							textDecoration: "none",
-							color: location.pathname === "/integrations" ? "#3b82f6" : "#6b7280",
+							color:
+								location.pathname === "/integrations" ? "#3b82f6" : "#6b7280",
 							fontWeight: location.pathname === "/integrations" ? 600 : 400,
 						}}
 					>
@@ -233,7 +251,9 @@ function IntegrationsPage() {
 		if (!hasFailed) {
 			// Simulate failure on first click
 			setHasFailed(true);
-			const error = new Error("Failed to connect to Stripe API. Please check your credentials.");
+			const error = new Error(
+				"Failed to connect to Stripe API. Please check your credentials.",
+			);
 			reportError(error, {
 				surface: "integrations",
 				markerId: "connect_stripe",
