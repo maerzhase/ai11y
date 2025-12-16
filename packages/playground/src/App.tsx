@@ -145,9 +145,9 @@ function HomePage() {
 					id="go_to_billing"
 					label="Go to Billing"
 					intent="Navigate to the billing page"
-					action={() => handleNavigate("/billing")}
 				>
 					<button
+						onClick={() => handleNavigate("/billing")}
 						style={{
 							padding: "12px 24px",
 							background: "#3b82f6",
@@ -167,9 +167,9 @@ function HomePage() {
 					id="go_to_integrations"
 					label="Go to Integrations"
 					intent="Navigate to the integrations page"
-					action={() => handleNavigate("/integrations")}
 				>
 					<button
+						onClick={() => handleNavigate("/integrations")}
 						style={{
 							padding: "12px 24px",
 							background: "#10b981",
@@ -217,11 +217,9 @@ function BillingPage() {
 					id="enable_billing"
 					label="Enable Billing"
 					intent="Enable billing for your account"
-					action={() => {
-						setBillingEnabled(true);
-					}}
 				>
 					<button
+						onClick={() => setBillingEnabled(true)}
 						style={{
 							padding: "12px 24px",
 							background: billingEnabled ? "#6b7280" : "#3b82f6",
@@ -303,9 +301,9 @@ function IntegrationsPage() {
 						id="connect_stripe"
 						label="Connect Stripe"
 						intent="Connect Stripe to accept payments"
-						action={handleConnectStripe}
 					>
 						<button
+							onClick={handleConnectStripe}
 							style={{
 								padding: "12px 24px",
 								background: "#6366f1",

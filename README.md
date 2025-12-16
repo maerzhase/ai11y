@@ -34,17 +34,17 @@ The `Mark` component is a semantic wrapper that registers UI elements with the a
   id="connect_stripe"
   label="Connect Stripe"
   intent="Connect Stripe to accept payments"
-  action={() => connectStripe()}
 >
-  <button>Connect Stripe</button>
+  <button onClick={() => connectStripe()}>Connect Stripe</button>
 </Mark>
 ```
 
 **Behavior:**
-- On mount: Registers the marker with the provider (id, label, intent, action, DOM ref)
+- On mount: Registers the marker with the provider (id, label, intent, DOM ref)
 - On unmount: Unregisters the marker
 - The DOM element is discoverable for highlighting and simulated clicks
 - Uses React refs (not CSS selectors) for reliable element access
+- **No action prop needed**: The assistant simulates browser events (clicks) on the wrapped element, which naturally triggers your existing `onClick` handlers
 
 ### 3. AssistPanel
 
@@ -175,24 +175,31 @@ import { Mark, useAssist } from "react-quest";
 function MyComponent() {
   const { reportError } = useAssist();
 
+  const handleClick = () => {
+    try {
+      doSomething();
+    } catch (error) {
+      reportError(error, { markerId: "my_button" });
+    }
+  };
+
   return (
     <Mark
       id="my_button"
       label="My Button"
       intent="Perform an important action"
-      action={() => {
-        try {
-          doSomething();
-        } catch (error) {
-          reportError(error, { markerId: "my_button" });
-        }
-      }}
     >
-      <button>Click Me</button>
+      <button onClick={handleClick}>Click Me</button>
     </Mark>
   );
 }
 ```
+
+**Key Points:**
+- No `action` prop needed - just use regular `onClick` handlers
+- The assistant simulates browser click events, which trigger your existing handlers
+- Works with any clickable element (buttons, links, divs with onClick, etc.)
+- Simplifies integration - no need to wrap existing components with action callbacks
 
 ### Using the Imperative API
 

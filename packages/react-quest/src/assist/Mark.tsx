@@ -5,11 +5,10 @@ interface MarkProps {
 	id: string;
 	label: string;
 	intent: string;
-	action?: () => void;
 	children: React.ReactElement;
 }
 
-export function Mark({ id, label, intent, action, children }: MarkProps) {
+export function Mark({ id, label, intent, children }: MarkProps) {
 	const { registerMarker, unregisterMarker } = useAssist();
 	const elementRef = useRef<HTMLElement | null>(null);
 
@@ -21,7 +20,6 @@ export function Mark({ id, label, intent, action, children }: MarkProps) {
 					id,
 					label,
 					intent,
-					action,
 					element: elementRef.current,
 				});
 			}
@@ -37,7 +35,7 @@ export function Mark({ id, label, intent, action, children }: MarkProps) {
 			cancelAnimationFrame(raf);
 			unregisterMarker(id);
 		};
-	}, [id, label, intent, action, registerMarker, unregisterMarker]);
+	}, [id, label, intent, registerMarker, unregisterMarker]);
 
 	// Clone the child element and attach ref
 	const childWithRef = React.cloneElement(children, {

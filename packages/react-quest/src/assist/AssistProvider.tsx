@@ -172,11 +172,24 @@ export function AssistProvider({
 				return;
 			}
 
-			if (marker.action) {
-				marker.action();
-			} else {
-				// Fallback: trigger click on the element
-				marker.element.click();
+			// Simulate browser click event
+			const element = marker.element;
+
+			// Create and dispatch a synthetic mouse event for better compatibility
+			const mouseEvent = new MouseEvent("click", {
+				view: window,
+				bubbles: true,
+				cancelable: true,
+				buttons: 1,
+			});
+
+			// Dispatch the event
+			element.dispatchEvent(mouseEvent);
+
+			// Also call native click as fallback (for elements that don't respond to dispatched events)
+			// This handles cases like <button> elements that might have special click handling
+			if (element.click && typeof element.click === "function") {
+				element.click();
 			}
 
 			track("click", { markerId });

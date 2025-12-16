@@ -12,7 +12,6 @@ export interface MarkerMetadata {
 	id: string;
 	label: string;
 	intent: string;
-	action?: () => void;
 	element: HTMLElement;
 }
 
