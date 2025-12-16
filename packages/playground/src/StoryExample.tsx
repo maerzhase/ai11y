@@ -3,7 +3,7 @@ import { Story, Step } from "react-quest";
 
 export const StoryExample = () => {
 	const [currentStepIndex, setCurrentStepIndex] = useState(null);
-	const [progress, setProgres] = useState(0);
+	const [progress, setProgress] = useState(0);
 
 	// This callback fires when a Step hits the offset threshold. It receives the
 	// data prop of the step, which in this demo stores the index of the step.
@@ -21,7 +21,7 @@ export const StoryExample = () => {
 				<Story
 					offset={0.5}
 					onStepEnter={onStepEnter}
-					onStepProgress={({ progress }) => setProgres(progress)}
+					onStepProgress={({ progress }) => setProgress(progress)}
 					debug
 				>
 					{[1, 2, 3, 4].map((_, stepIndex) => (

@@ -42,9 +42,9 @@ export function Story(props: StoryProps) {
 		setLastScrollTop(scrollTop);
 	};
 
-	const handleWindowResize = () => {
+	const handleWindowResize = React.useCallback(() => {
 		setWindowInnerHeight(window.innerHeight);
-	};
+	}, []);
 
 	React.useEffect(() => {
 		if (isOffsetDefinedInPixels) {
@@ -53,7 +53,8 @@ export function Story(props: StoryProps) {
 				window.removeEventListener("resize", handleWindowResize);
 			};
 		}
-	}, []);
+		return undefined;
+	}, [isOffsetDefinedInPixels, handleWindowResize]);
 
 	const isBrowser = typeof window !== "undefined";
 	const innerHeight = isBrowser ? windowInnerHeight || window.innerHeight : 0;
