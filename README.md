@@ -4,10 +4,15 @@ A minimal but real MVP of an "in-app AI assistant SDK" for React. The assistant 
 
 ## Architecture
 
-The SDK consists of two main packages:
+The SDK consists of:
 
-- **`packages/react-quest/`** - Core React SDK (provider, markers, hooks, agent)
-- **`packages/playground/`** - Demo app that uses the SDK
+**Packages (libraries):**
+- **`packages/react-quest/`** - Core React SDK (provider, markers, hooks, client-side agent)
+- **`packages/react-quest-server/`** - Server-side package for secure OpenAI API calls with extensible tool support
+
+**Apps (applications):**
+- **`apps/playground/`** - Demo app that uses the SDK
+- **`apps/server/`** - Example server application using the server package
 
 ## Core Concepts
 
@@ -65,7 +70,7 @@ The SDK supports **two agent modes**:
 
 #### LLM Agent (Recommended)
 
-The SDK includes full OpenAI integration with function calling. When configured, the agent uses GPT models to understand natural language and intelligently interact with your app.
+The SDK includes server-side OpenAI integration with function calling. The agent runs securely on your server (not in the browser) and uses GPT models to understand natural language and intelligently interact with your app.
 
 **Features:**
 - Natural language understanding
@@ -73,6 +78,8 @@ The SDK includes full OpenAI integration with function calling. When configured,
 - Intelligent tool selection (navigate, click, highlight)
 - Error explanation and recovery suggestions
 - Conversational interactions
+- **Secure**: API keys stay on the server, never exposed to the browser
+- **Extensible**: Easy to add custom tools via the server package
 
 #### Rule-Based Agent (Fallback)
 
@@ -138,16 +145,46 @@ function App() {
 }
 ```
 
-#### With LLM Agent (OpenAI)
+#### With LLM Agent (Server-Side)
+
+**Step 1: Set up the server**
+
+```bash
+# Install the server package
+pnpm add @react-quest/server openai
+
+# Set your OpenAI API key in a .env file (recommended)
+# Create a .env file in your server directory:
+echo "OPENAI_API_KEY=your-api-key-here" > .env
+```
+
+**Step 2: Create a server file**
+
+```ts
+// server.ts
+import Fastify from 'fastify';
+import { questPlugin } from '@react-quest/server/fastify';
+
+const fastify = Fastify();
+
+await fastify.register(questPlugin, {
+  config: {
+    apiKey: process.env.OPENAI_API_KEY!,
+    model: 'gpt-4o-mini', // Optional
+  }
+});
+
+await fastify.listen({ port: 3000 });
+```
+
+**Step 3: Configure the client**
 
 ```tsx
 import { AssistProvider, AssistPanel, Mark } from "react-quest";
 
 function App() {
   const llmConfig = {
-    apiKey: process.env.REACT_APP_OPENAI_API_KEY || "",
-    model: "gpt-4o-mini", // Optional, defaults to gpt-4o-mini
-    // baseURL: "https://api.openai.com/v1", // Optional, for custom endpoints
+    apiEndpoint: "http://localhost:3000/quest/agent",
   };
 
   return (
@@ -163,9 +200,9 @@ function App() {
 ```
 
 **Important:** 
-- The `openai` package is an optional dependency. Install it with: `pnpm add openai`
-- Never commit your API key to version control. Use environment variables.
-- The LLM agent automatically falls back to rule-based if OpenAI is unavailable or misconfigured.
+- The LLM agent automatically falls back to rule-based if the API endpoint is unavailable or misconfigured.
+- API keys are kept secure on the server, never exposed to the browser.
+- See `packages/react-quest-server/README.md` for more details on extending with custom tools.
 
 ### Marking Elements
 
@@ -222,7 +259,7 @@ function MyComponent() {
 
 ## Demo App
 
-The playground (`packages/playground/`) demonstrates:
+The playground (`apps/playground/`) demonstrates:
 
 - **Routes**: `/` (Home), `/billing`, `/integrations`
 - **Home Page**: Marked buttons for navigation
@@ -231,28 +268,47 @@ The playground (`packages/playground/`) demonstrates:
 
 ### Running the Demo
 
-```bash
-# Install dependencies (including optional OpenAI package)
-pnpm install
-pnpm add openai  # Optional: for LLM support
+This monorepo uses [Turborepo](https://turbo.build/repo) for managing builds and dev scripts.
 
-# Build the SDK
-cd packages/react-quest
+**Quick Start:**
+
+```bash
+# Install all dependencies
+pnpm install
+
+# Set up environment variables
+export OPENAI_API_KEY=your-api-key-here  # For server (optional)
+
+# Create .env file for playground (optional, for LLM support)
+echo "VITE_QUEST_API_ENDPOINT=http://localhost:3000/quest/agent" > apps/playground/.env
+
+# Run everything (frontend + backend) in one command
+pnpm dev
+```
+
+This will:
+- Build `react-quest` package
+- Start the server on `http://localhost:3000` (if `OPENAI_API_KEY` is set)
+- Start the playground on `http://localhost:5173`
+
+**Other Commands:**
+
+```bash
+# Build all packages
 pnpm build
 
-# Run the playground
-cd ../playground
-pnpm dev
+# Watch mode (rebuilds on changes)
+pnpm watch
 ```
 
 **To enable LLM in the demo:**
 
-1. Create a `.env` file in `packages/playground/`:
+1. Set `OPENAI_API_KEY` environment variable
+2. Create a `.env` file in `apps/playground/` with:
    ```
-   VITE_OPENAI_API_KEY=your-api-key-here
+   VITE_QUEST_API_ENDPOINT=http://localhost:3000/quest/agent
    ```
-
-2. Uncomment the LLM configuration in `packages/playground/src/App.tsx`
+   (The playground will use the rule-based agent if this is not set)
 
 ## UX Features
 
@@ -275,35 +331,27 @@ This feels like a real product primitive, not a demo chatbot.
 ## Technical Details
 
 - **TypeScript**: Strict mode enabled
-- **Minimal Dependencies**: Core SDK only depends on React (OpenAI is optional)
+- **Minimal Dependencies**: Core SDK only depends on React
 - **Refs-Based**: Uses React refs for element access (no CSS selectors)
 - **Memory-Only**: No persistence beyond runtime
-- **Dual Agent Mode**: LLM agent (OpenAI) with rule-based fallback
+- **Dual Agent Mode**: LLM agent (server-side) with rule-based fallback
 - **Function Calling**: Uses OpenAI's function calling API for structured tool execution
+- **Secure**: API keys never exposed to the browser
+- **Extensible**: Server package supports custom tools via `ToolRegistry`
 
-## LLM Configuration
+## Server Package
 
-The LLM agent uses OpenAI's API with function calling. It supports:
+The `@react-quest/server` package provides:
 
-- **Models**: Any OpenAI-compatible model (defaults to `gpt-4o-mini`)
-- **Custom Endpoints**: Use `baseURL` for OpenAI-compatible APIs (e.g., local proxies, other providers)
-- **Error Handling**: Automatically falls back to rule-based agent on errors
-- **Context Awareness**: Automatically includes current route, errors, markers, and app state
+- **Secure API handling**: OpenAI API calls happen server-side
+- **Fastify middleware**: Easy integration with Fastify servers
+- **Extensible tool system**: Register custom tools that the LLM can call
+- **Type-safe**: Full TypeScript support
 
-### Environment Variables
-
-For security, always use environment variables for API keys:
-
-```bash
-# .env
-VITE_OPENAI_API_KEY=sk-...
-```
-
-```tsx
-const llmConfig = {
-  apiKey: import.meta.env.VITE_OPENAI_API_KEY,
-};
-```
+See `packages/react-quest-server/README.md` for detailed documentation on:
+- Setting up the server
+- Extending with custom tools
+- API reference
 
 ## Future Enhancements
 
@@ -311,5 +359,5 @@ const llmConfig = {
 - Add persistence layer for state/events
 - Add analytics dashboard
 - Add authentication
-- Add backend API for agent processing
 - Streaming responses for better UX
+- Middleware for other frameworks (Express, Hono, etc.)

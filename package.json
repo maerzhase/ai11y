@@ -3,10 +3,16 @@
 	"author": "maerzhase3000",
 	"private": true,
 	"scripts": {
-		"dev": "pnpm -C packages/playground dev",
-		"build": "pnpm -C packages/react-quest build"
+		"dev": "turbo run dev",
+		"build": "turbo run build",
+		"watch": "turbo run watch"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "2.2.4"
+		"@biomejs/biome": "2.2.4",
+		"turbo": "^2.0.0"
+	},
+	"packageManager": "pnpm@9.0.0",
+	"engines": {
+		"node": ">=18"
 	}
 }

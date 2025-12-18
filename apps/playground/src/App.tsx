@@ -30,17 +30,16 @@ function AppWithRouter() {
 	}, [navigate, location.pathname]);
 
 	// Optional: Configure LLM agent
-	// To use OpenAI:
-	// 1. Create a .env file in packages/playground/ with: VITE_OPENAI_API_KEY=your-key-here
-	// 2. Uncomment the lines below
-	const llmConfig = import.meta.env.VITE_OPENAI_API_KEY
-		? {
-				apiKey: import.meta.env.VITE_OPENAI_API_KEY,
-				model: "gpt-4o-mini", // Optional, defaults to gpt-4o-mini
-			}
-		: null;
-
-	console.log(llmConfig);
+	// To use the LLM agent, you need to run the server:
+	// 1. Set up the server with your API key (see apps/server/README.md)
+	// 2. Run the server: pnpm --filter @react-quest/server-app dev
+	// 3. Optionally set VITE_QUEST_API_ENDPOINT (defaults to http://localhost:3000/quest/agent)
+	const apiEndpoint =
+		import.meta.env.VITE_QUEST_API_ENDPOINT ||
+		"http://localhost:3000/quest/agent";
+	const llmConfig = {
+		apiEndpoint,
+	};
 
 	return (
 		<AssistProvider

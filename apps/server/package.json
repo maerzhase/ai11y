@@ -1,0 +1,23 @@
+{
+	"name": "@react-quest/server-app",
+	"version": "0.0.0",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"dev": "tsx src/index.ts",
+		"build": "tsc",
+		"start": "node dist/index.js"
+	},
+	"dependencies": {
+		"@fastify/cors": "^10.0.0",
+		"@react-quest/server": "workspace:*",
+		"dotenv": "^16.4.0",
+		"fastify": "^5.0.0"
+	},
+	"devDependencies": {
+		"@types/node": "^20.0.0",
+		"tsx": "^4.0.0",
+		"typescript": "5.9.2"
+	}
+}
+

@@ -46,8 +46,9 @@ export interface AssistContext {
 }
 
 export interface LLMAgentConfig {
-	apiKey: string;
-	model?: string;
-	baseURL?: string;
+	/**
+	 * API endpoint URL for the agent server (e.g., "http://localhost:3000/quest/agent")
+	 */
+	apiEndpoint: string;
 }
 

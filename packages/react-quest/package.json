@@ -20,7 +20,8 @@
 	},
 	"scripts": {
 		"build": "tsdown",
-		"watch": "tsdown --watch"
+		"watch": "tsdown --watch",
+		"dev": "tsdown --watch"
 	},
 	"devDependencies": {
 		"@tsconfig/create-react-app": "2.0.7",
@@ -33,8 +34,5 @@
 	},
 	"dependencies": {
 		"react-intersection-observer": "10.0.0"
-	},
-	"optionalDependencies": {
-		"openai": "^4.28.0"
 	}
 }
