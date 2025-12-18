@@ -2,10 +2,11 @@
  * React Quest Server
  * 
  * Server-side agent implementation for React Quest.
- * Handles OpenAI API calls securely on the server.
+ * Handles LLM API calls securely on the server using LangChain.
  */
 
 export { runAgent } from "./agent";
+export { createLLM, normalizeConfig } from "./llm-provider";
 export { ToolRegistry, createDefaultToolRegistry } from "./tool-registry";
 export type {
 	AgentRequest,
@@ -15,5 +16,11 @@ export type {
 	ToolCall,
 	ToolDefinition,
 	ToolExecutor,
+	LLMProvider,
+	OpenAIConfig,
+	AnthropicConfig,
+	GoogleConfig,
+	CustomConfig,
+	LegacyServerConfig,
 } from "./types";
 
