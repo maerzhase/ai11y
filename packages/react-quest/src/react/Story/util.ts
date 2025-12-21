@@ -1,5 +1,3 @@
-import { ComponentRef, ElementType } from "react";
-
 export const createThreshold = (theta: number, height: number) => {
 	const count = Math.ceil(height / theta);
 	const t = [];

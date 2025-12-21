@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Step, Story } from "react-quest";
 
 export const StoryExample = () => {

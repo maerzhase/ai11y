@@ -40,7 +40,7 @@ export function AssistPanel() {
 	// Auto-scroll to bottom when messages change
 	useEffect(() => {
 		messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-	}, [messages]);
+	}, []);
 
 	// Focus input when panel opens
 	useEffect(() => {

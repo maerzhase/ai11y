@@ -6,18 +6,12 @@
  */
 
 export { runAgent } from "./agent";
-export { createLLM, normalizeConfig } from "./llm-provider";
+export { createLLM } from "./llm-provider";
 export { createDefaultToolRegistry, ToolRegistry } from "./tool-registry";
 export type {
 	AgentRequest,
 	AgentResponse,
-	AnthropicConfig,
 	AssistContext,
-	CustomConfig,
-	GoogleConfig,
-	LegacyServerConfig,
-	LLMProvider,
-	OpenAIConfig,
 	ServerConfig,
 	ToolCall,
 	ToolDefinition,

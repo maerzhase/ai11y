@@ -1,22 +1,14 @@
 import type {
 	FastifyInstance,
 	FastifyPluginOptions,
-	FastifyReply,
 	FastifyRequest,
 } from "fastify";
 import { runAgent } from "./agent";
-import { normalizeConfig } from "./llm-provider";
 import { createDefaultToolRegistry, type ToolRegistry } from "./tool-registry";
-import type {
-	AgentRequest,
-	LegacyServerConfig,
-	ServerConfig,
-	ToolDefinition,
-	ToolExecutor,
-} from "./types";
+import type { AgentRequest, ServerConfig } from "./types";
 
 interface FastifyQuestOptions extends FastifyPluginOptions {
-	config: ServerConfig | LegacyServerConfig;
+	config: ServerConfig;
 	toolRegistry?: ToolRegistry;
 }
 
@@ -34,21 +26,11 @@ interface QuestRequest extends FastifyRequest {
  *
  * const fastify = Fastify();
  *
- * // Using OpenAI (legacy format still works)
  * await fastify.register(questPlugin, {
  *   config: {
  *     provider: 'openai',
  *     apiKey: process.env.OPENAI_API_KEY!,
  *     model: 'gpt-4o-mini'
- *   }
- * });
- *
- * // Or using Anthropic
- * await fastify.register(questPlugin, {
- *   config: {
- *     provider: 'anthropic',
- *     apiKey: process.env.ANTHROPIC_API_KEY!,
- *     model: 'claude-3-haiku-20240307'
  *   }
  * });
  *
@@ -61,14 +43,9 @@ export async function questPlugin(
 ) {
 	const { config, toolRegistry = createDefaultToolRegistry() } = options;
 
-	// Normalize config (supports both new and legacy formats)
-	const normalizedConfig = normalizeConfig(config);
-
 	// Validate config
-	if (!normalizedConfig.apiKey) {
-		throw new Error(
-			`API key is required for provider: ${normalizedConfig.provider}`,
-		);
+	if (!config.apiKey) {
+		throw new Error(`API key is required for provider: ${config.provider}`);
 	}
 
 	/**
@@ -77,11 +54,7 @@ export async function questPlugin(
 	 */
 	fastify.post<QuestRequest>("/quest/agent", async (request, reply) => {
 		try {
-			const response = await runAgent(
-				request.body,
-				normalizedConfig,
-				toolRegistry,
-			);
+			const response = await runAgent(request.body, config, toolRegistry);
 			return reply.send(response);
 		} catch (error) {
 			fastify.log.error(error, "Error processing agent request");

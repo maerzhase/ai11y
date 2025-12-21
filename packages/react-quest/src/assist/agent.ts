@@ -107,7 +107,7 @@ export function runAgent(input: string, context: AssistContext): AgentResponse {
 			// Try to find a retry action
 			if (context.lastError.meta?.markerId) {
 				const marker = context.markers.find(
-					(m) => m.id === context.lastError!.meta!.markerId,
+					(m) => m.id === context.lastError?.meta?.markerId,
 				);
 				if (marker) {
 					return {

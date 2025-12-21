@@ -4,7 +4,6 @@ import React, {
 	createContext,
 	isValidElement,
 	type ReactElement,
-	ReactNode,
 	type RefAttributes,
 	useCallback,
 	useContext,
@@ -61,7 +60,7 @@ export function StoryProvider({
 
 	const progressThreshold = React.useMemo(
 		() => createThreshold(threshold, innerHeight),
-		[innerHeight],
+		[innerHeight, threshold],
 	);
 
 	return (

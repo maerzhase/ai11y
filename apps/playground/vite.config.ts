@@ -10,7 +10,7 @@ export default defineConfig({
 			generateBundle() {
 				// This plugin helps prevent Node.js module errors
 			},
-			transform(code, id) {
+			transform(code, _id) {
 				// Replace Node.js module imports with empty stubs
 				if (code.includes("node:module")) {
 					return code.replace(

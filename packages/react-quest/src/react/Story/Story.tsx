@@ -65,7 +65,7 @@ export function Story(props: StoryProps) {
 
 	const progressThreshold = React.useMemo(
 		() => createThreshold(threshold, innerHeight),
-		[innerHeight],
+		[innerHeight, threshold],
 	);
 
 	return (

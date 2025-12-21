@@ -72,7 +72,7 @@ export function AssistProvider({
 	onNavigate,
 	llmConfig = null,
 }: AssistProviderProps) {
-	const [assistState, setAssistState] = useState<AssistState>(initialState);
+	const [assistState, _setAssistState] = useState<AssistState>(initialState);
 	const [currentRoute, setCurrentRoute] = useState<string>("/");
 	const [lastError, setLastError] = useState<AssistError | null>(null);
 	const [events, setEvents] = useState<AssistEvent[]>([]);

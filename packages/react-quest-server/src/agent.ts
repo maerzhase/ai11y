@@ -1,6 +1,6 @@
 import { DynamicStructuredTool } from "@langchain/core/tools";
 import { z } from "zod";
-import { createLLM, normalizeConfig } from "./llm-provider";
+import { createLLM } from "./llm-provider";
 import { createDefaultToolRegistry, type ToolRegistry } from "./tool-registry";
 import type {
 	AgentRequest,
@@ -99,14 +99,11 @@ function createLangChainTools(
  */
 export async function runAgent(
 	request: AgentRequest,
-	config: ServerConfig | { apiKey: string; model?: string; baseURL?: string },
+	config: ServerConfig,
 	toolRegistry: ToolRegistry = createDefaultToolRegistry(),
 ): Promise<AgentResponse> {
-	// Normalize config to support both new and legacy formats
-	const normalizedConfig = normalizeConfig(config);
-
 	// Create LLM instance
-	const llm = await createLLM(normalizedConfig);
+	const llm = await createLLM(config);
 
 	// Format context for the prompt
 	const contextPrompt = formatContextForPrompt(request.context);
@@ -116,7 +113,9 @@ export async function runAgent(
 
 	// Bind tools to LLM
 	const llmWithTools =
-		langchainTools.length > 0 ? llm.bindTools(langchainTools) : llm;
+		langchainTools.length > 0 && typeof llm.bindTools === "function"
+			? llm.bindTools(langchainTools)
+			: llm;
 
 	const systemPrompt = `You are a helpful AI assistant embedded in a web application. Your role is to help users navigate the app, interact with UI elements, and resolve errors.
 
