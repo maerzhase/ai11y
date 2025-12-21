@@ -9,4 +9,3 @@ export default defineConfig({
 	outDir: "dist",
 	external: ["react", "react-dom", "react/jsx-runtime", "@base-ui/react"],
 });
-

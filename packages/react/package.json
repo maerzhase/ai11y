@@ -13,6 +13,7 @@
 	},
 	"sideEffects": false,
 	"dependencies": {
+		"@quest/core": "workspace:*",
 		"@quest/ui": "workspace:*"
 	},
 	"peerDependencies": {

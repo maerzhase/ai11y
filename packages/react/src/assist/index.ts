@@ -1,5 +1,5 @@
-export { AssistProvider, useAssist } from "./AssistProvider";
 export { AssistPanel } from "./AssistPanel";
+export { AssistProvider, useAssist } from "./AssistProvider";
 export { runAgent } from "./agent";
 export { runLLMAgent } from "./llm-agent";
 export { Mark } from "./Mark";
@@ -13,3 +13,5 @@ export type {
 	MarkerMetadata,
 	ToolCall,
 } from "./types";
+export type { Message as ChatMessage } from "./useAssistChat";
+export { useAssistChat } from "./useAssistChat";

@@ -1,8 +1,15 @@
-import { AssistPanel as BaseAssistPanel } from "@quest/ui";
-import type { ToolCall } from "./types";
+import {
+	AssistPanelHeader,
+	AssistPanelPopover,
+	ChatInput,
+	MessageList,
+} from "@quest/ui";
+import { useEffect } from "react";
 import { useAssist } from "./AssistProvider";
 import { runAgent } from "./agent";
 import { runLLMAgent } from "./llm-agent";
+import type { ToolCall } from "./types";
+import { useAssistChat } from "./useAssistChat";
 
 export function AssistPanel() {
 	const {
@@ -50,13 +57,41 @@ export function AssistPanel() {
 		}
 	};
 
+	const {
+		messages,
+		input,
+		setInput,
+		isProcessing,
+		messagesEndRef,
+		inputRef,
+		handleSubmit: handleChatSubmit,
+	} = useAssistChat({
+		onSubmit: handleSubmit,
+		onToolCall: handleToolCall,
+	});
+
+	// Focus input when panel opens
+	useEffect(() => {
+		if (isPanelOpen && inputRef.current) {
+			inputRef.current.focus();
+		}
+	}, [isPanelOpen, inputRef]);
+
 	return (
-		<BaseAssistPanel
-			isOpen={isPanelOpen}
-			onOpenChange={setIsPanelOpen}
-			onSubmit={handleSubmit}
-			onToolCall={handleToolCall}
-		/>
+		<AssistPanelPopover isOpen={isPanelOpen} onOpenChange={setIsPanelOpen}>
+			<AssistPanelHeader onClose={() => setIsPanelOpen(false)} />
+			<MessageList
+				messages={messages}
+				isProcessing={isProcessing}
+				messagesEndRef={messagesEndRef}
+			/>
+			<ChatInput
+				value={input}
+				onChange={setInput}
+				onSubmit={handleChatSubmit}
+				disabled={isProcessing}
+				inputRef={inputRef}
+			/>
+		</AssistPanelPopover>
 	);
 }
-

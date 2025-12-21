@@ -49,10 +49,10 @@ interface AssistContextValue {
 	llmConfig: LLMAgentConfig | null;
 }
 
-const AssistContext = createContext<AssistContextValue | null>(null);
+const AssistReactContext = createContext<AssistContextValue | null>(null);
 
 export function useAssist() {
-	const context = useContext(AssistContext);
+	const context = useContext(AssistReactContext);
 	if (!context) {
 		throw new Error("useAssist must be used within AssistProvider");
 	}
@@ -245,6 +245,8 @@ export function AssistProvider({
 	};
 
 	return (
-		<AssistContext.Provider value={value}>{children}</AssistContext.Provider>
+		<AssistReactContext.Provider value={value}>
+			{children}
+		</AssistReactContext.Provider>
 	);
 }

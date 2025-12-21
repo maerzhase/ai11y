@@ -1,5 +1,5 @@
-import type React from "react";
 import { Button as BaseButton } from "@base-ui/react/button";
+import type React from "react";
 
 export interface ButtonProps
 	extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -13,4 +13,3 @@ export function Button({ children, className = "", ...props }: ButtonProps) {
 		</BaseButton>
 	);
 }
-

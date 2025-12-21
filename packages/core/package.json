@@ -1,0 +1,21 @@
+{
+	"name": "@quest/core",
+	"version": "0.0.0",
+	"type": "module",
+	"main": "./dist/index.mjs",
+	"types": "./dist/index.d.mts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.mts",
+			"import": "./dist/index.mjs"
+		}
+	},
+	"scripts": {
+		"build": "tsdown",
+		"watch": "tsdown --watch"
+	},
+	"devDependencies": {
+		"tsdown": "0.18.1",
+		"typescript": "5.9.3"
+	}
+}
