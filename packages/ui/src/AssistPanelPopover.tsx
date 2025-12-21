@@ -14,7 +14,7 @@ export function AssistPanelPopover({
 	onOpenChange,
 	children,
 	trigger,
-	triggerClassName = "fixed bottom-5 right-5 flex size-14 items-center justify-center rounded-full bg-blue-500 text-white border-none select-none hover:bg-blue-600 focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-1 focus-visible:outline-blue-800 active:bg-blue-600 data-[popup-open]:bg-blue-600 shadow-lg text-2xl z-[10000] transition-colors",
+	triggerClassName = "fixed bottom-5 right-5 flex size-14 items-center justify-center rounded-full bg-primary text-primary-foreground border-none select-none hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-1 focus-visible:outline-ring active:opacity-90 data-[popup-open]:opacity-90 shadow-lg text-2xl z-[10000] transition-opacity",
 }: AssistPanelPopoverProps) {
 	return (
 		<Popover.Root open={isOpen} onOpenChange={onOpenChange}>
@@ -27,7 +27,7 @@ export function AssistPanelPopover({
 
 			<Popover.Portal>
 				<Popover.Positioner placement="top-end" sideOffset={8}>
-					<Popover.Popup className="origin-[var(--transform-origin)] w-[400px] h-[600px] max-h-[calc(100vh-40px)] rounded-lg bg-white text-gray-900 outline outline-1 outline-gray-200 transition-[transform,scale,opacity] data-[ending-style]:scale-90 data-[ending-style]:opacity-0 data-[starting-style]:scale-90 data-[starting-style]:opacity-0 flex flex-col z-[10000] overflow-hidden">
+					<Popover.Popup className="origin-[var(--transform-origin)] w-[400px] h-[600px] max-h-[calc(100vh-40px)] rounded-lg bg-popover text-popover-foreground outline outline-1 outline-border transition-[transform,scale,opacity] data-[ending-style]:scale-90 data-[ending-style]:opacity-0 data-[starting-style]:scale-90 data-[starting-style]:opacity-0 flex flex-col z-[10000] overflow-hidden">
 						{children}
 					</Popover.Popup>
 				</Popover.Positioner>

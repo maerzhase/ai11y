@@ -24,7 +24,7 @@ export function MessageList({
 				<MessageBubble key={msg.id ?? `msg-${index}`} message={msg} />
 			))}
 			{isProcessing && (
-				<div className="px-3.5 py-2.5 rounded-xl bg-gray-50 text-gray-500 text-sm">
+				<div className="px-3.5 py-2.5 rounded-xl bg-muted text-muted-foreground text-sm">
 					Thinking...
 				</div>
 			)}

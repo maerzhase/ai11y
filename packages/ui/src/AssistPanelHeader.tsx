@@ -10,11 +10,11 @@ export function AssistPanelHeader({
 	onClose,
 }: AssistPanelHeaderProps) {
 	return (
-		<div className="px-5 py-4 border-b border-gray-200 flex justify-between items-center bg-gray-50">
-			<h3 className="m-0 text-lg font-semibold">{title}</h3>
+		<div className="px-5 py-4 border-b border-border flex justify-between items-center bg-muted">
+			<h3 className="m-0 text-lg font-semibold text-foreground">{title}</h3>
 			<Button
 				onClick={onClose}
-				className="bg-transparent border-none cursor-pointer text-xl text-gray-500 p-1 hover:text-gray-700 transition-colors"
+				className="bg-transparent border-none cursor-pointer text-xl text-muted-foreground p-1 hover:text-foreground transition-colors"
 				aria-label="Close"
 			>
 				×

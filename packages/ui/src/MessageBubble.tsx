@@ -15,10 +15,10 @@ export function MessageBubble({ message }: MessageBubbleProps) {
 			<div
 				className={`px-3.5 py-2.5 rounded-xl max-w-[80%] text-sm leading-relaxed ${
 					message.type === "user"
-						? "bg-blue-500 text-white"
+						? "bg-primary text-primary-foreground"
 						: message.type === "system"
-							? "bg-gray-100 text-gray-500 border border-gray-200"
-							: "bg-gray-50 text-gray-900"
+							? "bg-muted text-muted-foreground border border-border"
+							: "bg-muted text-foreground"
 				}`}
 			>
 				{message.content}

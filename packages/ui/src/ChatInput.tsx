@@ -20,7 +20,7 @@ export function ChatInput({
 }: ChatInputProps) {
 	return (
 		<form
-			className="px-5 py-4 border-t border-gray-200 bg-gray-50"
+			className="px-5 py-4 border-t border-border bg-muted"
 			onSubmit={onSubmit}
 		>
 			<div className="flex gap-2">
@@ -31,14 +31,14 @@ export function ChatInput({
 					onChange={(e) => onChange(e.target.value)}
 					placeholder={placeholder}
 					disabled={disabled}
-					className="flex-1 px-3.5 py-2.5 border border-gray-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed"
+					className="flex-1 px-3.5 py-2.5 border border-input rounded-lg text-sm outline-none bg-background text-foreground focus:ring-2 focus:ring-ring focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed"
 				/>
 				<Button
 					type="submit"
 					disabled={!value.trim() || disabled}
-					className={`px-5 py-2.5 bg-blue-500 text-white border-none rounded-lg text-sm font-medium transition-opacity ${
+					className={`px-5 py-2.5 bg-primary text-primary-foreground border-none rounded-lg text-sm font-medium transition-opacity ${
 						value.trim() && !disabled
-							? "cursor-pointer opacity-100 hover:bg-blue-600"
+							? "cursor-pointer opacity-100 hover:opacity-90"
 							: "cursor-not-allowed opacity-50"
 					}`}
 				>
