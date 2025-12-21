@@ -1,13 +1,13 @@
+import { useEffect, useState } from "react";
 import { PrismLight as SyntaxHighlighter } from "react-syntax-highlighter";
-import {
-	oneLight,
-	oneDark,
-} from "react-syntax-highlighter/dist/esm/styles/prism";
+import javascript from "react-syntax-highlighter/dist/esm/languages/prism/javascript";
+import jsx from "react-syntax-highlighter/dist/esm/languages/prism/jsx";
 import tsx from "react-syntax-highlighter/dist/esm/languages/prism/tsx";
 import typescript from "react-syntax-highlighter/dist/esm/languages/prism/typescript";
-import jsx from "react-syntax-highlighter/dist/esm/languages/prism/jsx";
-import javascript from "react-syntax-highlighter/dist/esm/languages/prism/javascript";
-import { useState, useEffect } from "react";
+import {
+	oneDark,
+	oneLight,
+} from "react-syntax-highlighter/dist/esm/styles/prism";
 
 interface CodeBlockProps {
 	code: string;
@@ -15,10 +15,7 @@ interface CodeBlockProps {
 }
 
 // Register languages - must be done at module level before component usage
-if (
-	typeof SyntaxHighlighter !== "undefined" &&
-	SyntaxHighlighter.registerLanguage
-) {
+if (SyntaxHighlighter?.registerLanguage) {
 	SyntaxHighlighter.registerLanguage("tsx", tsx);
 	SyntaxHighlighter.registerLanguage("typescript", typescript);
 	SyntaxHighlighter.registerLanguage("jsx", jsx);

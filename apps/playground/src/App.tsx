@@ -1,8 +1,14 @@
 import { AssistPanel, AssistProvider } from "@quest/react";
 import React from "react";
-import { BrowserRouter, Route, Routes, useLocation, useNavigate } from "react-router-dom";
-import { AppLayout } from "./layout/AppLayout";
+import {
+	BrowserRouter,
+	Route,
+	Routes,
+	useLocation,
+	useNavigate,
+} from "react-router-dom";
 import { CustomHighlightWrapper } from "./components/CustomHighlight";
+import { AppLayout } from "./layout/AppLayout";
 import { BillingPage } from "./pages/BillingPage";
 import { HomePage } from "./pages/HomePage";
 import { IntegrationsPage } from "./pages/IntegrationsPage";

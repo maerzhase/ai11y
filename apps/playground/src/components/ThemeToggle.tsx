@@ -18,12 +18,13 @@ export function ThemeToggle() {
 	useEffect(() => {
 		const root = document.documentElement;
 		const stored = localStorage.getItem("theme");
-		const initialTheme = stored === "dark" || stored === "light" 
-			? stored 
-			: window.matchMedia("(prefers-color-scheme: dark)").matches 
-				? "dark" 
-				: "light";
-		
+		const initialTheme =
+			stored === "dark" || stored === "light"
+				? stored
+				: window.matchMedia("(prefers-color-scheme: dark)").matches
+					? "dark"
+					: "light";
+
 		if (initialTheme === "dark") {
 			root.classList.add("dark");
 		} else {

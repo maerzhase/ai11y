@@ -9,8 +9,12 @@ interface MarkProps {
 }
 
 export function Mark({ id, label, intent, children }: MarkProps) {
-	const { registerMarker, unregisterMarker, highlightedMarkers, highlightWrapper } =
-		useAssist();
+	const {
+		registerMarker,
+		unregisterMarker,
+		highlightedMarkers,
+		highlightWrapper,
+	} = useAssist();
 	const elementRef = useRef<HTMLElement | null>(null);
 
 	useEffect(() => {

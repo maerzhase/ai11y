@@ -152,8 +152,8 @@ export function HomePage() {
 										Visual Highlighting
 									</h3>
 									<p className="text-muted-foreground leading-relaxed">
-										Highlight elements with custom animations. Try: "highlight the
-										features title" or "show me the navigation card"
+										Highlight elements with custom animations. Try: "highlight
+										the features title" or "show me the navigation card"
 									</p>
 								</div>
 							</div>

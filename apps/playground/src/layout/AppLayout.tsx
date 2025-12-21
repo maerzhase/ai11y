@@ -1,7 +1,6 @@
 import { useAssist } from "@quest/react";
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Logo } from "../components/Logo";
 import { LogoCircular } from "../components/LogoCircular";
 import { ThemeToggle } from "../components/ThemeToggle";
 
