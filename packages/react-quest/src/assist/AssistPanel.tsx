@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
+import type React from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAssist } from "./AssistProvider";
 import { runAgent } from "./agent";
 import { runLLMAgent } from "./llm-agent";
@@ -26,7 +27,8 @@ export function AssistPanel() {
 		{
 			id: "welcome",
 			type: "assistant",
-			content: "Hi! I'm your AI assistant. I can help you navigate, click buttons, and highlight elements. Try saying 'go to billing' or 'click connect stripe'.",
+			content:
+				"Hi! I'm your AI assistant. I can help you navigate, click buttons, and highlight elements. Try saying 'go to billing' or 'click connect stripe'.",
 			timestamp: Date.now(),
 		},
 	]);
@@ -95,7 +97,7 @@ export function AssistPanel() {
 
 		// Get context and run agent
 		const context = getContext();
-		
+
 		try {
 			// Use LLM agent if configured, otherwise use rule-based
 			const response = llmConfig
@@ -228,8 +230,7 @@ export function AssistPanel() {
 						style={{
 							display: "flex",
 							flexDirection: "column",
-							alignItems:
-								msg.type === "user" ? "flex-end" : "flex-start",
+							alignItems: msg.type === "user" ? "flex-end" : "flex-start",
 						}}
 					>
 						<div
@@ -251,10 +252,7 @@ export function AssistPanel() {
 											: "#111827",
 								fontSize: 14,
 								lineHeight: 1.5,
-								border:
-									msg.type === "system"
-										? "1px solid #e5e7eb"
-										: "none",
+								border: msg.type === "system" ? "1px solid #e5e7eb" : "none",
 							}}
 						>
 							{msg.content}
@@ -325,4 +323,3 @@ export function AssistPanel() {
 		</div>
 	);
 }
-

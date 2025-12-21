@@ -1,4 +1,4 @@
-import type { QuestStep, Quest, QuestSnapshot } from "./_types";
+import type { Quest, QuestSnapshot, QuestStep } from "./_types";
 
 export function createQuest(steps: QuestStep[]): Quest {
 	let i = -1;

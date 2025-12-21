@@ -1,6 +1,6 @@
-import { questManager } from "@/lib/manager";
-import { Marker, computeMarkerForTarget } from "@/lib/marker/compute";
 import React, { useEffect, useMemo, useState } from "react";
+import { questManager } from "@/lib/manager";
+import { computeMarkerForTarget, type Marker } from "@/lib/marker/compute";
 
 export function QuestMarker({
 	target,

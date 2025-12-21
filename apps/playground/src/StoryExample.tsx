@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Story, Step } from "react-quest";
+import { Step, Story } from "react-quest";
 
 export const StoryExample = () => {
 	const [currentStepIndex, setCurrentStepIndex] = useState(null);

@@ -88,5 +88,3 @@ export function normalizeConfig(
 		baseURL: config.baseURL,
 	};
 }
-
-

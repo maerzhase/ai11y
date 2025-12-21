@@ -1,11 +1,19 @@
-import type { ToolDefinition, ToolExecutor, AssistContext, ToolCall } from "./types";
+import type {
+	AssistContext,
+	ToolCall,
+	ToolDefinition,
+	ToolExecutor,
+} from "./types";
 
 /**
  * Registry for managing tools that can be called by the LLM agent.
  * This allows extending the agent with custom tools.
  */
 export class ToolRegistry {
-	private tools = new Map<string, { definition: ToolDefinition; executor: ToolExecutor }>();
+	private tools = new Map<
+		string,
+		{ definition: ToolDefinition; executor: ToolExecutor }
+	>();
 
 	/**
 	 * Register a new tool
@@ -108,7 +116,8 @@ export function createDefaultToolRegistry(): ToolRegistry {
 				properties: {
 					route: {
 						type: "string",
-						description: "The route to navigate to (e.g., '/billing', '/integrations', '/')",
+						description:
+							"The route to navigate to (e.g., '/billing', '/integrations', '/')",
 					},
 				},
 				required: ["route"],
@@ -144,7 +153,8 @@ export function createDefaultToolRegistry(): ToolRegistry {
 	registry.register(
 		{
 			name: "highlight",
-			description: "Highlight a UI element by its marker ID to draw the user's attention",
+			description:
+				"Highlight a UI element by its marker ID to draw the user's attention",
 			parameters: {
 				type: "object",
 				properties: {
@@ -164,4 +174,3 @@ export function createDefaultToolRegistry(): ToolRegistry {
 
 	return registry;
 }
-

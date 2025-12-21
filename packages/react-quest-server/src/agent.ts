@@ -1,8 +1,13 @@
-import type { AgentRequest, AgentResponse, ServerConfig, ToolCall } from "./types";
-import { ToolRegistry, createDefaultToolRegistry } from "./tool-registry";
-import { createLLM, normalizeConfig } from "./llm-provider";
 import { DynamicStructuredTool } from "@langchain/core/tools";
 import { z } from "zod";
+import { createLLM, normalizeConfig } from "./llm-provider";
+import { createDefaultToolRegistry, type ToolRegistry } from "./tool-registry";
+import type {
+	AgentRequest,
+	AgentResponse,
+	ServerConfig,
+	ToolCall,
+} from "./types";
 
 /**
  * Format context for the LLM prompt
@@ -15,7 +20,7 @@ function formatContextForPrompt(context: AgentRequest["context"]): string {
 	if (context.lastError) {
 		const error = context.lastError.error;
 		parts.push(
-			`\n⚠️ Last error: ${error.message}${context.lastError.meta?.markerId ? ` (related to marker: ${context.lastError.meta.markerId})` : ""}`,
+			`\n! Last error: ${error.message}${context.lastError.meta?.markerId ? ` (related to marker: ${context.lastError.meta.markerId})` : ""}`,
 		);
 		parts.push(
 			"The user may want to retry the failed action. Look for markers related to the error.",
@@ -50,17 +55,18 @@ function createLangChainTools(
 
 	for (const toolDef of toolDefinitions) {
 		const def = toolDef.function;
-		
+
 		// Convert parameters to Zod schema
 		const zodSchema: Record<string, z.ZodTypeAny> = {};
 		for (const [key, param] of Object.entries(def.parameters.properties)) {
-			const zodType = param.type === "string" 
-				? z.string()
-				: param.type === "number"
-				? z.number()
-				: param.type === "boolean"
-				? z.boolean()
-				: z.any();
+			const zodType =
+				param.type === "string"
+					? z.string()
+					: param.type === "number"
+						? z.number()
+						: param.type === "boolean"
+							? z.boolean()
+							: z.any();
 			zodSchema[key] = zodType.describe(param.description);
 		}
 
@@ -109,9 +115,8 @@ export async function runAgent(
 	const langchainTools = createLangChainTools(toolRegistry, request.context);
 
 	// Bind tools to LLM
-	const llmWithTools = langchainTools.length > 0 
-		? llm.bindTools(langchainTools)
-		: llm;
+	const llmWithTools =
+		langchainTools.length > 0 ? llm.bindTools(langchainTools) : llm;
 
 	const systemPrompt = `You are a helpful AI assistant embedded in a web application. Your role is to help users navigate the app, interact with UI elements, and resolve errors.
 
@@ -155,18 +160,19 @@ Available markers: ${request.context.markers.map((m) => `${m.label} (${m.id})`).
 
 	// Extract tool calls from LangChain response
 	// LangChain stores tool calls in response.tool_calls or response.additional_kwargs.tool_calls
-	const toolCallObjects = 
-		(response as any).tool_calls || 
-		(response as any).additional_kwargs?.tool_calls || 
+	const toolCallObjects =
+		(response as any).tool_calls ||
+		(response as any).additional_kwargs?.tool_calls ||
 		[];
-	
+
 	for (const toolCall of toolCallObjects) {
 		const toolName = toolCall.name || toolCall.function?.name;
-		const toolArgs = toolCall.args || 
-			(toolCall.function?.arguments 
-				? (typeof toolCall.function.arguments === "string"
+		const toolArgs =
+			toolCall.args ||
+			(toolCall.function?.arguments
+				? typeof toolCall.function.arguments === "string"
 					? JSON.parse(toolCall.function.arguments)
-					: toolCall.function.arguments)
+					: toolCall.function.arguments
 				: {});
 
 		if (toolName) {
@@ -178,7 +184,7 @@ Available markers: ${request.context.markers.map((m) => `${m.label} (${m.id})`).
 					arguments: JSON.stringify(toolArgs),
 				},
 			});
-			
+
 			if (converted) {
 				toolCalls.push(converted);
 			} else {
@@ -205,4 +211,3 @@ Available markers: ${request.context.markers.map((m) => `${m.label} (${m.id})`).
 		toolCalls: toolCalls.length > 0 ? toolCalls : undefined,
 	};
 }
-

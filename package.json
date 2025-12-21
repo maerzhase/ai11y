@@ -5,7 +5,8 @@
 	"scripts": {
 		"dev": "turbo run dev",
 		"build": "turbo run build",
-		"watch": "turbo run watch"
+		"watch": "turbo run watch",
+		"format": "biome check --write ."
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.2.4",

@@ -1,16 +1,14 @@
 import React, {
-	isValidElement,
-	RefAttributes,
-	useContext,
-	useRef,
-} from "react";
-import {
 	Children,
 	cloneElement,
 	createContext,
-	ReactElement,
+	isValidElement,
+	type ReactElement,
 	ReactNode,
+	type RefAttributes,
 	useCallback,
+	useContext,
+	useRef,
 	useState,
 } from "react";
 import { useInView } from "react-intersection-observer";

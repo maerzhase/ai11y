@@ -31,7 +31,9 @@ export function runAgent(input: string, context: AssistContext): AgentResponse {
 				// If it's a navigation marker, extract route from intent
 				if (matchingMarker.intent.toLowerCase().includes("billing")) {
 					route = "/billing";
-				} else if (matchingMarker.intent.toLowerCase().includes("integrations")) {
+				} else if (
+					matchingMarker.intent.toLowerCase().includes("integrations")
+				) {
 					route = "/integrations";
 				}
 			}
@@ -130,4 +132,3 @@ export function runAgent(input: string, context: AssistContext): AgentResponse {
 		reply: `I can help you navigate, click buttons, or highlight elements. Try saying "go to billing", "click connect stripe", or "show me the enable billing button".`,
 	};
 }
-

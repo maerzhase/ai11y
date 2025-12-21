@@ -1,8 +1,19 @@
-import type { FastifyInstance, FastifyPluginOptions, FastifyRequest, FastifyReply } from "fastify";
+import type {
+	FastifyInstance,
+	FastifyPluginOptions,
+	FastifyReply,
+	FastifyRequest,
+} from "fastify";
 import { runAgent } from "./agent";
 import { normalizeConfig } from "./llm-provider";
-import { ToolRegistry, createDefaultToolRegistry } from "./tool-registry";
-import type { AgentRequest, ServerConfig, ToolDefinition, ToolExecutor, LegacyServerConfig } from "./types";
+import { createDefaultToolRegistry, type ToolRegistry } from "./tool-registry";
+import type {
+	AgentRequest,
+	LegacyServerConfig,
+	ServerConfig,
+	ToolDefinition,
+	ToolExecutor,
+} from "./types";
 
 interface FastifyQuestOptions extends FastifyPluginOptions {
 	config: ServerConfig | LegacyServerConfig;
@@ -15,14 +26,14 @@ interface QuestRequest extends FastifyRequest {
 
 /**
  * Fastify plugin for React Quest server
- * 
+ *
  * @example
  * ```ts
  * import Fastify from 'fastify';
  * import { questPlugin } from '@react-quest/server/fastify';
- * 
+ *
  * const fastify = Fastify();
- * 
+ *
  * // Using OpenAI (legacy format still works)
  * await fastify.register(questPlugin, {
  *   config: {
@@ -31,7 +42,7 @@ interface QuestRequest extends FastifyRequest {
  *     model: 'gpt-4o-mini'
  *   }
  * });
- * 
+ *
  * // Or using Anthropic
  * await fastify.register(questPlugin, {
  *   config: {
@@ -40,7 +51,7 @@ interface QuestRequest extends FastifyRequest {
  *     model: 'claude-3-haiku-20240307'
  *   }
  * });
- * 
+ *
  * await fastify.listen({ port: 3000 });
  * ```
  */
@@ -55,7 +66,9 @@ export async function questPlugin(
 
 	// Validate config
 	if (!normalizedConfig.apiKey) {
-		throw new Error(`API key is required for provider: ${normalizedConfig.provider}`);
+		throw new Error(
+			`API key is required for provider: ${normalizedConfig.provider}`,
+		);
 	}
 
 	/**
@@ -64,7 +77,11 @@ export async function questPlugin(
 	 */
 	fastify.post<QuestRequest>("/quest/agent", async (request, reply) => {
 		try {
-			const response = await runAgent(request.body, normalizedConfig, toolRegistry);
+			const response = await runAgent(
+				request.body,
+				normalizedConfig,
+				toolRegistry,
+			);
 			return reply.send(response);
 		} catch (error) {
 			fastify.log.error(error, "Error processing agent request");
@@ -87,7 +104,7 @@ export async function questPlugin(
 /**
  * Helper function to create a tool registry with custom tools.
  * Returns a ToolRegistry instance that supports method chaining.
- * 
+ *
  * @example
  * ```ts
  * const registry = createToolRegistry()
@@ -112,5 +129,4 @@ export function createToolRegistry(): ToolRegistry {
 }
 
 // Re-export types for convenience
-export type { ToolDefinition, ToolExecutor, ServerConfig } from "./types";
-
+export type { ServerConfig, ToolDefinition, ToolExecutor } from "./types";

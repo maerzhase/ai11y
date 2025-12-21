@@ -1,4 +1,5 @@
-import React, {
+import type React from "react";
+import {
 	createContext,
 	useCallback,
 	useContext,
@@ -29,7 +30,10 @@ interface AssistContextValue {
 
 	// Imperative API
 	track: (event: string, payload?: unknown) => void;
-	reportError: (error: Error, meta?: { surface?: string; markerId?: string }) => void;
+	reportError: (
+		error: Error,
+		meta?: { surface?: string; markerId?: string },
+	) => void;
 	navigate: (route: string) => void;
 	highlight: (markerId: string) => void;
 	click: (markerId: string) => void;
@@ -72,7 +76,9 @@ export function AssistProvider({
 	const [currentRoute, setCurrentRoute] = useState<string>("/");
 	const [lastError, setLastError] = useState<AssistError | null>(null);
 	const [events, setEvents] = useState<AssistEvent[]>([]);
-	const [markers, setMarkers] = useState<Map<string, MarkerMetadata>>(new Map());
+	const [markers, setMarkers] = useState<Map<string, MarkerMetadata>>(
+		new Map(),
+	);
 	const [isPanelOpen, setIsPanelOpen] = useState(false);
 	const highlightTimeoutRef = useRef<number | null>(null);
 
@@ -242,4 +248,3 @@ export function AssistProvider({
 		<AssistContext.Provider value={value}>{children}</AssistContext.Provider>
 	);
 }
-

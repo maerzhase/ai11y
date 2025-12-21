@@ -1,10 +1,10 @@
 import React, {
-	useState,
-	useMemo,
-	useCallback,
-	useRef,
-	useEffect,
 	cloneElement,
+	useCallback,
+	useEffect,
+	useMemo,
+	useRef,
+	useState,
 } from "react";
 import { useInView } from "react-intersection-observer";
 

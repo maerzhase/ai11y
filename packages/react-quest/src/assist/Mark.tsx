@@ -53,4 +53,3 @@ export function Mark({ id, label, intent, children }: MarkProps) {
 
 	return childWithRef;
 }
-

@@ -5,12 +5,16 @@
  */
 
 import "dotenv/config";
-import Fastify from "fastify";
 import cors from "@fastify/cors";
 import { questPlugin } from "@react-quest/server/fastify";
+import Fastify from "fastify";
 
 // Determine provider and validate API key
-const provider = (process.env.LLM_PROVIDER || "openai") as "openai" | "anthropic" | "google" | "custom";
+const provider = (process.env.LLM_PROVIDER || "openai") as
+	| "openai"
+	| "anthropic"
+	| "google"
+	| "custom";
 
 let apiKey: string | undefined;
 switch (provider) {
@@ -30,7 +34,9 @@ switch (provider) {
 
 if (!apiKey) {
 	console.error(`❌ Error: API key is required for provider: ${provider}`);
-	console.error(`   Set ${provider.toUpperCase()}_API_KEY or OPENAI_API_KEY environment variable`);
+	console.error(
+		`   Set ${provider.toUpperCase()}_API_KEY or OPENAI_API_KEY environment variable`,
+	);
 	process.exit(1);
 }
 
@@ -44,18 +50,20 @@ async function start() {
 	await fastify.register(cors, {
 		// In development, allow all origins for easier local development
 		// In production, you should specify exact origins
-		origin: process.env.NODE_ENV === "production" 
-			? (origin, cb) => {
-				// In production, restrict to specific origins
-				// You can customize this list based on your frontend domain(s)
-				const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(",") || [];
-				if (origin && allowedOrigins.includes(origin)) {
-					cb(null, true);
-				} else {
-					cb(null, false);
-				}
-			}
-			: true, // Allow all origins in development
+		origin:
+			process.env.NODE_ENV === "production"
+				? (origin, cb) => {
+						// In production, restrict to specific origins
+						// You can customize this list based on your frontend domain(s)
+						const allowedOrigins =
+							process.env.ALLOWED_ORIGINS?.split(",") || [];
+						if (origin && allowedOrigins.includes(origin)) {
+							cb(null, true);
+						} else {
+							cb(null, false);
+						}
+					}
+				: true, // Allow all origins in development
 		credentials: true,
 	});
 
