@@ -1,5 +1,6 @@
 import { Mark, useAssist } from "@quest/react";
 import { useNavigate } from "react-router-dom";
+import { CodeBlock } from "../components/CodeBlock";
 
 export function HomePage() {
 	const navigate = useNavigate();
@@ -218,6 +219,189 @@ export function HomePage() {
 							>
 								Go to Integrations
 							</button>
+						</Mark>
+					</div>
+				</div>
+			</section>
+
+			{/* Code Examples Section */}
+			<section
+				id="code-examples-section"
+				className="relative min-h-screen py-24 px-6 bg-muted/20"
+			>
+				<div className="max-w-6xl mx-auto">
+					<Mark
+						id="code_examples_title"
+						label="Code Examples Title"
+						intent="The code examples section title"
+					>
+						<h2 className="text-4xl md:text-5xl font-bold text-center mb-4 text-foreground tracking-tight">
+							Code Examples
+						</h2>
+					</Mark>
+					<p className="text-center text-muted-foreground mb-16 text-lg max-w-2xl mx-auto">
+						See how easy it is to integrate React Quest into your application
+					</p>
+
+					<div className="grid md:grid-cols-2 gap-8">
+						{/* Mark Component Example */}
+						<Mark
+							id="code_example_mark"
+							label="Mark Component Code Example"
+							intent="Code example showing Mark component usage"
+						>
+							<div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+								<h3 className="text-xl font-semibold mb-4 text-card-foreground">
+									Marking Elements
+								</h3>
+								<CodeBlock
+									code={`import { Mark } from "@quest/react";
+
+<Mark
+  id="my_button"
+  label="My Button"
+  intent="Perform an action"
+>
+  <button onClick={handleClick}>
+    Click Me
+  </button>
+</Mark>`}
+								/>
+							</div>
+						</Mark>
+
+						{/* Navigation Example */}
+						<Mark
+							id="code_example_navigation"
+							label="Navigation Code Example"
+							intent="Code example showing navigation"
+						>
+							<div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+								<h3 className="text-xl font-semibold mb-4 text-card-foreground">
+									Navigation
+								</h3>
+								<CodeBlock
+									code={`import { useAssist } from "@quest/react";
+
+function MyComponent() {
+  const { navigate } = useAssist();
+  
+  return (
+    <button onClick={() => navigate("/billing")}>
+      Go to Billing
+    </button>
+  );
+}`}
+								/>
+							</div>
+						</Mark>
+
+						{/* Highlighting Example */}
+						<Mark
+							id="code_example_highlight"
+							label="Highlight Code Example"
+							intent="Code example showing highlighting"
+						>
+							<div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+								<h3 className="text-xl font-semibold mb-4 text-card-foreground">
+									Visual Highlighting
+								</h3>
+								<CodeBlock
+									code={`import { useAssist } from "@quest/react";
+
+function MyComponent() {
+  const { highlight } = useAssist();
+  
+  const handleClick = () => {
+    highlight("my_button");
+  };
+  
+  return <button onClick={handleClick}>Highlight</button>;
+}`}
+								/>
+							</div>
+						</Mark>
+
+						{/* Error Reporting Example */}
+						<Mark
+							id="code_example_error"
+							label="Error Reporting Code Example"
+							intent="Code example showing error reporting"
+						>
+							<div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+								<h3 className="text-xl font-semibold mb-4 text-card-foreground">
+									Error Reporting
+								</h3>
+								<CodeBlock
+									code={`import { useAssist } from "@quest/react";
+
+function MyComponent() {
+  const { reportError } = useAssist();
+  
+  const handleAction = async () => {
+    try {
+      await doSomething();
+    } catch (error) {
+      reportError(error, {
+        markerId: "my_button"
+      });
+    }
+  };
+}`}
+								/>
+							</div>
+						</Mark>
+
+						{/* Setup Example */}
+						<Mark
+							id="code_example_setup"
+							label="Setup Code Example"
+							intent="Code example showing basic setup"
+						>
+							<div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+								<h3 className="text-xl font-semibold mb-4 text-card-foreground">
+									Basic Setup
+								</h3>
+								<CodeBlock
+									code={`import { AssistProvider, AssistPanel } from "@quest/react";
+
+function App() {
+  return (
+    <AssistProvider onNavigate={(route) => navigate(route)}>
+      <YourApp />
+      <AssistPanel />
+    </AssistProvider>
+  );
+}`}
+								/>
+							</div>
+						</Mark>
+
+						{/* Imperative API Example */}
+						<Mark
+							id="code_example_imperative"
+							label="Imperative API Code Example"
+							intent="Code example showing imperative API"
+						>
+							<div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+								<h3 className="text-xl font-semibold mb-4 text-card-foreground">
+									Imperative API
+								</h3>
+								<CodeBlock
+									code={`import { useAssist } from "@quest/react";
+
+function MyComponent() {
+  const { navigate, highlight, click, track } = useAssist();
+  
+  const handleAction = () => {
+    track("custom_event");
+    navigate("/billing");
+    highlight("some_marker");
+    click("another_marker");
+  };
+}`}
+								/>
+							</div>
 						</Mark>
 					</div>
 				</div>

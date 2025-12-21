@@ -139,3 +139,9 @@ html {
 	background-color: hsl(var(--primary) / 0.3);
 	color: hsl(var(--foreground));
 }
+
+/* Prism syntax highlighting styles */
+code[class*="language-"],
+pre[class*="language-"] {
+	font-family: "Geist Mono", "Courier New", monospace !important;
+}
