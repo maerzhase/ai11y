@@ -109,6 +109,7 @@ export function AssistPanel() {
 				messagesEndRef={messagesEndRef}
 			/>
 			<ChatInput
+				autoFocus
 				value={input}
 				onChange={setInput}
 				onSubmit={handleChatSubmit}

@@ -8,6 +8,7 @@ export interface ChatInputProps {
 	disabled?: boolean;
 	placeholder?: string;
 	inputRef?: React.RefObject<HTMLInputElement>;
+	autoFocus?: boolean;
 }
 
 export function ChatInput({
@@ -17,6 +18,7 @@ export function ChatInput({
 	disabled = false,
 	placeholder = "Ask me anything...",
 	inputRef,
+	autoFocus,
 }: ChatInputProps) {
 	return (
 		<form
@@ -25,6 +27,7 @@ export function ChatInput({
 		>
 			<div className="flex gap-2">
 				<input
+					autoFocus={autoFocus}
 					ref={inputRef}
 					type="text"
 					value={value}
