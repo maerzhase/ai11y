@@ -128,3 +128,14 @@ html {
 ::-webkit-scrollbar-thumb:hover {
 	background: hsl(var(--muted-foreground) / 0.5);
 }
+
+/* Text selection styling to match theme */
+::selection {
+	background-color: hsl(var(--primary) / 0.3);
+	color: hsl(var(--foreground));
+}
+
+::-moz-selection {
+	background-color: hsl(var(--primary) / 0.3);
+	color: hsl(var(--foreground));
+}

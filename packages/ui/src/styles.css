@@ -70,3 +70,14 @@
 	--color-input: hsl(var(--input));
 	--color-ring: hsl(var(--ring));
 }
+
+/* Text selection styling to match theme */
+::selection {
+	background-color: hsl(var(--primary) / 0.3);
+	color: hsl(var(--foreground));
+}
+
+::-moz-selection {
+	background-color: hsl(var(--primary) / 0.3);
+	color: hsl(var(--foreground));
+}
