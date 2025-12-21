@@ -25,9 +25,13 @@ export function AssistPanelPopover({
 				{trigger ?? "💬"}
 			</Popover.Trigger>
 
-			<Popover.Portal>
-				<Popover.Positioner placement="top-end" sideOffset={8}>
-					<Popover.Popup className="origin-[var(--transform-origin)] w-[400px] h-[600px] max-h-[calc(100vh-40px)] rounded-lg bg-popover text-popover-foreground outline outline-1 outline-border transition-[transform,scale,opacity] data-[ending-style]:scale-90 data-[ending-style]:opacity-0 data-[starting-style]:scale-90 data-[starting-style]:opacity-0 flex flex-col z-[10000] overflow-hidden">
+			<Popover.Portal className="z-200">
+				<Popover.Positioner
+					placement="top-end"
+					sideOffset={8}
+					className="z-200"
+				>
+					<Popover.Popup className="origin-[var(--transform-origin)] w-[400px] h-[600px] max-h-[calc(100vh-40px)] rounded-lg bg-popover text-popover-foreground outline outline-1 outline-border transition-[transform,scale,opacity] data-[ending-style]:scale-90 data-[ending-style]:opacity-0 data-[starting-style]:scale-90 data-[starting-style]:opacity-0 flex flex-col z-200 overflow-hidden">
 						{children}
 					</Popover.Popup>
 				</Popover.Positioner>

@@ -18,6 +18,7 @@ export function ClickMiniDemo() {
 					id="click_demo_toggle"
 					label="Demo Toggle"
 					intent="Toggles local state to demonstrate click tool"
+					showAssistBubble
 				>
 					<button
 						type="button"

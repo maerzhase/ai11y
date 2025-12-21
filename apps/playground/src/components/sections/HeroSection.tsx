@@ -11,6 +11,7 @@ export function HeroSection() {
 					id="hero_title"
 					label="React Quest"
 					intent="The main hero title - AI Assistant SDK for React"
+					showAssistBubble
 				>
 					<h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent tracking-tight">
 						React Quest
@@ -68,4 +69,3 @@ export function HeroSection() {
 		</section>
 	);
 }
-
