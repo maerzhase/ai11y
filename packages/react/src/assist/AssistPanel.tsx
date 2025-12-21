@@ -22,6 +22,8 @@ export function AssistPanel() {
 		click,
 		track,
 		llmConfig,
+		pendingMessage,
+		clearPendingMessage,
 	} = useAssist();
 
 	const handleSubmit = async (message: string) => {
@@ -82,6 +84,21 @@ export function AssistPanel() {
 			inputRef.current.focus();
 		}
 	}, [isPanelOpen, inputRef]);
+
+	// Set pending message when available (works even if the input ref isn't ready yet)
+	useEffect(() => {
+		if (!pendingMessage || !isPanelOpen) return;
+
+		setInput(pendingMessage);
+		clearPendingMessage();
+
+		// Focus on next tick (input may mount after we set input state)
+		const timeout = window.setTimeout(() => {
+			inputRef.current?.focus();
+		}, 0);
+
+		return () => window.clearTimeout(timeout);
+	}, [pendingMessage, isPanelOpen, setInput, clearPendingMessage, inputRef]);
 
 	return (
 		<AssistPanelPopover isOpen={isPanelOpen} onOpenChange={setIsPanelOpen}>

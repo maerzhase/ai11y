@@ -1,3 +1,4 @@
+import React from "react";
 import { CTASection } from "../components/sections/CTASection";
 import { CodeExamplesSection } from "../components/sections/CodeExamplesSection";
 import { FeatureShowcase } from "../components/sections/FeatureShowcase";

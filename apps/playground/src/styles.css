@@ -103,6 +103,36 @@ pre {
 	}
 }
 
+/* Comic-style rubber band highlight (stretch/squash, like animate.css) */
+@keyframes rq-rubberband {
+	0% {
+		transform: scale3d(1, 1, 1);
+	}
+	30% {
+		transform: scale3d(1.22, 0.78, 1);
+	}
+	40% {
+		transform: scale3d(0.86, 1.14, 1);
+	}
+	50% {
+		transform: scale3d(1.12, 0.88, 1);
+	}
+	65% {
+		transform: scale3d(0.96, 1.04, 1);
+	}
+	75% {
+		transform: scale3d(1.04, 0.96, 1);
+	}
+	100% {
+		transform: scale3d(1, 1, 1);
+	}
+}
+
+.rq-highlight-rubberband {
+	animation: rq-rubberband 520ms ease-in-out;
+	transform-origin: center;
+}
+
 /* Smooth scroll behavior */
 html {
 	scroll-behavior: smooth;

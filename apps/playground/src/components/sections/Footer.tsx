@@ -1,3 +1,5 @@
+import React from "react";
+
 export function Footer() {
 	return (
 		<footer className="border-t border-border bg-muted/30 py-12 px-6">

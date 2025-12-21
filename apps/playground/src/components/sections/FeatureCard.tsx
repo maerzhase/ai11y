@@ -1,12 +1,14 @@
-import { Mark } from "@quest/react";
+import React, { type ReactNode } from "react";
+import { Mark, useAssist } from "@quest/react";
 
 interface FeatureCardProps {
 	id: string;
 	emoji: string;
 	title: string;
 	description: string;
-	onTry?: () => void;
+	tryMessage: string;
 	tryLabel?: string;
+	demo?: ReactNode;
 }
 
 export function FeatureCard({
@@ -14,14 +16,13 @@ export function FeatureCard({
 	emoji,
 	title,
 	description,
-	onTry,
+	tryMessage,
 	tryLabel = "Try it →",
+	demo,
 }: FeatureCardProps) {
-	const handleTry = () => {
-		if (onTry) {
-			onTry();
-		}
-	};
+	const { openPanelWithMessage } = useAssist();
+
+	const handleTry = () => openPanelWithMessage(tryMessage);
 
 	return (
 		<Mark
@@ -41,7 +42,7 @@ export function FeatureCard({
 					<p className="text-muted-foreground text-sm mb-4 leading-relaxed">
 						{description}
 					</p>
-					{onTry && (
+					<div className="flex items-center justify-between gap-3">
 						<button
 							type="button"
 							onClick={handleTry}
@@ -49,7 +50,12 @@ export function FeatureCard({
 						>
 							{tryLabel}
 						</button>
-					)}
+						<code className="text-xs text-muted-foreground bg-muted/60 border border-border rounded px-2 py-1">
+							{tryMessage}
+						</code>
+					</div>
+
+					{demo && <div className="mt-4">{demo}</div>}
 				</div>
 			</div>
 		</Mark>

@@ -49,6 +49,9 @@ interface AssistContextValue {
 	// Panel control
 	isPanelOpen: boolean;
 	setIsPanelOpen: (open: boolean) => void;
+	openPanelWithMessage: (message: string) => void;
+	clearPendingMessage: () => void;
+	pendingMessage: string | null;
 
 	// Context for agent
 	getContext: () => AssistContext;
@@ -84,7 +87,7 @@ interface AssistProviderProps {
 		children: React.ReactNode;
 		markerId: string;
 	}>;
-	llmConfig?: LLMAgentConfig;
+	llmConfig?: LLMAgentConfig | null;
 }
 
 export function AssistProvider({
@@ -103,6 +106,7 @@ export function AssistProvider({
 		new Map(),
 	);
 	const [isPanelOpen, setIsPanelOpen] = useState(false);
+	const [pendingMessage, setPendingMessage] = useState<string | null>(null);
 	const [highlightedMarkers, setHighlightedMarkers] = useState<Set<string>>(
 		new Set(),
 	);
@@ -272,30 +276,36 @@ export function AssistProvider({
 				return;
 			}
 
-			// Simulate browser click event
 			const element = marker.element;
 
-			// Create and dispatch a synthetic mouse event for better compatibility
-			const mouseEvent = new MouseEvent("click", {
-				view: window,
-				bubbles: true,
-				cancelable: true,
-				buttons: 1,
-			});
-
-			// Dispatch the event
-			element.dispatchEvent(mouseEvent);
-
-			// Also call native click as fallback (for elements that don't respond to dispatched events)
-			// This handles cases like <button> elements that might have special click handling
-			if (element.click && typeof element.click === "function") {
+			// Prefer native click to avoid double-firing handlers (important for toggles).
+			if ("click" in element && typeof element.click === "function") {
 				element.click();
+			} else {
+				// Fallback: dispatch a synthetic mouse event
+				const mouseEvent = new MouseEvent("click", {
+					view: window,
+					bubbles: true,
+					cancelable: true,
+					buttons: 1,
+				});
+				element.dispatchEvent(mouseEvent);
 			}
 
 			track("click", { markerId });
 		},
 		[markers, track],
 	);
+
+	const openPanelWithMessage = useCallback((message: string) => {
+		setPendingMessage(message);
+		setIsPanelOpen(true);
+		track("panel_opened_with_message", { message });
+	}, [track]);
+
+	const clearPendingMessage = useCallback(() => {
+		setPendingMessage(null);
+	}, []);
 
 	const getContext = useCallback((): AssistContext => {
 		return {
@@ -338,6 +348,9 @@ export function AssistProvider({
 		click,
 		isPanelOpen,
 		setIsPanelOpen,
+		openPanelWithMessage,
+		clearPendingMessage,
+		pendingMessage,
 		getContext,
 		llmConfig,
 	};

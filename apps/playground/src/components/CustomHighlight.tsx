@@ -14,12 +14,7 @@ export function CustomHighlightWrapper({
 	children,
 }: CustomHighlightWrapperProps) {
 	return (
-		<div
-			className="ring-4 ring-blue-500 dark:ring-blue-400 ring-opacity-75 shadow-[0_0_20px_rgba(59,130,246,0.6)] dark:shadow-[0_0_20px_rgba(96,165,250,0.6)] transition-all duration-500 ease-in-out z-50 relative animate-pulse"
-			style={{
-				borderRadius: "inherit",
-			}}
-		>
+		<div className="rq-highlight-rubberband z-50 relative transition-transform duration-300 will-change-transform">
 			{children}
 		</div>
 	);

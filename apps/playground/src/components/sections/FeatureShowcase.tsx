@@ -1,9 +1,14 @@
-import { Mark, useAssist } from "@quest/react";
+import React from "react";
+import { Mark } from "@quest/react";
 import { FeatureCard } from "./FeatureCard";
+import { ClickMiniDemo } from "./featureDemos/ClickMiniDemo";
+import { ErrorMiniDemo } from "./featureDemos/ErrorMiniDemo";
+import { HighlightMiniDemo } from "./featureDemos/HighlightMiniDemo";
+import { LLMMiniDemo } from "./featureDemos/LLMMiniDemo";
+import { NavigationMiniDemo } from "./featureDemos/NavigationMiniDemo";
+import { TrackingMiniDemo } from "./featureDemos/TrackingMiniDemo";
 
 export function FeatureShowcase() {
-	const { highlight, click, track, reportError } = useAssist();
-
 	const features = [
 		{
 			id: "navigation",
@@ -11,9 +16,8 @@ export function FeatureShowcase() {
 			title: "Smart Navigation",
 			description:
 				"Navigate between pages using natural language. Works with any routing library.",
-			onTry: () => {
-				alert('Try saying: "go to billing" or "navigate to integrations"');
-			},
+			tryMessage: "go to billing",
+			demo: <NavigationMiniDemo />,
 		},
 		{
 			id: "highlight",
@@ -21,9 +25,8 @@ export function FeatureShowcase() {
 			title: "Visual Highlighting",
 			description:
 				"Customizable highlight animations. Perfect for tutorials and guided experiences.",
-			onTry: () => {
-				highlight("feature_highlight");
-			},
+			tryMessage: "highlight demo target",
+			demo: <HighlightMiniDemo />,
 		},
 		{
 			id: "click",
@@ -31,9 +34,8 @@ export function FeatureShowcase() {
 			title: "Smart Clicking",
 			description:
 				"Trigger clicks on any marked element. Works with buttons, links, and custom components.",
-			onTry: () => {
-				click("demo_enable_billing");
-			},
+			tryMessage: "click demo toggle",
+			demo: <ClickMiniDemo />,
 		},
 		{
 			id: "error",
@@ -41,10 +43,8 @@ export function FeatureShowcase() {
 			title: "Error Recovery",
 			description:
 				"Automatic error detection and recovery suggestions. The assistant helps users fix issues.",
-			onTry: () => {
-				const error = new Error("Demo error - this is just a showcase!");
-				reportError(error, { markerId: "feature_error" });
-			},
+			tryMessage: "click connect stripe mini demo",
+			demo: <ErrorMiniDemo />,
 		},
 		{
 			id: "tracking",
@@ -52,10 +52,8 @@ export function FeatureShowcase() {
 			title: "Event Tracking",
 			description:
 				"Track user interactions and assistant actions. Perfect for analytics and debugging.",
-			onTry: () => {
-				track("demo_event", { feature: "tracking", timestamp: Date.now() });
-				alert("Event tracked! Check the console or your analytics.");
-			},
+			tryMessage: "click track demo event",
+			demo: <TrackingMiniDemo />,
 		},
 		{
 			id: "llm",
@@ -63,10 +61,9 @@ export function FeatureShowcase() {
 			title: "LLM-Powered",
 			description:
 				"Optional server-side LLM agent for intelligent, context-aware interactions. Falls back to rule-based.",
-			onTry: () => {
-				alert("Configure your server with OpenAI API key to enable LLM mode!");
-			},
-			tryLabel: "Learn more →",
+			tryMessage: "what can you help me with?",
+			demo: <LLMMiniDemo />,
+			tryLabel: "Try it →",
 		},
 	];
 
