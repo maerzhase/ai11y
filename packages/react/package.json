@@ -1,0 +1,36 @@
+{
+	"name": "@quest/react",
+	"author": "maerzhase3000",
+	"version": "0.0.0",
+	"type": "module",
+	"main": "./dist/index.mjs",
+	"types": "./dist/index.d.mts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.mts",
+			"import": "./dist/index.mjs"
+		}
+	},
+	"sideEffects": false,
+	"dependencies": {
+		"@quest/ui": "workspace:*"
+	},
+	"peerDependencies": {
+		"react": "19.2.3",
+		"react-dom": "19.2.3"
+	},
+	"scripts": {
+		"build": "tsdown",
+		"watch": "tsdown --watch",
+		"dev": "tsdown --watch"
+	},
+	"devDependencies": {
+		"@tsconfig/create-react-app": "2.0.10",
+		"@types/react": "19.2.7",
+		"@types/react-dom": "19.2.3",
+		"react": "19.2.3",
+		"react-dom": "19.2.3",
+		"tsdown": "0.18.1",
+		"typescript": "5.9.3"
+	}
+}

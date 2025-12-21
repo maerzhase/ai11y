@@ -6,7 +6,7 @@
 
 import "dotenv/config";
 import cors from "@fastify/cors";
-import { questPlugin } from "@react-quest/server/fastify";
+import { questPlugin } from "@quest/server/fastify";
 import Fastify from "fastify";
 
 // Determine provider and validate API key

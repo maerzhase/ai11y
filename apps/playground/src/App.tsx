@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { AssistPanel, AssistProvider, Mark, useAssist } from "react-quest";
+import { AssistPanel, AssistProvider, Mark, useAssist } from "@quest/react";
 import {
 	BrowserRouter,
 	Link,
@@ -66,47 +66,37 @@ function AppContent() {
 	}, [location.pathname, assistNavigate]);
 
 	return (
-		<div style={{ minHeight: "100vh", background: "#f9fafb" }}>
-			<nav
-				style={{
-					background: "white",
-					borderBottom: "1px solid #e5e7eb",
-					padding: "16px 24px",
-					display: "flex",
-					gap: 24,
-					alignItems: "center",
-				}}
-			>
-				<h1 style={{ margin: 0, fontSize: 20, fontWeight: 600 }}>Demo App</h1>
-				<div style={{ display: "flex", gap: 16 }}>
+		<div className="min-h-screen bg-gray-50">
+			<nav className="bg-white border-b border-gray-200 px-6 py-4 flex gap-6 items-center">
+				<h1 className="m-0 text-xl font-semibold">Demo App</h1>
+				<div className="flex gap-4">
 					<Link
 						to="/"
-						style={{
-							textDecoration: "none",
-							color: location.pathname === "/" ? "#3b82f6" : "#6b7280",
-							fontWeight: location.pathname === "/" ? 600 : 400,
-						}}
+						className={`no-underline ${
+							location.pathname === "/"
+								? "text-blue-500 font-semibold"
+								: "text-gray-500 font-normal"
+						}`}
 					>
 						Home
 					</Link>
 					<Link
 						to="/billing"
-						style={{
-							textDecoration: "none",
-							color: location.pathname === "/billing" ? "#3b82f6" : "#6b7280",
-							fontWeight: location.pathname === "/billing" ? 600 : 400,
-						}}
+						className={`no-underline ${
+							location.pathname === "/billing"
+								? "text-blue-500 font-semibold"
+								: "text-gray-500 font-normal"
+						}`}
 					>
 						Billing
 					</Link>
 					<Link
 						to="/integrations"
-						style={{
-							textDecoration: "none",
-							color:
-								location.pathname === "/integrations" ? "#3b82f6" : "#6b7280",
-							fontWeight: location.pathname === "/integrations" ? 600 : 400,
-						}}
+						className={`no-underline ${
+							location.pathname === "/integrations"
+								? "text-blue-500 font-semibold"
+								: "text-gray-500 font-normal"
+						}`}
 					>
 						Integrations
 					</Link>
@@ -134,14 +124,14 @@ function HomePage() {
 	};
 
 	return (
-		<div style={{ padding: 48, maxWidth: 800, margin: "0 auto" }}>
-			<h2 style={{ fontSize: 32, marginBottom: 16 }}>Welcome Home</h2>
-			<p style={{ color: "#6b7280", marginBottom: 32, fontSize: 16 }}>
+		<div className="p-12 max-w-3xl mx-auto">
+			<h2 className="text-3xl mb-4">Welcome Home</h2>
+			<p className="text-gray-500 mb-8 text-base">
 				This is a demo app showcasing the AI assistant SDK. Try asking the
 				assistant to navigate or click buttons!
 			</p>
 
-			<div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+			<div className="flex flex-col gap-4">
 				<Mark
 					id="go_to_billing"
 					label="Go to Billing"
@@ -149,16 +139,7 @@ function HomePage() {
 				>
 					<button
 						onClick={() => handleNavigate("/billing")}
-						style={{
-							padding: "12px 24px",
-							background: "#3b82f6",
-							color: "white",
-							border: "none",
-							borderRadius: 8,
-							cursor: "pointer",
-							fontSize: 16,
-							fontWeight: 500,
-						}}
+						className="px-6 py-3 bg-blue-500 text-white border-none rounded-lg cursor-pointer text-base font-medium hover:bg-blue-600 transition-colors"
 					>
 						Go to Billing
 					</button>
@@ -171,16 +152,7 @@ function HomePage() {
 				>
 					<button
 						onClick={() => handleNavigate("/integrations")}
-						style={{
-							padding: "12px 24px",
-							background: "#10b981",
-							color: "white",
-							border: "none",
-							borderRadius: 8,
-							cursor: "pointer",
-							fontSize: 16,
-							fontWeight: 500,
-						}}
+						className="px-6 py-3 bg-emerald-500 text-white border-none rounded-lg cursor-pointer text-base font-medium hover:bg-emerald-600 transition-colors"
 					>
 						Go to Integrations
 					</button>
@@ -194,22 +166,15 @@ function BillingPage() {
 	const [billingEnabled, setBillingEnabled] = useState(false);
 
 	return (
-		<div style={{ padding: 48, maxWidth: 800, margin: "0 auto" }}>
-			<h2 style={{ fontSize: 32, marginBottom: 16 }}>Billing</h2>
-			<p style={{ color: "#6b7280", marginBottom: 32, fontSize: 16 }}>
+		<div className="p-12 max-w-3xl mx-auto">
+			<h2 className="text-3xl mb-4">Billing</h2>
+			<p className="text-gray-500 mb-8 text-base">
 				Manage your billing settings here.
 			</p>
 
-			<div
-				style={{
-					background: "white",
-					padding: 24,
-					borderRadius: 12,
-					border: "1px solid #e5e7eb",
-				}}
-			>
-				<h3 style={{ marginTop: 0, marginBottom: 16 }}>Billing Status</h3>
-				<p style={{ color: "#6b7280", marginBottom: 24 }}>
+			<div className="bg-white p-6 rounded-xl border border-gray-200">
+				<h3 className="mt-0 mb-4">Billing Status</h3>
+				<p className="text-gray-500 mb-6">
 					Billing is currently:{" "}
 					<strong>{billingEnabled ? "Enabled" : "Disabled"}</strong>
 				</p>
@@ -221,17 +186,12 @@ function BillingPage() {
 				>
 					<button
 						onClick={() => setBillingEnabled(true)}
-						style={{
-							padding: "12px 24px",
-							background: billingEnabled ? "#6b7280" : "#3b82f6",
-							color: "white",
-							border: "none",
-							borderRadius: 8,
-							cursor: billingEnabled ? "not-allowed" : "pointer",
-							fontSize: 16,
-							fontWeight: 500,
-							disabled: billingEnabled,
-						}}
+						disabled={billingEnabled}
+						className={`px-6 py-3 text-white border-none rounded-lg text-base font-medium transition-colors ${
+							billingEnabled
+								? "bg-gray-500 cursor-not-allowed"
+								: "bg-blue-500 cursor-pointer hover:bg-blue-600"
+						}`}
 					>
 						{billingEnabled ? "Billing Enabled" : "Enable Billing"}
 					</button>
@@ -265,36 +225,19 @@ function IntegrationsPage() {
 	};
 
 	return (
-		<div style={{ padding: 48, maxWidth: 800, margin: "0 auto" }}>
-			<h2 style={{ fontSize: 32, marginBottom: 16 }}>Integrations</h2>
-			<p style={{ color: "#6b7280", marginBottom: 32, fontSize: 16 }}>
+		<div className="p-12 max-w-3xl mx-auto">
+			<h2 className="text-3xl mb-4">Integrations</h2>
+			<p className="text-gray-500 mb-8 text-base">
 				Connect third-party services to enhance your app.
 			</p>
 
-			<div
-				style={{
-					background: "white",
-					padding: 24,
-					borderRadius: 12,
-					border: "1px solid #e5e7eb",
-					marginBottom: 24,
-				}}
-			>
-				<h3 style={{ marginTop: 0, marginBottom: 8 }}>Stripe</h3>
-				<p style={{ color: "#6b7280", marginBottom: 16, fontSize: 14 }}>
+			<div className="bg-white p-6 rounded-xl border border-gray-200 mb-6">
+				<h3 className="mt-0 mb-2">Stripe</h3>
+				<p className="text-gray-500 mb-4 text-sm">
 					Connect Stripe to accept payments
 				</p>
 				{isConnected ? (
-					<div
-						style={{
-							padding: "12px 16px",
-							background: "#d1fae5",
-							color: "#065f46",
-							borderRadius: 8,
-							fontSize: 14,
-							fontWeight: 500,
-						}}
-					>
+					<div className="px-4 py-3 bg-emerald-100 text-emerald-800 rounded-lg text-sm font-medium">
 						✓ Connected
 					</div>
 				) : (
@@ -305,23 +248,14 @@ function IntegrationsPage() {
 					>
 						<button
 							onClick={handleConnectStripe}
-							style={{
-								padding: "12px 24px",
-								background: "#6366f1",
-								color: "white",
-								border: "none",
-								borderRadius: 8,
-								cursor: "pointer",
-								fontSize: 16,
-								fontWeight: 500,
-							}}
+							className="px-6 py-3 bg-indigo-500 text-white border-none rounded-lg cursor-pointer text-base font-medium hover:bg-indigo-600 transition-colors"
 						>
 							{hasFailed ? "Retry Connection" : "Connect Stripe"}
 						</button>
 					</Mark>
 				)}
 				{hasFailed && !isConnected && (
-					<p style={{ color: "#dc2626", marginTop: 12, fontSize: 14 }}>
+					<p className="text-red-600 mt-3 text-sm">
 						Connection failed. Ask the assistant to retry!
 					</p>
 				)}

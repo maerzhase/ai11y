@@ -22,7 +22,7 @@ interface QuestRequest extends FastifyRequest {
  * @example
  * ```ts
  * import Fastify from 'fastify';
- * import { questPlugin } from '@react-quest/server/fastify';
+ * import { questPlugin } from '@quest/server/fastify';
  *
  * const fastify = Fastify();
  *

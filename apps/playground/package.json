@@ -7,16 +7,19 @@
 		"dev": "vite"
 	},
 	"dependencies": {
-		"react": "19.1.1",
-		"react-dom": "19.1.1",
-		"react-router-dom": "^6.28.0",
-		"react-quest": "workspace:*"
+		"@quest/react": "workspace:*",
+		"@quest/ui": "workspace:*",
+		"@tailwindcss/vite": "4.1.18",
+		"react": "19.2.3",
+		"react-dom": "19.2.3",
+		"react-router-dom": "7.11.0"
 	},
 	"devDependencies": {
-		"@types/react": "19.1.14",
-		"@types/react-dom": "19.1.9",
-		"@vitejs/plugin-react": "4.3.0",
-		"typescript": "5.9.2",
-		"vite": "5.4.0"
+		"@types/react": "19.2.7",
+		"@types/react-dom": "19.2.3",
+		"@vitejs/plugin-react": "5.1.2",
+		"tailwindcss": "4.1.18",
+		"typescript": "5.9.3",
+		"vite": "7.3.0"
 	}
 }

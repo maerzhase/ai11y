@@ -1,0 +1,41 @@
+{
+	"name": "@quest/ui",
+	"author": "maerzhase3000",
+	"version": "0.0.0",
+	"type": "module",
+	"main": "./dist/index.mjs",
+	"types": "./dist/index.d.mts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.mts",
+			"import": "./dist/index.mjs"
+		},
+		"./styles.css": "./src/styles.css"
+	},
+	"sideEffects": false,
+	"dependencies": {
+		"@base-ui/react": "1.0.0"
+	},
+	"peerDependencies": {
+		"react": "19.2.3",
+		"react-dom": "19.2.3"
+	},
+	"scripts": {
+		"build": "postcss ./src/styles.css -o ./dist/styles.css --minify && tsdown",
+		"watch": "tsdown --watch",
+		"dev": "tsdown --watch"
+	},
+	"devDependencies": {
+		"@tsconfig/create-react-app": "2.0.10",
+		"@types/react": "19.2.7",
+		"@types/react-dom": "19.2.3",
+		"react": "19.2.3",
+		"react-dom": "19.2.3",
+		"tsdown": "0.18.1",
+		"typescript": "5.9.3",
+		"tailwindcss": "4.1.18",
+		"@tailwindcss/postcss": "4.1.18",
+		"postcss": "8.5.6",
+		"postcss-cli": "11.0.0"
+	}
+}
