@@ -9,7 +9,7 @@ export interface Message {
 }
 
 export interface UseAssistChatOptions {
-	onSubmit: (message: string) => Promise<AgentResponse>;
+	onSubmit: (message: string, messages: Message[]) => Promise<AgentResponse>;
 	onToolCall?: (toolCall: ToolCall) => void;
 	initialMessage?: string;
 }
@@ -41,6 +41,7 @@ export function useAssistChat({
 	const [isProcessing, setIsProcessing] = useState(false);
 	const messagesEndRef = useRef<HTMLDivElement>(null);
 	const inputRef = useRef<HTMLInputElement>(null);
+	const processingRef = useRef(false);
 
 	// Auto-scroll to bottom when messages change
 	useEffect(() => {
@@ -50,11 +51,12 @@ export function useAssistChat({
 	const handleSubmit = useCallback(
 		async (e: React.FormEvent) => {
 			e.preventDefault();
-			if (!input.trim() || isProcessing) return;
+			if (!input.trim() || isProcessing || processingRef.current) return;
 
 			const userMessage = input.trim();
 			setInput("");
 			setIsProcessing(true);
+			processingRef.current = true;
 
 			// Add user message
 			const userMsg: Message = {
@@ -63,38 +65,51 @@ export function useAssistChat({
 				content: userMessage,
 				timestamp: Date.now(),
 			};
-			setMessages((prev) => [...prev, userMsg]);
+			
+			// Build updated messages array for conversation history
+			setMessages((prev) => {
+				const updated = [...prev, userMsg];
+				
+				// Pass conversation history (including the new user message) to onSubmit
+				onSubmit(userMessage, updated)
+					.then((response) => {
+						// Add assistant reply only if we're still processing (prevent duplicates)
+						if (processingRef.current) {
+							const assistantMsg: Message = {
+								id: `assistant-${Date.now()}`,
+								type: "assistant",
+								content: response.reply,
+								timestamp: Date.now(),
+							};
+							setMessages((prevMsgs) => [...prevMsgs, assistantMsg]);
 
-			try {
-				const response = await onSubmit(userMessage);
-
-				// Add assistant reply
-				const assistantMsg: Message = {
-					id: `assistant-${Date.now()}`,
-					type: "assistant",
-					content: response.reply,
-					timestamp: Date.now(),
-				};
-				setMessages((prev) => [...prev, assistantMsg]);
-
-				// Execute tool calls
-				if (response.toolCalls && onToolCall) {
-					for (const toolCall of response.toolCalls) {
-						onToolCall(toolCall);
-					}
-				}
-			} catch (error) {
-				// Handle errors gracefully
-				const errorMsg: Message = {
-					id: `error-${Date.now()}`,
-					type: "assistant",
-					content: `Sorry, I encountered an error: ${error instanceof Error ? error.message : "Unknown error"}. Please try again.`,
-					timestamp: Date.now(),
-				};
-				setMessages((prev) => [...prev, errorMsg]);
-			} finally {
-				setIsProcessing(false);
-			}
+							// Execute tool calls
+							if (response.toolCalls && onToolCall) {
+								for (const toolCall of response.toolCalls) {
+									onToolCall(toolCall);
+								}
+							}
+						}
+					})
+					.catch((error) => {
+						// Handle errors gracefully
+						if (processingRef.current) {
+							const errorMsg: Message = {
+								id: `error-${Date.now()}`,
+								type: "assistant",
+								content: `Sorry, I encountered an error: ${error instanceof Error ? error.message : "Unknown error"}. Please try again.`,
+								timestamp: Date.now(),
+							};
+							setMessages((prevMsgs) => [...prevMsgs, errorMsg]);
+						}
+					})
+					.finally(() => {
+						setIsProcessing(false);
+						processingRef.current = false;
+					});
+				
+				return updated;
+			});
 		},
 		[input, isProcessing, onSubmit, onToolCall],
 	);

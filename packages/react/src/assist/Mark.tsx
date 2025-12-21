@@ -20,6 +20,11 @@ interface MarkProps {
 	children: React.ReactElement;
 }
 
+function formatMarkerId(id: string): string {
+	// Convert snake_case to readable text
+	return id.replace(/_/g, " ").replace(/\b\w/g, (char) => char.toUpperCase());
+}
+
 function buildMarkerPrompt({
 	id,
 	label,
@@ -29,16 +34,15 @@ function buildMarkerPrompt({
 	label: string;
 	intent: string;
 }) {
-	const safeLabel = label?.trim() || id;
 	const safeIntent = intent?.trim();
-
-	const intentLine = safeIntent ? `Goal: ${safeIntent}\n` : "";
-	return (
-		`I'm looking at "${safeLabel}".\n` +
-		intentLine +
-		`Please explain what this is, what it does, and what I should do next.\n` +
-		`If needed, highlight/scroll/click the marker "${id}".`
-	);
+	const safeLabel = label?.trim() || formatMarkerId(id);
+	
+	// Include the label so follow-up questions like "highlight it" can match
+	// The label is what the agent will use to identify the marker in subsequent requests
+	if (safeIntent) {
+		return `Tell me about "${safeLabel}" - ${safeIntent}`;
+	}
+	return `Tell me about "${safeLabel}"`;
 }
 
 export function Mark({

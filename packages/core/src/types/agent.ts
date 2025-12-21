@@ -10,9 +10,21 @@ export interface AgentResponse {
 }
 
 /**
+ * Conversation message for context
+ */
+export interface ConversationMessage {
+	role: "user" | "assistant";
+	content: string;
+}
+
+/**
  * Request to the agent containing user input and current context
  */
 export interface AgentRequest {
 	input: string;
 	context: AssistContext;
+	/**
+	 * Optional conversation history for context-aware responses
+	 */
+	messages?: ConversationMessage[];
 }

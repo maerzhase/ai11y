@@ -26,12 +26,27 @@ export function AssistPanel() {
 		clearPendingMessage,
 	} = useAssist();
 
-	const handleSubmit = async (message: string) => {
+	const handleSubmit = async (message: string, messages: Array<{ type: string; content: string }>) => {
 		const context = getContext();
+
+		// Convert messages to conversation format for LLM
+		// Exclude the last message if it's the current user message (to avoid duplication)
+		const conversationMessages = messages
+			.filter((m, index) => {
+				// Include all messages except the last one if it matches the current input
+				if (index === messages.length - 1 && m.type === "user" && m.content === message) {
+					return false;
+				}
+				return m.type === "user" || m.type === "assistant";
+			})
+			.map((m) => ({
+				role: m.type === "user" ? "user" as const : "assistant" as const,
+				content: m.content,
+			}));
 
 		// Use LLM agent if configured, otherwise use rule-based
 		const response = llmConfig
-			? await runLLMAgent(message, context, llmConfig)
+			? await runLLMAgent(message, context, llmConfig, conversationMessages)
 			: runAgent(message, context);
 
 		// Track the interaction

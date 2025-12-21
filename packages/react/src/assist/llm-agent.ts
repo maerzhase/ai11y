@@ -1,4 +1,5 @@
 import type { AgentResponse, AssistContext, LLMAgentConfig } from "./types";
+import type { ConversationMessage } from "@quest/core";
 
 /**
  * LLM-based agent using server-side API endpoint.
@@ -8,6 +9,7 @@ export async function runLLMAgent(
 	input: string,
 	context: AssistContext,
 	config: LLMAgentConfig,
+	messages?: ConversationMessage[],
 ): Promise<AgentResponse> {
 	try {
 		const response = await fetch(config.apiEndpoint, {
@@ -31,6 +33,7 @@ export async function runLLMAgent(
 						: null,
 					markers: context.markers,
 				},
+				messages: messages?.slice(-10), // Send last 10 messages for context
 			}),
 		});
 

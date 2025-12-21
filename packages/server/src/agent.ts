@@ -117,9 +117,25 @@ export async function runAgent(
 			? llm.bindTools(langchainTools)
 			: llm;
 
+	// Extract marker info from recent conversation if available
+	let recentMarkerContext = "";
+	if (request.messages && request.messages.length > 0) {
+		const lastFewMessages = request.messages.slice(-4);
+		for (const msg of lastFewMessages) {
+			// Look for marker mentions in the conversation
+			for (const marker of request.context.markers) {
+				if (msg.content.toLowerCase().includes(marker.label.toLowerCase()) || 
+				    msg.content.toLowerCase().includes(marker.id.toLowerCase())) {
+					recentMarkerContext += `\nRecently discussed: ${marker.label} (${marker.id}) - ${marker.intent}`;
+					break;
+				}
+			}
+		}
+	}
+
 	const systemPrompt = `You are a helpful AI assistant embedded in a web application. Your role is to help users navigate the app, interact with UI elements, and resolve errors.
 
-${contextPrompt}
+${contextPrompt}${recentMarkerContext}
 
 When the user asks you to do something:
 1. Use the available markers to understand what actions are possible
@@ -127,13 +143,32 @@ When the user asks you to do something:
 3. Use the appropriate tools to perform actions
 4. Be conversational and helpful in your responses
 
+IMPORTANT: When a user gives an affirmative response (like "yes", "yeah", "I would like to see", "please do it", "show me", etc.) after you've asked about a marker or suggested an action, they want you to interact with that marker. Look at the conversation history to see what marker was just discussed, then use the appropriate tool (click, highlight, or navigate) to interact with it.
+
 Available markers: ${request.context.markers.map((m) => `${m.label} (${m.id})`).join(", ") || "none"}`;
 
-	// Invoke LLM with messages
-	const response = await llmWithTools.invoke([
+	// Build conversation messages
+	const conversationMessages: Array<{ role: string; content: string }> = [
 		{ role: "system", content: systemPrompt },
-		{ role: "user", content: request.input },
-	]);
+	];
+
+	// Add conversation history if available (excluding the current input)
+	if (request.messages && request.messages.length > 0) {
+		// Add previous messages (last 10 to avoid token limits)
+		const recentMessages = request.messages.slice(-10);
+		for (const msg of recentMessages) {
+			conversationMessages.push({
+				role: msg.role,
+				content: msg.content,
+			});
+		}
+	}
+
+	// Add current user input
+	conversationMessages.push({ role: "user", content: request.input });
+
+	// Invoke LLM with messages
+	const response = await llmWithTools.invoke(conversationMessages);
 
 	// Extract tool calls and content
 	const toolCalls: ToolCall[] = [];
