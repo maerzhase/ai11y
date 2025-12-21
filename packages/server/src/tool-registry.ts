@@ -86,6 +86,9 @@ export class ToolRegistry {
 		if (toolCall.function.name === "highlight") {
 			return { type: "highlight", markerId: args.markerId };
 		}
+		if (toolCall.function.name === "scroll") {
+			return { type: "scroll", markerId: args.markerId };
+		}
 
 		// For custom tools, we return null and let the executor handle it
 		// The executor result can be used for follow-up messages
@@ -154,7 +157,7 @@ export function createDefaultToolRegistry(): ToolRegistry {
 		{
 			name: "highlight",
 			description:
-				"Highlight a UI element by its marker ID to draw the user's attention",
+				"Highlight a UI element by its marker ID to draw the user's attention. This will also scroll the element into view.",
 			parameters: {
 				type: "object",
 				properties: {
@@ -168,6 +171,28 @@ export function createDefaultToolRegistry(): ToolRegistry {
 		},
 		async (args) => {
 			// Highlight is handled client-side, just return success
+			return { success: true, markerId: args.markerId };
+		},
+	);
+
+	registry.register(
+		{
+			name: "scroll",
+			description:
+				"Scroll to a UI element by its marker ID to bring it into view without highlighting",
+			parameters: {
+				type: "object",
+				properties: {
+					markerId: {
+						type: "string",
+						description: "The ID of the marker to scroll to",
+					},
+				},
+				required: ["markerId"],
+			},
+		},
+		async (args) => {
+			// Scroll is handled client-side, just return success
 			return { success: true, markerId: args.markerId };
 		},
 	);

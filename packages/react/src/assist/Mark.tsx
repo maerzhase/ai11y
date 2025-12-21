@@ -9,7 +9,8 @@ interface MarkProps {
 }
 
 export function Mark({ id, label, intent, children }: MarkProps) {
-	const { registerMarker, unregisterMarker } = useAssist();
+	const { registerMarker, unregisterMarker, highlightedMarkers, highlightWrapper } =
+		useAssist();
 	const elementRef = useRef<HTMLElement | null>(null);
 
 	useEffect(() => {
@@ -50,6 +51,15 @@ export function Mark({ id, label, intent, children }: MarkProps) {
 			}
 		},
 	});
+
+	// Check if this marker is currently highlighted and we have a wrapper component
+	const isHighlighted = highlightedMarkers.has(id);
+
+	// If highlighted with a wrapper component, wrap the children
+	if (isHighlighted && highlightWrapper) {
+		const HighlightWrapper = highlightWrapper;
+		return <HighlightWrapper markerId={id}>{childWithRef}</HighlightWrapper>;
+	}
 
 	return childWithRef;
 }

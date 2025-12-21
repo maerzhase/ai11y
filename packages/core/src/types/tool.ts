@@ -6,7 +6,8 @@ import type { AssistContext } from "./context";
 export type ToolCall =
 	| { type: "navigate"; route: string }
 	| { type: "highlight"; markerId: string }
-	| { type: "click"; markerId: string };
+	| { type: "click"; markerId: string }
+	| { type: "scroll"; markerId: string };
 
 /**
  * Tool definition for extensibility

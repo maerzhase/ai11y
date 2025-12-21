@@ -18,6 +18,7 @@ export function AssistPanel() {
 		getContext,
 		navigate,
 		highlight,
+		scroll,
 		click,
 		track,
 		llmConfig,
@@ -47,6 +48,11 @@ export function AssistPanel() {
 			case "highlight":
 				if (toolCall.markerId) {
 					highlight(toolCall.markerId);
+				}
+				break;
+			case "scroll":
+				if (toolCall.markerId) {
+					scroll(toolCall.markerId);
 				}
 				break;
 			case "click":

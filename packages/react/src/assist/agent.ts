@@ -76,6 +76,35 @@ export function runAgent(input: string, context: AssistContext): AgentResponse {
 		}
 	}
 
+	// Handle scroll commands (scroll to element)
+	if (
+		lowerInput.includes("scroll to") ||
+		lowerInput.includes("scroll") ||
+		lowerInput.includes("show me")
+	) {
+		const matchingMarker = context.markers.find((m) => {
+			const markerText = `${m.label} ${m.intent}`.toLowerCase();
+			const searchText = lowerInput
+				.replace(/scroll to|scroll|show me/g, "")
+				.trim();
+			return (
+				markerText.includes(searchText) ||
+				lowerInput.includes(m.label.toLowerCase())
+			);
+		});
+
+		if (matchingMarker) {
+			// If user explicitly wants to scroll, use scroll tool
+			// Otherwise, if they say "show me" or "highlight", use highlight (which now scrolls)
+			if (lowerInput.includes("scroll")) {
+				return {
+					reply: `Scrolling to ${matchingMarker.label}...`,
+					toolCalls: [{ type: "scroll", markerId: matchingMarker.id }],
+				};
+			}
+		}
+	}
+
 	// Handle highlight commands
 	if (lowerInput.includes("highlight") || lowerInput.includes("show")) {
 		const matchingMarker = context.markers.find((m) => {

@@ -28,6 +28,13 @@ interface AssistContextValue {
 	registerMarker: (metadata: MarkerMetadata) => void;
 	unregisterMarker: (id: string) => void;
 
+	// Highlight state
+	highlightedMarkers: Set<string>;
+	highlightWrapper?: React.ComponentType<{
+		children: React.ReactNode;
+		markerId: string;
+	}>;
+
 	// Imperative API
 	track: (event: string, payload?: unknown) => void;
 	reportError: (
@@ -36,6 +43,7 @@ interface AssistContextValue {
 	) => void;
 	navigate: (route: string) => void;
 	highlight: (markerId: string) => void;
+	scroll: (markerId: string) => void;
 	click: (markerId: string) => void;
 
 	// Panel control
@@ -63,6 +71,19 @@ interface AssistProviderProps {
 	children: React.ReactNode;
 	initialState?: AssistState;
 	onNavigate?: (route: string) => void;
+	/**
+	 * Event handler called when an element is highlighted.
+	 * Use this for side effects like analytics, logging, or DOM manipulation.
+	 */
+	onHighlight?: (markerId: string, element: HTMLElement) => void;
+	/**
+	 * Component used to wrap highlighted elements.
+	 * Receives `{ children, markerId }` as props.
+	 */
+	highlightWrapper?: React.ComponentType<{
+		children: React.ReactNode;
+		markerId: string;
+	}>;
 	llmConfig?: LLMAgentConfig;
 }
 
@@ -70,6 +91,8 @@ export function AssistProvider({
 	children,
 	initialState = {},
 	onNavigate,
+	onHighlight,
+	highlightWrapper,
 	llmConfig = null,
 }: AssistProviderProps) {
 	const [assistState, _setAssistState] = useState<AssistState>(initialState);
@@ -80,7 +103,10 @@ export function AssistProvider({
 		new Map(),
 	);
 	const [isPanelOpen, setIsPanelOpen] = useState(false);
-	const highlightTimeoutRef = useRef<number | null>(null);
+	const [highlightedMarkers, setHighlightedMarkers] = useState<Set<string>>(
+		new Set(),
+	);
+	const highlightTimeoutRef = useRef<Map<string, number>>(new Map());
 
 	const registerMarker = useCallback((metadata: MarkerMetadata) => {
 		setMarkers((prev) => {
@@ -142,12 +168,57 @@ export function AssistProvider({
 				return;
 			}
 
-			// Clear any existing highlight timeout
-			if (highlightTimeoutRef.current) {
-				clearTimeout(highlightTimeoutRef.current);
+			const element = marker.element;
+
+			// Scroll element into view
+			element.scrollIntoView({
+				behavior: "smooth",
+				block: "center",
+				inline: "nearest",
+			});
+
+			// Call event handler if provided (for side effects)
+			if (onHighlight) {
+				onHighlight(markerId, element);
 			}
 
-			const element = marker.element;
+			// If highlightWrapper is provided, use component-based highlighting
+			if (highlightWrapper) {
+				// Mark as highlighted for component wrapper
+				setHighlightedMarkers((prev) => {
+					const next = new Set(prev);
+					next.add(markerId);
+					return next;
+				});
+
+				// Clear any existing timeout for this marker
+				const existingTimeout = highlightTimeoutRef.current.get(markerId);
+				if (existingTimeout) {
+					clearTimeout(existingTimeout);
+				}
+
+				// Remove highlight after 2 seconds (default duration)
+				const timeout = window.setTimeout(() => {
+					setHighlightedMarkers((prev) => {
+						const next = new Set(prev);
+						next.delete(markerId);
+						return next;
+					});
+					highlightTimeoutRef.current.delete(markerId);
+				}, 2000);
+
+				highlightTimeoutRef.current.set(markerId, timeout);
+				track("highlight", { markerId });
+				return;
+			}
+
+			// Default highlight behavior (classname-based)
+			// Clear any existing highlight timeout
+			const existingTimeout = highlightTimeoutRef.current.get(markerId);
+			if (existingTimeout) {
+				clearTimeout(existingTimeout);
+			}
+
 			const originalOutline = element.style.outline;
 			const originalOutlineOffset = element.style.outlineOffset;
 			const originalTransition = element.style.transition;
@@ -158,14 +229,37 @@ export function AssistProvider({
 			element.style.transition = "outline 0.2s ease";
 
 			// Remove highlight after 2 seconds
-			highlightTimeoutRef.current = window.setTimeout(() => {
+			const timeout = window.setTimeout(() => {
 				element.style.outline = originalOutline;
 				element.style.outlineOffset = originalOutlineOffset;
 				element.style.transition = originalTransition;
-				highlightTimeoutRef.current = null;
+				highlightTimeoutRef.current.delete(markerId);
 			}, 2000);
 
+			highlightTimeoutRef.current.set(markerId, timeout);
 			track("highlight", { markerId });
+		},
+		[markers, track, onHighlight, highlightWrapper],
+	);
+
+	const scroll = useCallback(
+		(markerId: string) => {
+			const marker = markers.get(markerId);
+			if (!marker) {
+				console.warn(`Marker ${markerId} not found`);
+				return;
+			}
+
+			const element = marker.element;
+
+			// Scroll element into view
+			element.scrollIntoView({
+				behavior: "smooth",
+				block: "center",
+				inline: "nearest",
+			});
+
+			track("scroll", { markerId });
 		},
 		[markers, track],
 	);
@@ -216,12 +310,13 @@ export function AssistProvider({
 		};
 	}, [currentRoute, assistState, lastError, markers]);
 
-	// Cleanup highlight on unmount
+	// Cleanup highlights on unmount
 	useEffect(() => {
 		return () => {
-			if (highlightTimeoutRef.current) {
-				clearTimeout(highlightTimeoutRef.current);
-			}
+			highlightTimeoutRef.current.forEach((timeout) => {
+				clearTimeout(timeout);
+			});
+			highlightTimeoutRef.current.clear();
 		};
 	}, []);
 
@@ -233,10 +328,13 @@ export function AssistProvider({
 		markers,
 		registerMarker,
 		unregisterMarker,
+		highlightedMarkers,
+		highlightWrapper,
 		track,
 		reportError,
 		navigate,
 		highlight,
+		scroll,
 		click,
 		isPanelOpen,
 		setIsPanelOpen,
