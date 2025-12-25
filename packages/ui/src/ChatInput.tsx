@@ -16,16 +16,16 @@ export function ChatInput({
 	onChange,
 	onSubmit,
 	disabled = false,
-	placeholder = "Ask me anything...",
+	placeholder = "Ask something...",
 	inputRef,
 	autoFocus,
 }: ChatInputProps) {
 	return (
 		<form
-			className="px-5 py-4 border-t border-border bg-muted"
+			className="px-3 py-2.5 border-t border-border/50"
 			onSubmit={onSubmit}
 		>
-			<div className="flex gap-2">
+			<div className="flex gap-1.5 items-center">
 				<input
 					autoFocus={autoFocus}
 					ref={inputRef}
@@ -34,18 +34,21 @@ export function ChatInput({
 					onChange={(e) => onChange(e.target.value)}
 					placeholder={placeholder}
 					disabled={disabled}
-					className="flex-1 px-3.5 py-2.5 border border-input rounded-lg text-sm outline-none bg-background text-foreground focus:ring-2 focus:ring-ring focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed"
+					className="flex-1 px-2.5 py-1.5 border-none rounded-md text-[13px] outline-none bg-muted/50 text-foreground placeholder:text-muted-foreground/60 focus:bg-muted disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
 				/>
 				<Button
 					type="submit"
 					disabled={!value.trim() || disabled}
-					className={`px-5 py-2.5 bg-primary text-primary-foreground border-none rounded-lg text-sm font-medium transition-opacity ${
+					className={`p-1.5 bg-foreground text-background border-none rounded-md transition-all ${
 						value.trim() && !disabled
-							? "cursor-pointer opacity-100 hover:opacity-90"
-							: "cursor-not-allowed opacity-50"
+							? "cursor-pointer opacity-100 hover:opacity-80 active:scale-95"
+							: "cursor-not-allowed opacity-30"
 					}`}
 				>
-					Send
+					<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+						<line x1="22" y1="2" x2="11" y2="13" />
+						<polygon points="22 2 15 22 11 13 2 9 22 2" />
+					</svg>
 				</Button>
 			</div>
 		</form>

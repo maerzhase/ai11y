@@ -1,5 +1,4 @@
 import {
-	AssistPanelHeader,
 	AssistPanelPopover,
 	ChatInput,
 	MessageList,
@@ -116,8 +115,7 @@ export function AssistPanel() {
 	}, [pendingMessage, isPanelOpen, setInput, clearPendingMessage, inputRef]);
 
 	return (
-		<AssistPanelPopover isOpen={isPanelOpen} onOpenChange={setIsPanelOpen}>
-			<AssistPanelHeader onClose={() => setIsPanelOpen(false)} />
+		<AssistPanelPopover isOpen={isPanelOpen} onOpenChange={setIsPanelOpen} onClose={() => setIsPanelOpen(false)}>
 			<MessageList
 				messages={messages}
 				isProcessing={isProcessing}

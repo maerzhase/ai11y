@@ -13,12 +13,12 @@ export function MessageBubble({ message }: MessageBubbleProps) {
 			}`}
 		>
 			<div
-				className={`px-3.5 py-2.5 rounded-xl max-w-[80%] text-sm leading-relaxed ${
+				className={`max-w-[85%] text-[13px] leading-snug ${
 					message.type === "user"
-						? "bg-primary text-primary-foreground"
+						? "px-2.5 py-1.5 rounded-lg bg-foreground text-background"
 						: message.type === "system"
-							? "bg-muted text-muted-foreground border border-border"
-							: "bg-muted text-foreground"
+							? "text-muted-foreground text-xs italic"
+							: "text-foreground"
 				}`}
 			>
 				{message.content}

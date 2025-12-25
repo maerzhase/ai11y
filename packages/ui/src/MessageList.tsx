@@ -19,13 +19,17 @@ export function MessageList({
 	messagesEndRef,
 }: MessageListProps) {
 	return (
-		<div className="flex-1 overflow-y-auto px-5 py-4 flex flex-col gap-3">
+		<div className="flex-1 overflow-y-auto px-3 py-3 flex flex-col gap-2">
 			{messages.map((msg, index) => (
 				<MessageBubble key={msg.id ?? `msg-${index}`} message={msg} />
 			))}
 			{isProcessing && (
-				<div className="px-3.5 py-2.5 rounded-xl bg-muted text-muted-foreground text-sm">
-					Thinking...
+				<div className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs text-muted-foreground">
+					<span className="inline-flex gap-0.5">
+						<span className="w-1 h-1 bg-muted-foreground/60 rounded-full animate-pulse" />
+						<span className="w-1 h-1 bg-muted-foreground/60 rounded-full animate-pulse [animation-delay:150ms]" />
+						<span className="w-1 h-1 bg-muted-foreground/60 rounded-full animate-pulse [animation-delay:300ms]" />
+					</span>
 				</div>
 			)}
 			<div ref={messagesEndRef} />
