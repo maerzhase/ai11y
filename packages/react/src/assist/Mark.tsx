@@ -1,3 +1,4 @@
+import { MorphingBlob } from "@quest/ui";
 import React, {
 	useEffect,
 	useLayoutEffect,
@@ -115,8 +116,7 @@ export function Mark({
 			}
 
 			const rect = el.getBoundingClientRect();
-			const size = 22;
-			const pad = 8;
+			const size = 24;
 
 			const inViewport =
 				rect.width > 0 &&
@@ -133,14 +133,9 @@ export function Mark({
 				return;
 			}
 
-			const top = Math.min(
-				window.innerHeight - size - pad,
-				Math.max(pad, rect.top - size / 2),
-			);
-			const left = Math.min(
-				window.innerWidth - size - pad,
-				Math.max(pad, rect.right - size / 2),
-			);
+			// Position at outer bottom-right corner
+			const top = rect.bottom - size / 2;
+			const left = rect.right - size / 2;
 
 			setBubblePos({ top, left, visible: true });
 		};
@@ -214,69 +209,6 @@ export function Mark({
 		return (
 			<>
 				<HighlightWrapper markerId={id}>{childWithRef}</HighlightWrapper>
-				{showAssistBubble &&
-					bubblePos.visible &&
-					typeof document !== "undefined" &&
-					createPortal(
-						<button
-							type="button"
-							aria-label={`Ask assistant about ${label || id}`}
-							onClick={(e) => {
-								e.preventDefault();
-								e.stopPropagation();
-								openPanelWithMessage(bubbleMessage);
-							}}
-							style={{
-								position: "fixed",
-								top: bubblePos.top,
-								left: bubblePos.left,
-								width: 22,
-								height: 22,
-								borderRadius: 9999,
-								border: "1px solid rgba(255,255,255,0.18)",
-								background: "rgba(15, 23, 42, 0.92)", // slate-900-ish
-								color: "white",
-								display: "flex",
-								alignItems: "center",
-								justifyContent: "center",
-								boxShadow:
-									"0 10px 20px rgba(0,0,0,0.22), 0 2px 6px rgba(0,0,0,0.18)",
-								zIndex: 2147483647,
-								cursor: "pointer",
-								padding: 0,
-							}}
-						>
-							<svg
-								width="14"
-								height="14"
-								viewBox="0 0 24 24"
-								fill="none"
-								xmlns="http://www.w3.org/2000/svg"
-								aria-hidden="true"
-							>
-								<path
-									d="M20 12c0 3.866-3.582 7-8 7a9.8 9.8 0 0 1-2.4-.296L5 20l.98-3.1C4.734 15.66 4 13.9 4 12c0-3.866 3.582-7 8-7s8 3.134 8 7Z"
-									stroke="currentColor"
-									strokeWidth="2"
-									strokeLinejoin="round"
-								/>
-								<path
-									d="M8 12h.01M12 12h.01M16 12h.01"
-									stroke="currentColor"
-									strokeWidth="2"
-									strokeLinecap="round"
-								/>
-							</svg>
-						</button>,
-						document.body,
-					)}
-			</>
-		);
-	}
-
-	return (
-		<>
-			{childWithRef}
 			{showAssistBubble &&
 				bubblePos.visible &&
 				typeof document !== "undefined" &&
@@ -293,46 +225,93 @@ export function Mark({
 							position: "fixed",
 							top: bubblePos.top,
 							left: bubblePos.left,
-							width: 22,
-							height: 22,
-							borderRadius: 9999,
-							border: "1px solid rgba(255,255,255,0.18)",
-							background: "rgba(15, 23, 42, 0.92)", // slate-900-ish
-							color: "white",
-							display: "flex",
-							alignItems: "center",
-							justifyContent: "center",
-							boxShadow:
-								"0 10px 20px rgba(0,0,0,0.22), 0 2px 6px rgba(0,0,0,0.18)",
-							zIndex: 100,
+							zIndex: 2147483647,
 							cursor: "pointer",
 							padding: 0,
+							background: "none",
+							border: "none",
+							color: "white",
 						}}
+						className="transition-transform duration-200 hover:scale-110 active:scale-95"
 					>
-						<svg
-							width="14"
-							height="14"
-							viewBox="0 0 24 24"
-							fill="none"
-							xmlns="http://www.w3.org/2000/svg"
-							aria-hidden="true"
-						>
-							<path
-								d="M20 12c0 3.866-3.582 7-8 7a9.8 9.8 0 0 1-2.4-.296L5 20l.98-3.1C4.734 15.66 4 13.9 4 12c0-3.866 3.582-7 8-7s8 3.134 8 7Z"
-								stroke="currentColor"
-								strokeWidth="2"
-								strokeLinejoin="round"
-							/>
-							<path
-								d="M8 12h.01M12 12h.01M16 12h.01"
-								stroke="currentColor"
-								strokeWidth="2"
-								strokeLinecap="round"
-							/>
-						</svg>
+						<MorphingBlob size={24} duration={8}>
+							<svg
+								width="12"
+								height="12"
+								viewBox="0 0 24 24"
+								fill="none"
+								xmlns="http://www.w3.org/2000/svg"
+								aria-hidden="true"
+								style={{ color: "rgb(15, 23, 42)" }}
+							>
+								<circle cx="8" cy="10" r="2" fill="currentColor" />
+								<circle cx="16" cy="10" r="2" fill="currentColor" />
+								<path
+									d="M8 15c1.5 2 6.5 2 8 0"
+									stroke="currentColor"
+									strokeWidth="2"
+									strokeLinecap="round"
+								/>
+							</svg>
+						</MorphingBlob>
 					</button>,
 					document.body,
 				)}
+			</>
+		);
+	}
+
+	return (
+		<>
+			{childWithRef}
+				{showAssistBubble &&
+					bubblePos.visible &&
+					typeof document !== "undefined" &&
+					createPortal(
+						<button
+							type="button"
+							aria-label={`Ask assistant about ${label || id}`}
+							onClick={(e) => {
+								e.preventDefault();
+								e.stopPropagation();
+								openPanelWithMessage(bubbleMessage);
+							}}
+							style={{
+								position: "fixed",
+								top: bubblePos.top,
+								left: bubblePos.left,
+								zIndex: 100,
+								cursor: "pointer",
+								padding: 0,
+								background: "none",
+								border: "none",
+								color: "white",
+							}}
+							className="transition-transform duration-200 hover:scale-110 active:scale-95"
+						>
+							<MorphingBlob size={24} duration={8}>
+								<svg
+									width="12"
+									height="12"
+									viewBox="0 0 24 24"
+									fill="none"
+									xmlns="http://www.w3.org/2000/svg"
+									aria-hidden="true"
+									style={{ color: "rgb(15, 23, 42)" }}
+								>
+									<circle cx="8" cy="10" r="2" fill="currentColor" />
+									<circle cx="16" cy="10" r="2" fill="currentColor" />
+									<path
+										d="M8 15c1.5 2 6.5 2 8 0"
+										stroke="currentColor"
+										strokeWidth="2"
+										strokeLinecap="round"
+									/>
+								</svg>
+							</MorphingBlob>
+						</button>,
+						document.body,
+					)}
 		</>
 	);
 }

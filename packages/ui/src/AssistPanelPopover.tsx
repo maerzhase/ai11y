@@ -1,5 +1,6 @@
 import { Popover } from "@base-ui/react/popover";
 import type React from "react";
+import { AssistTrigger } from "./AssistTrigger";
 
 export interface AssistPanelPopoverProps {
 	isOpen: boolean;
@@ -16,7 +17,7 @@ export function AssistPanelPopover({
 	onClose,
 	children,
 	trigger,
-	triggerClassName = "fixed bottom-4 right-4 flex size-10 items-center justify-center rounded-full bg-foreground/90 text-background border-none select-none hover:bg-foreground focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-1 focus-visible:outline-ring active:scale-95 data-[popup-open]:bg-foreground shadow-sm text-base z-[10000] transition-all duration-150",
+	triggerClassName = "fixed bottom-4 right-4 flex items-center justify-center border-none select-none focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-1 focus-visible:outline-ring z-[10000]",
 }: AssistPanelPopoverProps) {
 	return (
 		<Popover.Root open={isOpen} onOpenChange={onOpenChange}>
@@ -24,11 +25,7 @@ export function AssistPanelPopover({
 				className={triggerClassName}
 				aria-label="Open AI Assistant"
 			>
-				{trigger ?? (
-					<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-						<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-					</svg>
-				)}
+				{trigger ?? <AssistTrigger />}
 			</Popover.Trigger>
 
 			<Popover.Portal className="z-200">
