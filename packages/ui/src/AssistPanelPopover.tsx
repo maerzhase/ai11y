@@ -1,5 +1,6 @@
-import { Popover } from "@base-ui/react/popover";
+import { Popover, type PopoverRootChangeEventDetails } from "@base-ui/react/popover";
 import type React from "react";
+import { useCallback } from "react";
 import { AssistTrigger } from "./AssistTrigger";
 
 export interface AssistPanelPopoverProps {
@@ -19,8 +20,17 @@ export function AssistPanelPopover({
 	trigger,
 	triggerClassName = "fixed bottom-4 right-4 flex items-center justify-center border-none select-none focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-1 focus-visible:outline-ring z-[10000]",
 }: AssistPanelPopoverProps) {
+	// Handle open change, ignoring outside press events so users can interact with the page
+	const handleOpenChange = useCallback((open: boolean, eventDetails: PopoverRootChangeEventDetails) => {
+		// Ignore outside clicks - the panel should stay open while interacting with the page
+		if (!open && eventDetails.reason === "outside-press") {
+			return;
+		}
+		onOpenChange(open);
+	}, [onOpenChange]);
+
 	return (
-		<Popover.Root open={isOpen} onOpenChange={onOpenChange}>
+		<Popover.Root open={isOpen} onOpenChange={handleOpenChange} modal={false}>
 			<Popover.Trigger
 				className={triggerClassName}
 				aria-label="Open AI Assistant"

@@ -1,8 +1,4 @@
-import {
-	AssistPanelPopover,
-	ChatInput,
-	MessageList,
-} from "@quest/ui";
+import { AssistPanelPopover, ChatInput, MessageList } from "@quest/ui";
 import { useEffect } from "react";
 import { useAssist } from "./AssistProvider";
 import { runAgent } from "./agent";
@@ -25,7 +21,10 @@ export function AssistPanel() {
 		clearPendingMessage,
 	} = useAssist();
 
-	const handleSubmit = async (message: string, messages: Array<{ type: string; content: string }>) => {
+	const handleSubmit = async (
+		message: string,
+		messages: Array<{ type: string; content: string }>,
+	) => {
 		const context = getContext();
 
 		// Convert messages to conversation format for LLM
@@ -33,13 +32,17 @@ export function AssistPanel() {
 		const conversationMessages = messages
 			.filter((m, index) => {
 				// Include all messages except the last one if it matches the current input
-				if (index === messages.length - 1 && m.type === "user" && m.content === message) {
+				if (
+					index === messages.length - 1 &&
+					m.type === "user" &&
+					m.content === message
+				) {
 					return false;
 				}
 				return m.type === "user" || m.type === "assistant";
 			})
 			.map((m) => ({
-				role: m.type === "user" ? "user" as const : "assistant" as const,
+				role: m.type === "user" ? ("user" as const) : ("assistant" as const),
 				content: m.content,
 			}));
 
@@ -115,14 +118,17 @@ export function AssistPanel() {
 	}, [pendingMessage, isPanelOpen, setInput, clearPendingMessage, inputRef]);
 
 	return (
-		<AssistPanelPopover isOpen={isPanelOpen} onOpenChange={setIsPanelOpen} onClose={() => setIsPanelOpen(false)}>
+		<AssistPanelPopover
+			isOpen={isPanelOpen}
+			onOpenChange={setIsPanelOpen}
+			onClose={() => setIsPanelOpen(false)}
+		>
 			<MessageList
 				messages={messages}
 				isProcessing={isProcessing}
 				messagesEndRef={messagesEndRef}
 			/>
 			<ChatInput
-				autoFocus
 				value={input}
 				onChange={setInput}
 				onSubmit={handleChatSubmit}

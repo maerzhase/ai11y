@@ -1,11 +1,5 @@
 import { MorphingBlob } from "@quest/ui";
-import React, {
-	useEffect,
-	useLayoutEffect,
-	useMemo,
-	useRef,
-	useState,
-} from "react";
+import React, { useEffect, useLayoutEffect, useMemo, useRef } from "react";
 import { createPortal } from "react-dom";
 import { useAssist } from "./AssistProvider";
 
@@ -22,7 +16,6 @@ interface MarkProps {
 }
 
 function formatMarkerId(id: string): string {
-	// Convert snake_case to readable text
 	return id.replace(/_/g, " ").replace(/\b\w/g, (char) => char.toUpperCase());
 }
 
@@ -37,14 +30,28 @@ function buildMarkerPrompt({
 }) {
 	const safeIntent = intent?.trim();
 	const safeLabel = label?.trim() || formatMarkerId(id);
-	
-	// Include the label so follow-up questions like "highlight it" can match
-	// The label is what the agent will use to identify the marker in subsequent requests
+
 	if (safeIntent) {
 		return `Tell me about "${safeLabel}" - ${safeIntent}`;
 	}
 	return `Tell me about "${safeLabel}"`;
 }
+
+function assignRef<T>(ref: React.Ref<T> | undefined, value: T | null) {
+	if (!ref) return;
+	if (typeof ref === "function") {
+		ref(value);
+		return;
+	}
+	try {
+		(ref as React.MutableRefObject<T | null>).current = value;
+	} catch {
+		// ignore read-only refs
+	}
+}
+
+const useIsomorphicLayoutEffect =
+	typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 export function Mark({
 	id,
@@ -58,205 +65,148 @@ export function Mark({
 		unregisterMarker,
 		highlightedMarkers,
 		highlightWrapper,
-		openPanelWithMessage,
+		togglePanelForMarker,
+		focusedMarkerId,
 	} = useAssist();
+
+	const isFocused = focusedMarkerId === id;
+	const isHighlighted = highlightedMarkers.has(id);
 	const elementRef = useRef<HTMLElement | null>(null);
-	const scheduleBubbleUpdateRef = useRef<null | (() => void)>(null);
-	const bubbleResizeObserverRef = useRef<ResizeObserver | null>(null);
-	const [bubblePos, setBubblePos] = useState<{
-		top: number;
-		left: number;
-		visible: boolean;
-	}>({ top: 0, left: 0, visible: false });
+	const bubbleRef = useRef<HTMLButtonElement | null>(null);
 
 	const bubbleMessage = useMemo(
 		() => buildMarkerPrompt({ id, label, intent }),
 		[id, label, intent],
 	);
 
+	// Register marker
 	useEffect(() => {
-		// Wait for element to be available
-		const checkAndRegister = () => {
-			if (elementRef.current) {
-				registerMarker({
-					id,
-					label,
-					intent,
-					element: elementRef.current,
-				});
-			}
-		};
-
-		// Try immediately
-		checkAndRegister();
-
-		// Also try on next frame in case element isn't ready yet
-		const raf = requestAnimationFrame(checkAndRegister);
+		if (!elementRef.current) return;
+		registerMarker({
+			id,
+			label,
+			intent,
+			element: elementRef.current,
+		});
 
 		return () => {
-			cancelAnimationFrame(raf);
 			unregisterMarker(id);
 		};
-	}, [id, label, intent, registerMarker, unregisterMarker]);
+		// Note: we intentionally re-run this effect when highlight wrapping changes.
+		// Conditional wrapping can remount the underlying DOM node; we need the registry
+		// to point at the current element so tools like `click()` still work.
+	}, [
+		id,
+		label,
+		intent,
+		isHighlighted,
+		highlightWrapper,
+		registerMarker,
+		unregisterMarker,
+	]);
 
-	// Keep the bubble positioned near the marked element without changing layout
-	useLayoutEffect(() => {
+	// Update bubble position directly via ref (no state updates during scroll)
+	useIsomorphicLayoutEffect(() => {
 		if (!showAssistBubble) return;
-		if (typeof window === "undefined") return;
-
-		let raf = 0;
 
 		const updatePosition = () => {
 			const el = elementRef.current;
-			if (!el) {
-				setBubblePos((prev) =>
-					prev.visible ? { ...prev, visible: false } : prev,
-				);
-				return;
-			}
-
+			const bubble = bubbleRef.current;
+			if (!el || !bubble) return;
 			const rect = el.getBoundingClientRect();
-			const size = 24;
-
-			const inViewport =
-				rect.width > 0 &&
-				rect.height > 0 &&
-				rect.bottom > 0 &&
-				rect.right > 0 &&
-				rect.top < window.innerHeight &&
-				rect.left < window.innerWidth;
-
-			if (!inViewport) {
-				setBubblePos((prev) =>
-					prev.visible ? { ...prev, visible: false } : prev,
-				);
-				return;
-			}
-
-			// Position at outer bottom-right corner
-			const top = rect.bottom - size / 2;
-			const left = rect.right - size / 2;
-
-			setBubblePos({ top, left, visible: true });
+			bubble.style.top = `${rect.bottom - 12}px`;
+			bubble.style.left = `${rect.right - 12}px`;
 		};
 
-		const scheduleUpdate = () => {
-			if (raf) return;
-			raf = window.requestAnimationFrame(() => {
-				raf = 0;
-				updatePosition();
-			});
-		};
-
-		scheduleBubbleUpdateRef.current = scheduleUpdate;
-
-		// Initial position
 		updatePosition();
 
-		// Track scroll/resize across the document (capture catches scroll on containers)
-		window.addEventListener("scroll", scheduleUpdate, true);
-		window.addEventListener("resize", scheduleUpdate);
-
-		// Track element resizes
-		if ("ResizeObserver" in window) {
-			const resizeObserver = new ResizeObserver(scheduleUpdate);
-			bubbleResizeObserverRef.current = resizeObserver;
-			if (elementRef.current) {
-				resizeObserver.observe(elementRef.current);
-			}
-		}
+		window.addEventListener("scroll", updatePosition, true);
+		window.addEventListener("resize", updatePosition);
 
 		return () => {
-			window.removeEventListener("scroll", scheduleUpdate, true);
-			window.removeEventListener("resize", scheduleUpdate);
-			scheduleBubbleUpdateRef.current = null;
-			bubbleResizeObserverRef.current?.disconnect();
-			bubbleResizeObserverRef.current = null;
-			if (raf) window.cancelAnimationFrame(raf);
+			window.removeEventListener("scroll", updatePosition, true);
+			window.removeEventListener("resize", updatePosition);
 		};
-	}, [showAssistBubble]);
+	}, [showAssistBubble, isHighlighted, highlightWrapper]);
 
-	// Clone the child element and attach ref
+	// Clone child and attach ref (no wrapper needed)
 	const childWithRef = React.cloneElement(children, {
 		ref: (node: HTMLElement | null) => {
-			const previous = elementRef.current;
 			elementRef.current = node;
-			if (showAssistBubble && node && bubbleResizeObserverRef.current) {
-				// Ensure the ResizeObserver starts tracking once the element exists
-				if (previous && previous !== node) {
-					bubbleResizeObserverRef.current.unobserve(previous);
-				}
-				bubbleResizeObserverRef.current.observe(node);
-			}
-			// Ensure bubble shows up immediately once ref attaches
-			scheduleBubbleUpdateRef.current?.();
-			// Preserve original ref if it exists
-			const originalRef = (children as any).ref;
-			if (typeof originalRef === "function") {
-				originalRef(node);
-			} else if (originalRef) {
-				originalRef.current = node;
-			}
+			assignRef((children as any).ref, node);
 		},
-	});
+	} as any);
 
-	// Check if this marker is currently highlighted and we have a wrapper component
-	const isHighlighted = highlightedMarkers.has(id);
+	const handleBubbleClick = (e: React.MouseEvent) => {
+		e.preventDefault();
+		e.stopPropagation();
+		togglePanelForMarker(id, bubbleMessage);
+	};
 
-	// If highlighted with a wrapper component, wrap the children
+	const isEmphasized = isFocused || isHighlighted;
+
+	const canShowBubble =
+		showAssistBubble &&
+		typeof document !== "undefined" &&
+		typeof document.body !== "undefined";
+
+	const bubble =
+		canShowBubble &&
+		createPortal(
+			<button
+				ref={bubbleRef}
+				type="button"
+				aria-label={`Ask assistant about ${label || id}`}
+				onClick={handleBubbleClick}
+				style={{
+					position: "fixed",
+					top: 0,
+					left: 0,
+					zIndex: isHighlighted ? 2147483647 : 100,
+					cursor: "pointer",
+					padding: 0,
+					background: "none",
+					border: "none",
+					color: isEmphasized ? "hsl(200, 80%, 50%)" : "white",
+					filter: isEmphasized
+						? "drop-shadow(0 0 6px hsl(200, 80%, 50%))"
+						: "none",
+					transform: isEmphasized ? "scale(1.1)" : "scale(1)",
+					transition:
+						"transform 0.15s ease, color 0.15s ease, filter 0.15s ease",
+				}}
+				className="hover:scale-110 active:scale-95"
+			>
+				<MorphingBlob size={24} duration={isEmphasized ? 4 : 8}>
+					<svg
+						width="12"
+						height="12"
+						viewBox="0 0 24 24"
+						fill="none"
+						xmlns="http://www.w3.org/2000/svg"
+						aria-hidden="true"
+						style={{ color: "rgb(15, 23, 42)" }}
+					>
+						<circle cx="8" cy="10" r="2" fill="currentColor" />
+						<circle cx="16" cy="10" r="2" fill="currentColor" />
+						<path
+							d="M8 15c1.5 2 6.5 2 8 0"
+							stroke="currentColor"
+							strokeWidth="2"
+							strokeLinecap="round"
+						/>
+					</svg>
+				</MorphingBlob>
+			</button>,
+			document.body,
+		);
+
 	if (isHighlighted && highlightWrapper) {
 		const HighlightWrapper = highlightWrapper;
 		return (
 			<>
 				<HighlightWrapper markerId={id}>{childWithRef}</HighlightWrapper>
-			{showAssistBubble &&
-				bubblePos.visible &&
-				typeof document !== "undefined" &&
-				createPortal(
-					<button
-						type="button"
-						aria-label={`Ask assistant about ${label || id}`}
-						onClick={(e) => {
-							e.preventDefault();
-							e.stopPropagation();
-							openPanelWithMessage(bubbleMessage);
-						}}
-						style={{
-							position: "fixed",
-							top: bubblePos.top,
-							left: bubblePos.left,
-							zIndex: 2147483647,
-							cursor: "pointer",
-							padding: 0,
-							background: "none",
-							border: "none",
-							color: "white",
-						}}
-						className="transition-transform duration-200 hover:scale-110 active:scale-95"
-					>
-						<MorphingBlob size={24} duration={8}>
-							<svg
-								width="12"
-								height="12"
-								viewBox="0 0 24 24"
-								fill="none"
-								xmlns="http://www.w3.org/2000/svg"
-								aria-hidden="true"
-								style={{ color: "rgb(15, 23, 42)" }}
-							>
-								<circle cx="8" cy="10" r="2" fill="currentColor" />
-								<circle cx="16" cy="10" r="2" fill="currentColor" />
-								<path
-									d="M8 15c1.5 2 6.5 2 8 0"
-									stroke="currentColor"
-									strokeWidth="2"
-									strokeLinecap="round"
-								/>
-							</svg>
-						</MorphingBlob>
-					</button>,
-					document.body,
-				)}
+				{bubble}
 			</>
 		);
 	}
@@ -264,54 +214,7 @@ export function Mark({
 	return (
 		<>
 			{childWithRef}
-				{showAssistBubble &&
-					bubblePos.visible &&
-					typeof document !== "undefined" &&
-					createPortal(
-						<button
-							type="button"
-							aria-label={`Ask assistant about ${label || id}`}
-							onClick={(e) => {
-								e.preventDefault();
-								e.stopPropagation();
-								openPanelWithMessage(bubbleMessage);
-							}}
-							style={{
-								position: "fixed",
-								top: bubblePos.top,
-								left: bubblePos.left,
-								zIndex: 100,
-								cursor: "pointer",
-								padding: 0,
-								background: "none",
-								border: "none",
-								color: "white",
-							}}
-							className="transition-transform duration-200 hover:scale-110 active:scale-95"
-						>
-							<MorphingBlob size={24} duration={8}>
-								<svg
-									width="12"
-									height="12"
-									viewBox="0 0 24 24"
-									fill="none"
-									xmlns="http://www.w3.org/2000/svg"
-									aria-hidden="true"
-									style={{ color: "rgb(15, 23, 42)" }}
-								>
-									<circle cx="8" cy="10" r="2" fill="currentColor" />
-									<circle cx="16" cy="10" r="2" fill="currentColor" />
-									<path
-										d="M8 15c1.5 2 6.5 2 8 0"
-										stroke="currentColor"
-										strokeWidth="2"
-										strokeLinecap="round"
-									/>
-								</svg>
-							</MorphingBlob>
-						</button>,
-						document.body,
-					)}
+			{bubble}
 		</>
 	);
 }

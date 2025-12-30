@@ -35,6 +35,9 @@ interface AssistContextValue {
 		markerId: string;
 	}>;
 
+	// Focused marker (clicked marker bubble)
+	focusedMarkerId: string | null;
+
 	// Imperative API
 	track: (event: string, payload?: unknown) => void;
 	reportError: (
@@ -50,6 +53,7 @@ interface AssistContextValue {
 	isPanelOpen: boolean;
 	setIsPanelOpen: (open: boolean) => void;
 	openPanelWithMessage: (message: string) => void;
+	togglePanelForMarker: (markerId: string, message: string) => void;
 	clearPendingMessage: () => void;
 	pendingMessage: string | null;
 
@@ -110,7 +114,14 @@ export function AssistProvider({
 	const [highlightedMarkers, setHighlightedMarkers] = useState<Set<string>>(
 		new Set(),
 	);
+	const [focusedMarkerId, setFocusedMarkerId] = useState<string | null>(null);
+	const focusedMarkerIdRef = useRef<string | null>(null);
+	const isPanelOpenRef = useRef(false);
 	const highlightTimeoutRef = useRef<Map<string, number>>(new Map());
+
+	// Keep refs in sync with state
+	focusedMarkerIdRef.current = focusedMarkerId;
+	isPanelOpenRef.current = isPanelOpen;
 
 	const registerMarker = useCallback((metadata: MarkerMetadata) => {
 		setMarkers((prev) => {
@@ -164,6 +175,33 @@ export function AssistProvider({
 		[onNavigate, track],
 	);
 
+	const addHighlight = useCallback((markerId: string, duration = 2000) => {
+		// Mark as highlighted (for bubble emphasis)
+		setHighlightedMarkers((prev) => {
+			const next = new Set(prev);
+			next.add(markerId);
+			return next;
+		});
+
+		// Clear any existing timeout for this marker
+		const existingTimeout = highlightTimeoutRef.current.get(markerId);
+		if (existingTimeout) {
+			clearTimeout(existingTimeout);
+		}
+
+		// Remove highlight after duration
+		const timeout = window.setTimeout(() => {
+			setHighlightedMarkers((prev) => {
+				const next = new Set(prev);
+				next.delete(markerId);
+				return next;
+			});
+			highlightTimeoutRef.current.delete(markerId);
+		}, duration);
+
+		highlightTimeoutRef.current.set(markerId, timeout);
+	}, []);
+
 	const highlight = useCallback(
 		(markerId: string) => {
 			const marker = markers.get(markerId);
@@ -186,43 +224,16 @@ export function AssistProvider({
 				onHighlight(markerId, element);
 			}
 
-			// If highlightWrapper is provided, use component-based highlighting
+			// Always add to highlightedMarkers (for bubble emphasis)
+			addHighlight(markerId);
+
+			// If highlightWrapper is provided, let it handle visual highlighting
 			if (highlightWrapper) {
-				// Mark as highlighted for component wrapper
-				setHighlightedMarkers((prev) => {
-					const next = new Set(prev);
-					next.add(markerId);
-					return next;
-				});
-
-				// Clear any existing timeout for this marker
-				const existingTimeout = highlightTimeoutRef.current.get(markerId);
-				if (existingTimeout) {
-					clearTimeout(existingTimeout);
-				}
-
-				// Remove highlight after 2 seconds (default duration)
-				const timeout = window.setTimeout(() => {
-					setHighlightedMarkers((prev) => {
-						const next = new Set(prev);
-						next.delete(markerId);
-						return next;
-					});
-					highlightTimeoutRef.current.delete(markerId);
-				}, 2000);
-
-				highlightTimeoutRef.current.set(markerId, timeout);
 				track("highlight", { markerId });
 				return;
 			}
 
-			// Default highlight behavior (classname-based)
-			// Clear any existing highlight timeout
-			const existingTimeout = highlightTimeoutRef.current.get(markerId);
-			if (existingTimeout) {
-				clearTimeout(existingTimeout);
-			}
-
+			// Default highlight behavior (inline styles)
 			const originalOutline = element.style.outline;
 			const originalOutlineOffset = element.style.outlineOffset;
 			const originalTransition = element.style.transition;
@@ -237,13 +248,19 @@ export function AssistProvider({
 				element.style.outline = originalOutline;
 				element.style.outlineOffset = originalOutlineOffset;
 				element.style.transition = originalTransition;
-				highlightTimeoutRef.current.delete(markerId);
 			}, 2000);
 
-			highlightTimeoutRef.current.set(markerId, timeout);
+			// Store separate timeout for element styles cleanup
+			const styleTimeoutKey = `${markerId}-style`;
+			const existingStyleTimeout = highlightTimeoutRef.current.get(styleTimeoutKey);
+			if (existingStyleTimeout) {
+				clearTimeout(existingStyleTimeout);
+			}
+			highlightTimeoutRef.current.set(styleTimeoutKey, timeout);
+
 			track("highlight", { markerId });
 		},
-		[markers, track, onHighlight, highlightWrapper],
+		[markers, track, onHighlight, highlightWrapper, addHighlight],
 	);
 
 	const scroll = useCallback(
@@ -263,9 +280,12 @@ export function AssistProvider({
 				inline: "nearest",
 			});
 
+			// Highlight the bubble when scrolling to marker
+			addHighlight(markerId);
+
 			track("scroll", { markerId });
 		},
-		[markers, track],
+		[markers, track, addHighlight],
 	);
 
 	const click = useCallback(
@@ -303,6 +323,26 @@ export function AssistProvider({
 		track("panel_opened_with_message", { message });
 	}, [track]);
 
+	const togglePanelForMarker = useCallback((markerId: string, message: string) => {
+		// Use refs to avoid stale closure issues
+		const currentFocusedId = focusedMarkerIdRef.current;
+		const currentPanelOpen = isPanelOpenRef.current;
+
+		// If this marker is already focused and panel is open, close the panel
+		if (currentFocusedId === markerId && currentPanelOpen) {
+			setIsPanelOpen(false);
+			setFocusedMarkerId(null);
+			track("panel_closed_by_marker", { markerId });
+			return;
+		}
+
+		// Otherwise, focus this marker and open panel with message
+		setFocusedMarkerId(markerId);
+		setPendingMessage(message);
+		setIsPanelOpen(true);
+		track("panel_opened_by_marker", { markerId, message });
+	}, [track]);
+
 	const clearPendingMessage = useCallback(() => {
 		setPendingMessage(null);
 	}, []);
@@ -330,6 +370,14 @@ export function AssistProvider({
 		};
 	}, []);
 
+	// Handle panel open state changes from external sources (Popover trigger, close button, etc.)
+	const handleSetIsPanelOpen = useCallback((open: boolean) => {
+		setIsPanelOpen(open);
+		if (!open) {
+			setFocusedMarkerId(null);
+		}
+	}, []);
+
 	const value: AssistContextValue = {
 		assistState,
 		currentRoute,
@@ -340,6 +388,7 @@ export function AssistProvider({
 		unregisterMarker,
 		highlightedMarkers,
 		highlightWrapper,
+		focusedMarkerId,
 		track,
 		reportError,
 		navigate,
@@ -347,8 +396,9 @@ export function AssistProvider({
 		scroll,
 		click,
 		isPanelOpen,
-		setIsPanelOpen,
+		setIsPanelOpen: handleSetIsPanelOpen,
 		openPanelWithMessage,
+		togglePanelForMarker,
 		clearPendingMessage,
 		pendingMessage,
 		getContext,
