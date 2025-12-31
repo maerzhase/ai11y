@@ -1,4 +1,4 @@
-import { AssistPanel, UIAIProvider } from "@quest/react";
+import { AgentConfig, AssistPanel, UIAIProvider } from "@quest/react";
 import React from "react";
 import {
 	BrowserRouter,
@@ -33,12 +33,13 @@ function AppWithRouter() {
 		locationRef.current = location.pathname;
 	}, [navigate, location.pathname]);
 
-	// Optional: Configure LLM agent
+	// Optional: Configure agent
 	const apiEndpoint =
 		import.meta.env.VITE_QUEST_API_ENDPOINT ||
 		"http://localhost:3000/quest/agent";
-	const llmConfig = {
+	const agentConfig: AgentConfig = {
 		apiEndpoint,
+		mode: "auto" as const,
 	};
 
 	return (
@@ -50,7 +51,7 @@ function AppWithRouter() {
 				}
 			}}
 			highlightWrapper={CustomHighlightWrapper}
-			llmConfig={llmConfig || undefined}
+			agentConfig={agentConfig}
 		>
 			<AppLayout>
 				<Routes>

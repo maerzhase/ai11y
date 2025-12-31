@@ -1,7 +1,8 @@
 import { Mark, useAssist } from "@quest/react";
 
 export function LLMMiniDemo() {
-	const { llmConfig } = useAssist();
+	const { agentConfig } = useAssist();
+	const isLLMEnabled = agentConfig?.apiEndpoint !== undefined;
 
 	return (
 		<div className="rounded-lg border border-border bg-muted/30 p-3">
@@ -14,10 +15,10 @@ export function LLMMiniDemo() {
 				<div className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-3 py-1 text-xs font-medium text-foreground">
 					<span
 						className={`inline-block h-2 w-2 rounded-full ${
-							llmConfig ? "bg-emerald-500" : "bg-amber-500"
+							isLLMEnabled ? "bg-emerald-500" : "bg-amber-500"
 						}`}
 					/>
-					{llmConfig ? "LLM enabled" : "Rule-based fallback"}
+					{isLLMEnabled ? "LLM enabled" : "Rule-based fallback"}
 				</div>
 			</Mark>
 			<div className="mt-2 text-xs text-muted-foreground">

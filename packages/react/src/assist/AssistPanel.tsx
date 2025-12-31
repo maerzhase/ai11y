@@ -2,9 +2,8 @@ import { clickMarker, scrollToMarker } from "@quest/core";
 import { AssistPanelPopover, ChatInput, MessageList } from "@quest/ui";
 import { useEffect } from "react";
 import { useAssist } from "./AssistProvider";
-import { runAgent } from "./agent";
-import { runLLMAgent } from "./llm-agent";
-import type { ToolCall } from "./types";
+import { runAgentAdapter, type AgentAdapterConfig } from "./agent-adapter";
+import type { AgentConfig, LLMAgentConfig, ToolCall } from "./types";
 import { useAssistChat } from "./useAssistChat";
 import { useAssistTools } from "./useAssistTools";
 
@@ -14,7 +13,7 @@ export function AssistPanel() {
 		setIsPanelOpen,
 		getContext,
 		track,
-		llmConfig,
+		agentConfig,
 		pendingMessage,
 		clearPendingMessage,
 	} = useAssist();
@@ -45,10 +44,22 @@ export function AssistPanel() {
 				content: m.content,
 			}));
 
-		// Use LLM agent if configured, otherwise use rule-based
-		const response = llmConfig
-			? await runLLMAgent(message, context, llmConfig, conversationMessages)
-			: runAgent(message, context);
+		// Convert AgentConfig to AgentAdapterConfig format
+		const adapterConfig: AgentAdapterConfig = {
+			mode: agentConfig?.mode ?? "auto",
+			forceOffline: agentConfig?.forceOffline,
+			useDummyInTest: agentConfig?.useDummyInTest,
+			llmConfig:
+				agentConfig?.apiEndpoint !== undefined
+					? ({ apiEndpoint: agentConfig.apiEndpoint } as LLMAgentConfig)
+					: undefined,
+		};
+		const response = await runAgentAdapter(
+			message,
+			context,
+			adapterConfig,
+			conversationMessages,
+		);
 
 		// Track the interaction
 		track("assistant_message", { input: message, response });

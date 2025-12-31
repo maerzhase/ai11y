@@ -42,6 +42,7 @@ export function useAssistChat({
 	const messagesEndRef = useRef<HTMLDivElement>(null);
 	const inputRef = useRef<HTMLInputElement>(null);
 	const processingRef = useRef(false);
+	const messageIdCounterRef = useRef(0);
 
 	// Auto-scroll to bottom when messages change
 	useEffect(() => {
@@ -59,57 +60,73 @@ export function useAssistChat({
 			processingRef.current = true;
 
 			// Add user message
+			messageIdCounterRef.current += 1;
 			const userMsg: Message = {
-				id: `user-${Date.now()}`,
+				id: `user-${Date.now()}-${messageIdCounterRef.current}`,
 				type: "user",
 				content: userMessage,
 				timestamp: Date.now(),
 			};
 
 			// Build updated messages array for conversation history
+			let updatedMessages: Message[] = [];
 			setMessages((prev) => {
-				const updated = [...prev, userMsg];
+				updatedMessages = [...prev, userMsg];
+				return updatedMessages;
+			});
 
-				// Pass conversation history (including the new user message) to onSubmit
-				onSubmit(userMessage, updated)
-					.then((response) => {
-						// Add assistant reply only if we're still processing (prevent duplicates)
-						if (processingRef.current) {
-							const assistantMsg: Message = {
-								id: `assistant-${Date.now()}`,
-								type: "assistant",
-								content: response.reply,
-								timestamp: Date.now(),
-							};
-							setMessages((prevMsgs) => [...prevMsgs, assistantMsg]);
+			try {
+				// Call onSubmit with the updated messages (outside of state setter)
+				const response = await onSubmit(userMessage, updatedMessages);
 
-							// Execute tool calls
-							if (response.toolCalls && onToolCall) {
-								for (const toolCall of response.toolCalls) {
-									onToolCall(toolCall);
-								}
-							}
-						}
-					})
-					.catch((error) => {
-						// Handle errors gracefully
-						if (processingRef.current) {
-							const errorMsg: Message = {
-								id: `error-${Date.now()}`,
-								type: "assistant",
-								content: `Sorry, I encountered an error: ${error instanceof Error ? error.message : "Unknown error"}. Please try again.`,
-								timestamp: Date.now(),
-							};
-							setMessages((prevMsgs) => [...prevMsgs, errorMsg]);
-						}
-					})
-					.finally(() => {
-						setIsProcessing(false);
-						processingRef.current = false;
+				// Add assistant reply only if we're still processing (prevent duplicates)
+				if (processingRef.current) {
+					messageIdCounterRef.current += 1;
+					const assistantMsg: Message = {
+						id: `assistant-${Date.now()}-${messageIdCounterRef.current}`,
+						type: "assistant",
+						content: response.reply,
+						timestamp: Date.now(),
+					};
+					setMessages((prevMsgs) => {
+						// Check if this exact message already exists to prevent duplicates
+						const exists = prevMsgs.some(
+							(msg) => msg.id === assistantMsg.id || (msg.type === "assistant" && msg.content === response.reply && msg.timestamp === assistantMsg.timestamp),
+						);
+						if (exists) return prevMsgs;
+						return [...prevMsgs, assistantMsg];
 					});
 
-				return updated;
-			});
+					// Execute tool calls
+					if (response.toolCalls && onToolCall) {
+						for (const toolCall of response.toolCalls) {
+							onToolCall(toolCall);
+						}
+					}
+				}
+			} catch (error) {
+				// Handle errors gracefully
+				if (processingRef.current) {
+					messageIdCounterRef.current += 1;
+					const errorMsg: Message = {
+						id: `error-${Date.now()}-${messageIdCounterRef.current}`,
+						type: "assistant",
+						content: `Sorry, I encountered an error: ${error instanceof Error ? error.message : "Unknown error"}. Please try again.`,
+						timestamp: Date.now(),
+					};
+					setMessages((prevMsgs) => {
+						// Check for duplicates
+						const exists = prevMsgs.some(
+							(msg) => msg.id === errorMsg.id || (msg.type === "assistant" && msg.content === errorMsg.content && msg.timestamp === errorMsg.timestamp),
+						);
+						if (exists) return prevMsgs;
+						return [...prevMsgs, errorMsg];
+					});
+				}
+			} finally {
+				setIsProcessing(false);
+				processingRef.current = false;
+			}
 		},
 		[input, isProcessing, onSubmit, onToolCall],
 	);

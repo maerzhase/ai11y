@@ -20,7 +20,7 @@ import {
 	useState,
 } from "react";
 import type {
-	LLMAgentConfig,
+	AgentConfig,
 	UIAIError,
 	UIAIEvent,
 	UIAIState,
@@ -69,8 +69,8 @@ interface UIAIProviderContextValue {
 	// Context for agent
 	getContext: () => UIAIContext;
 
-	// LLM config
-	llmConfig: LLMAgentConfig | null;
+	// Agent config
+	agentConfig: AgentConfig | null;
 }
 
 const UIAIProviderContext = createContext<UIAIProviderContextValue | null>(null);
@@ -96,7 +96,7 @@ interface UIAIProviderProps {
 		children: React.ReactNode;
 		markerId: string;
 	}>;
-	llmConfig?: LLMAgentConfig | null;
+	agentConfig?: AgentConfig;
 }
 
 export function UIAIProvider({
@@ -104,7 +104,7 @@ export function UIAIProvider({
 	initialState = {},
 	onNavigate,
 	highlightWrapper,
-	llmConfig = null,
+	agentConfig,
 }: UIAIProviderProps) {
 	// Initialize core store with initial state if provided
 	useEffect(() => {
@@ -283,7 +283,7 @@ export function UIAIProvider({
 		clearPendingMessage,
 		pendingMessage,
 		getContext,
-		llmConfig,
+		agentConfig: agentConfig ?? null,
 	};
 
 	return (
