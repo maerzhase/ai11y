@@ -21,7 +21,6 @@ import {
 } from "react";
 import type {
 	LLMAgentConfig,
-	MarkerMetadata,
 	UIAIError,
 	UIAIEvent,
 	UIAIState,
@@ -35,10 +34,6 @@ interface UIAIProviderContextValue {
 	lastError: UIAIError | null;
 	events: UIAIEvent[];
 
-	// Marker registry
-	markers: Map<string, MarkerMetadata>;
-	registerMarker: (metadata: MarkerMetadata) => void;
-	unregisterMarker: (id: string) => void;
 
 	// Highlight state
 	highlightedMarkers: Set<string>;
@@ -147,9 +142,6 @@ export function UIAIProvider({
 		);
 		return unsubscribe;
 	}, []);
-	const [markers, setMarkers] = useState<Map<string, MarkerMetadata>>(
-		new Map(),
-	);
 	const [isPanelOpen, setIsPanelOpen] = useState(false);
 	const [pendingMessage, setPendingMessage] = useState<string | null>(null);
 	const [highlightedMarkers, setHighlightedMarkers] = useState<Set<string>>(
@@ -164,21 +156,6 @@ export function UIAIProvider({
 	focusedMarkerIdRef.current = focusedMarkerId;
 	isPanelOpenRef.current = isPanelOpen;
 
-	const registerMarker = useCallback((metadata: MarkerMetadata) => {
-		setMarkers((prev) => {
-			const next = new Map(prev);
-			next.set(metadata.id, metadata);
-			return next;
-		});
-	}, []);
-
-	const unregisterMarker = useCallback((id: string) => {
-		setMarkers((prev) => {
-			const next = new Map(prev);
-			next.delete(id);
-			return next;
-		});
-	}, []);
 
 	// Subscribe to events from core store for reactivity
 	useEffect(() => {
@@ -292,9 +269,6 @@ export function UIAIProvider({
 		currentRoute,
 		lastError,
 		events,
-		markers,
-		registerMarker,
-		unregisterMarker,
 		highlightedMarkers,
 		highlightWrapper,
 		addHighlight,

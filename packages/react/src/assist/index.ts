@@ -7,7 +7,6 @@ export type {
 	AgentResponse,
 	LLMAgentConfig,
 	Marker,
-	MarkerMetadata,
 	ToolCall,
 	UIAIError,
 	UIAIEvent,

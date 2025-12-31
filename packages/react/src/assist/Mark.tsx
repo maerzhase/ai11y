@@ -63,8 +63,6 @@ export function Mark({
 	children,
 }: MarkProps) {
 	const {
-		registerMarker,
-		unregisterMarker,
 		highlightedMarkers,
 		highlightWrapper,
 		togglePanelForMarker,
@@ -80,24 +78,6 @@ export function Mark({
 		() => buildMarkerPrompt({ id, label, intent }),
 		[id, label, intent],
 	);
-
-	// Register marker
-	useEffect(() => {
-		if (!elementRef.current) return;
-		registerMarker({
-			id,
-			label,
-			intent,
-			element: elementRef.current,
-		});
-
-		return () => {
-			unregisterMarker(id);
-		};
-		// Note: we intentionally re-run this effect when highlight wrapping changes.
-		// Conditional wrapping can remount the underlying DOM node; we need the registry
-		// to point at the current element so tools like `click()` still work.
-	}, [id, label, intent, registerMarker, unregisterMarker]);
 
 	// Update bubble position directly via ref (no state updates during scroll)
 	useIsomorphicLayoutEffect(() => {
