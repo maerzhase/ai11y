@@ -1,15 +1,12 @@
+import { clickMarker, scrollToMarker } from "@quest/core";
 import { AssistPanelPopover, ChatInput, MessageList } from "@quest/ui";
-import {
-	scrollToMarker,
-	clickMarker,
-} from "@quest/core";
 import { useEffect } from "react";
 import { useAssist } from "./AssistProvider";
-import { useAssistTools } from "./useAssistTools";
 import { runAgent } from "./agent";
 import { runLLMAgent } from "./llm-agent";
 import type { ToolCall } from "./types";
 import { useAssistChat } from "./useAssistChat";
+import { useAssistTools } from "./useAssistTools";
 
 export function AssistPanel() {
 	const {

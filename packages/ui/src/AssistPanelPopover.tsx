@@ -1,4 +1,7 @@
-import { Popover, type PopoverRootChangeEventDetails } from "@base-ui/react/popover";
+import {
+	Popover,
+	type PopoverRootChangeEventDetails,
+} from "@base-ui/react/popover";
 import type React from "react";
 import { useCallback } from "react";
 import { AssistTrigger } from "./AssistTrigger";
@@ -21,13 +24,16 @@ export function AssistPanelPopover({
 	triggerClassName = "fixed bottom-4 right-4 flex items-center justify-center border-none select-none focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-1 focus-visible:outline-ring z-[10000]",
 }: AssistPanelPopoverProps) {
 	// Handle open change, ignoring outside press events so users can interact with the page
-	const handleOpenChange = useCallback((open: boolean, eventDetails: PopoverRootChangeEventDetails) => {
-		// Ignore outside clicks - the panel should stay open while interacting with the page
-		if (!open && eventDetails.reason === "outside-press") {
-			return;
-		}
-		onOpenChange(open);
-	}, [onOpenChange]);
+	const handleOpenChange = useCallback(
+		(open: boolean, eventDetails: PopoverRootChangeEventDetails) => {
+			// Ignore outside clicks - the panel should stay open while interacting with the page
+			if (!open && eventDetails.reason === "outside-press") {
+				return;
+			}
+			onOpenChange(open);
+		},
+		[onOpenChange],
+	);
 
 	return (
 		<Popover.Root open={isOpen} onOpenChange={handleOpenChange} modal={false}>
@@ -53,7 +59,16 @@ export function AssistPanelPopover({
 								className="absolute top-2 right-2 z-10 p-1 text-muted-foreground hover:text-foreground transition-colors rounded hover:bg-muted/50"
 								aria-label="Close"
 							>
-								<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+								<svg
+									width="14"
+									height="14"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									strokeWidth="2"
+									strokeLinecap="round"
+									strokeLinejoin="round"
+								>
 									<line x1="18" y1="6" x2="6" y2="18" />
 									<line x1="6" y1="6" x2="18" y2="18" />
 								</svg>

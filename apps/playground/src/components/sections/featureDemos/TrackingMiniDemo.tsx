@@ -1,4 +1,3 @@
-import React from "react";
 import { Mark, useAssist } from "@quest/react";
 
 export function TrackingMiniDemo() {
@@ -43,5 +42,3 @@ export function TrackingMiniDemo() {
 		</div>
 	);
 }
-
-

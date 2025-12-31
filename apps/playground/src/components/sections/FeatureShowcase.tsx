@@ -1,4 +1,3 @@
-import React from "react";
 import { Mark } from "@quest/react";
 import { FeatureCard } from "./FeatureCard";
 import { ClickMiniDemo } from "./featureDemos/ClickMiniDemo";
@@ -92,4 +91,3 @@ export function FeatureShowcase() {
 		</section>
 	);
 }
-

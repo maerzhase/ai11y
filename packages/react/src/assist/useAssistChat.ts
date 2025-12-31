@@ -65,11 +65,11 @@ export function useAssistChat({
 				content: userMessage,
 				timestamp: Date.now(),
 			};
-			
+
 			// Build updated messages array for conversation history
 			setMessages((prev) => {
 				const updated = [...prev, userMsg];
-				
+
 				// Pass conversation history (including the new user message) to onSubmit
 				onSubmit(userMessage, updated)
 					.then((response) => {
@@ -107,7 +107,7 @@ export function useAssistChat({
 						setIsProcessing(false);
 						processingRef.current = false;
 					});
-				
+
 				return updated;
 			});
 		},

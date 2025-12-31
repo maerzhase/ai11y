@@ -126,8 +126,10 @@ export async function runAgent(
 		for (const msg of lastFewMessages) {
 			// Look for marker mentions in the conversation
 			for (const marker of request.context.markers) {
-				if (msg.content.toLowerCase().includes(marker.label.toLowerCase()) || 
-				    msg.content.toLowerCase().includes(marker.id.toLowerCase())) {
+				if (
+					msg.content.toLowerCase().includes(marker.label.toLowerCase()) ||
+					msg.content.toLowerCase().includes(marker.id.toLowerCase())
+				) {
 					recentMarkerContext += `\nRecently discussed: ${marker.label} (${marker.id}) - ${marker.intent}`;
 					break;
 				}

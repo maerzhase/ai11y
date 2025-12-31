@@ -1,6 +1,5 @@
-import React from "react";
-import { CTASection } from "../components/sections/CTASection";
 import { CodeExamplesSection } from "../components/sections/CodeExamplesSection";
+import { CTASection } from "../components/sections/CTASection";
 import { FeatureShowcase } from "../components/sections/FeatureShowcase";
 import { Footer } from "../components/sections/Footer";
 import { HeroSection } from "../components/sections/HeroSection";

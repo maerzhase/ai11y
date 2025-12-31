@@ -14,4 +14,3 @@
 export function formatMarkerId(id: string): string {
 	return id.replace(/_/g, " ").replace(/\b\w/g, (char) => char.toUpperCase());
 }
-

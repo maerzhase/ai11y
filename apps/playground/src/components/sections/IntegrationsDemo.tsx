@@ -1,5 +1,5 @@
 import { Mark, useAssist } from "@quest/react";
-import React, { useState } from "react";
+import { useState } from "react";
 
 export function IntegrationsDemo() {
 	const { reportError } = useAssist();
@@ -71,4 +71,3 @@ export function IntegrationsDemo() {
 		</Mark>
 	);
 }
-

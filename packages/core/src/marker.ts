@@ -1,8 +1,8 @@
 import {
 	getAllMarkersSelector,
 	getMarkerId,
-	getMarkerLabel,
 	getMarkerIntent,
+	getMarkerLabel,
 } from "./util/attributes";
 import { formatMarkerId } from "./util/format";
 
@@ -69,4 +69,3 @@ export function getMarkers(root?: Element): Marker[] {
 
 	return markers;
 }
-

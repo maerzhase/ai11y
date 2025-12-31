@@ -1,4 +1,3 @@
-import React from "react";
 import { Mark, useAssist } from "@quest/react";
 
 export function LLMMiniDemo() {
@@ -27,5 +26,3 @@ export function LLMMiniDemo() {
 		</div>
 	);
 }
-
-

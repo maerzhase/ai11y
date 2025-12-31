@@ -1,4 +1,3 @@
-import React from "react";
 import { Mark } from "@quest/react";
 
 export function CTASection() {
@@ -57,4 +56,3 @@ export function CTASection() {
 		</section>
 	);
 }
-

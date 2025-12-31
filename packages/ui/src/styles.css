@@ -84,7 +84,8 @@
 
 /* Quest Assist Trigger Animations */
 @keyframes quest-pulse {
-	0%, 100% {
+	0%,
+	100% {
 		transform: scale(1);
 		opacity: 0.4;
 	}
@@ -95,7 +96,8 @@
 }
 
 @keyframes quest-float {
-	0%, 100% {
+	0%,
+	100% {
 		transform: translateY(0) translateX(0);
 		opacity: 0.6;
 	}

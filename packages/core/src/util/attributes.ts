@@ -65,4 +65,3 @@ export function getMarkerSelector(markerId: string): string {
 export function getAllMarkersSelector(): string {
 	return `[${ATTRIBUTE_ID}]`;
 }
-

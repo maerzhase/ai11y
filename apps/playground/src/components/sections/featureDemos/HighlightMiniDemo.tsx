@@ -1,4 +1,3 @@
-import React from "react";
 import { Mark } from "@quest/react";
 
 export function HighlightMiniDemo() {
@@ -17,5 +16,3 @@ export function HighlightMiniDemo() {
 		</div>
 	);
 }
-
-

@@ -53,4 +53,3 @@ export function notify(): void {
 export function getSubscriberCount(): number {
 	return listeners.size;
 }
-

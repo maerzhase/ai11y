@@ -1,4 +1,3 @@
-import React from "react";
 import { Mark } from "@quest/react";
 import { CodeBlock } from "../CodeBlock";
 
@@ -24,4 +23,3 @@ export function CodeExampleCard({ id, title, code }: CodeExampleCardProps) {
 		</Mark>
 	);
 }
-

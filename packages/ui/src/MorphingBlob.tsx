@@ -21,9 +21,9 @@ export function MorphingBlob({
 	const gradientId = `quest-grad-${id}`;
 
 	// Scale the path coordinates based on size (paths are designed for 44x44)
-	const scale = size / 44;
+	const _scale = size / 44;
 	const viewBox = `0 0 ${size} ${size}`;
-	
+
 	// Center point
 	const c = size / 2;
 	// Radius variations
@@ -81,4 +81,3 @@ export function MorphingBlob({
 		</div>
 	);
 }
-

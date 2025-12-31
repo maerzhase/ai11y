@@ -1,10 +1,10 @@
-import { useCallback } from "react";
 import {
-	navigateToRoute,
-	highlightMarker,
-	scrollToMarker,
 	clickMarker,
+	highlightMarker,
+	navigateToRoute,
+	scrollToMarker,
 } from "@quest/core";
+import { useCallback } from "react";
 import { useAssist } from "./AssistProvider";
 
 /**
@@ -20,7 +20,7 @@ import { useAssist } from "./AssistProvider";
  * @example
  * ```tsx
  * const { navigate, highlight, scroll, click } = useAssistTools();
- * 
+ *
  * const handleAction = () => {
  *   navigate('/billing');
  *   highlight('connect_stripe');
@@ -28,12 +28,8 @@ import { useAssist } from "./AssistProvider";
  * ```
  */
 export function useAssistTools() {
-	const {
-		highlightedMarkers,
-		addHighlight,
-		highlightWrapper,
-		onNavigate,
-	} = useAssist();
+	const { highlightedMarkers, addHighlight, highlightWrapper, onNavigate } =
+		useAssist();
 
 	const navigate = useCallback(
 		(route: string) => {
@@ -88,4 +84,3 @@ export function useAssistTools() {
 		click,
 	};
 }
-

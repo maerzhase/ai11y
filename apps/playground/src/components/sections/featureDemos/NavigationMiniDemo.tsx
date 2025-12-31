@@ -1,4 +1,3 @@
-import React from "react";
 import { Mark, useAssist } from "@quest/react";
 
 export function NavigationMiniDemo() {
@@ -6,7 +5,9 @@ export function NavigationMiniDemo() {
 
 	return (
 		<div className="rounded-lg border border-border bg-muted/30 p-3">
-			<div className="text-xs text-muted-foreground mb-2">Assistant context</div>
+			<div className="text-xs text-muted-foreground mb-2">
+				Assistant context
+			</div>
 			<Mark
 				id="nav_demo_current_route"
 				label="Current Route (Demo)"
@@ -20,5 +21,3 @@ export function NavigationMiniDemo() {
 		</div>
 	);
 }
-
-

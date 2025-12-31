@@ -1,10 +1,10 @@
-import { MorphingBlob } from "@quest/ui";
 import {
-	formatMarkerId,
 	ATTRIBUTE_ID,
-	ATTRIBUTE_LABEL,
 	ATTRIBUTE_INTENT,
+	ATTRIBUTE_LABEL,
+	formatMarkerId,
 } from "@quest/core";
+import { MorphingBlob } from "@quest/ui";
 import React, { useEffect, useLayoutEffect, useMemo, useRef } from "react";
 import { createPortal } from "react-dom";
 import { useAssist } from "./AssistProvider";
@@ -97,15 +97,7 @@ export function Mark({
 		// Note: we intentionally re-run this effect when highlight wrapping changes.
 		// Conditional wrapping can remount the underlying DOM node; we need the registry
 		// to point at the current element so tools like `click()` still work.
-	}, [
-		id,
-		label,
-		intent,
-		isHighlighted,
-		highlightWrapper,
-		registerMarker,
-		unregisterMarker,
-	]);
+	}, [id, label, intent, registerMarker, unregisterMarker]);
 
 	// Update bubble position directly via ref (no state updates during scroll)
 	useIsomorphicLayoutEffect(() => {

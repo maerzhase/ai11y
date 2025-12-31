@@ -1,5 +1,4 @@
-export { scrollToMarker } from "./scroll";
-export { highlightMarker, type HighlightOptions } from "./highlight";
 export { clickMarker } from "./click";
+export { type HighlightOptions, highlightMarker } from "./highlight";
 export { navigateToRoute } from "./navigate";
-
+export { scrollToMarker } from "./scroll";

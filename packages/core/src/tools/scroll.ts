@@ -26,4 +26,3 @@ export function scrollToMarker(markerId: string): void {
 
 	track("scroll", { markerId });
 }
-

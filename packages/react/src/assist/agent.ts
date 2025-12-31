@@ -1,4 +1,4 @@
-import type { AgentResponse, UIContext, ToolCall } from "./types";
+import type { AgentResponse, ToolCall, UIContext } from "./types";
 
 export function runAgent(input: string, context: UIContext): AgentResponse {
 	const lowerInput = input.toLowerCase().trim();

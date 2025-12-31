@@ -1,4 +1,4 @@
-import { track, setRoute } from "../store";
+import { setRoute, track } from "../store";
 
 /**
  * Navigates to a route
@@ -15,4 +15,3 @@ export function navigateToRoute(route: string): void {
 	setRoute(route);
 	track("navigate", { route });
 }
-

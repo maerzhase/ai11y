@@ -1,3 +1,15 @@
+import {
+	getError,
+	getEvents,
+	getRoute,
+	getState,
+	getUIContext,
+	setError,
+	setState,
+	subscribe,
+	subscribeToStore,
+	track,
+} from "@quest/core";
 import type React from "react";
 import {
 	createContext,
@@ -7,25 +19,13 @@ import {
 	useRef,
 	useState,
 } from "react";
-import {
-	getUIContext,
-	getRoute,
-	getState,
-	getError,
-	getEvents,
-	setState,
-	setError,
-	subscribe,
-	subscribeToStore,
-	track,
-} from "@quest/core";
 import type {
-	UIContext,
+	LLMAgentConfig,
+	MarkerMetadata,
 	UIAIError,
 	UIAIEvent,
 	UIAIState,
-	LLMAgentConfig,
-	MarkerMetadata,
+	UIContext,
 } from "./types";
 
 interface AssistContextValue {
@@ -116,7 +116,7 @@ export function AssistProvider({
 		if (Object.keys(initialState).length > 0) {
 			setState(initialState);
 		}
-	}, []); // Only run on mount
+	}, [initialState]); // Only run on mount
 
 	// Read from core store reactively
 	const [currentRoute, setCurrentRoute] = useState<string>(
@@ -201,7 +201,7 @@ export function AssistProvider({
 			// Track event - events will be synced via subscription
 			track("error", { error: error.message, meta });
 		},
-		[track],
+		[],
 	);
 
 	const addHighlight = useCallback((markerId: string, duration = 2000) => {
@@ -235,27 +235,30 @@ export function AssistProvider({
 		setPendingMessage(message);
 		setIsPanelOpen(true);
 		track("panel_opened_with_message", { message });
-	}, [track]);
+	}, []);
 
-	const togglePanelForMarker = useCallback((markerId: string, message: string) => {
-		// Use refs to avoid stale closure issues
-		const currentFocusedId = focusedMarkerIdRef.current;
-		const currentPanelOpen = isPanelOpenRef.current;
+	const togglePanelForMarker = useCallback(
+		(markerId: string, message: string) => {
+			// Use refs to avoid stale closure issues
+			const currentFocusedId = focusedMarkerIdRef.current;
+			const currentPanelOpen = isPanelOpenRef.current;
 
-		// If this marker is already focused and panel is open, close the panel
-		if (currentFocusedId === markerId && currentPanelOpen) {
-			setIsPanelOpen(false);
-			setFocusedMarkerId(null);
-			track("panel_closed_by_marker", { markerId });
-			return;
-		}
+			// If this marker is already focused and panel is open, close the panel
+			if (currentFocusedId === markerId && currentPanelOpen) {
+				setIsPanelOpen(false);
+				setFocusedMarkerId(null);
+				track("panel_closed_by_marker", { markerId });
+				return;
+			}
 
-		// Otherwise, focus this marker and open panel with message
-		setFocusedMarkerId(markerId);
-		setPendingMessage(message);
-		setIsPanelOpen(true);
-		track("panel_opened_by_marker", { markerId, message });
-	}, [track]);
+			// Otherwise, focus this marker and open panel with message
+			setFocusedMarkerId(markerId);
+			setPendingMessage(message);
+			setIsPanelOpen(true);
+			track("panel_opened_by_marker", { markerId, message });
+		},
+		[],
+	);
 
 	const clearPendingMessage = useCallback(() => {
 		setPendingMessage(null);

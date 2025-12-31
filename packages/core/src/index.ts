@@ -4,29 +4,29 @@
  * Core types and utilities shared across all React Quest packages.
  */
 
-export * from "./types";
+export { getUIContext } from "./dom";
+export { getSubscriberCount, notify, subscribe } from "./events";
 export type { Marker } from "./marker";
 export { getMarkers } from "./marker";
-export { getUIContext } from "./dom";
-export * from "./util";
 export {
-	setRoute,
+	clearContext,
+	clearEvents,
+	getError,
+	getEvents,
 	getRoute,
-	setState,
 	getState,
 	setError,
-	getError,
-	track,
-	getEvents,
-	clearEvents,
-	clearContext,
+	setRoute,
+	setState,
 	subscribeToStore,
+	track,
 } from "./store";
-export { subscribe, notify, getSubscriberCount } from "./events";
 export {
-	scrollToMarker,
-	highlightMarker,
 	clickMarker,
-	navigateToRoute,
 	type HighlightOptions,
+	highlightMarker,
+	navigateToRoute,
+	scrollToMarker,
 } from "./tools";
+export * from "./types";
+export * from "./util";

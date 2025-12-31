@@ -1,5 +1,5 @@
-import type { AgentResponse, UIContext, LLMAgentConfig } from "./types";
 import type { ConversationMessage } from "@quest/core";
+import type { AgentResponse, LLMAgentConfig, UIContext } from "./types";
 
 /**
  * LLM-based agent using server-side API endpoint.

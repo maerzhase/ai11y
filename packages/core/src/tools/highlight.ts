@@ -76,4 +76,3 @@ export function highlightMarker(
 
 	track("highlight", { markerId });
 }
-

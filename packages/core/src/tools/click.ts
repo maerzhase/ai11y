@@ -19,7 +19,10 @@ export function clickMarker(markerId: string): void {
 	}
 
 	// Prefer native click to avoid double-firing handlers (important for toggles)
-	if ("click" in element && typeof (element as HTMLElement).click === "function") {
+	if (
+		"click" in element &&
+		typeof (element as HTMLElement).click === "function"
+	) {
 		(element as HTMLElement).click();
 	} else {
 		// Fallback: dispatch a synthetic mouse event
@@ -34,4 +37,3 @@ export function clickMarker(markerId: string): void {
 
 	track("click", { markerId });
 }
-

@@ -1,4 +1,3 @@
-import React from "react";
 import { Mark } from "@quest/react";
 import { useState } from "react";
 
@@ -32,5 +31,3 @@ export function ClickMiniDemo() {
 		</div>
 	);
 }
-
-

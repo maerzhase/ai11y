@@ -1,6 +1,6 @@
-import type { UIContext } from "./types";
 import { getMarkers } from "./marker";
-import { getRoute, getState, getError } from "./store";
+import { getError, getRoute, getState } from "./store";
+import type { UIContext } from "./types";
 
 /**
  * Composes a complete UIContext from singleton state and DOM markers
@@ -40,4 +40,3 @@ export function getUIContext(root?: Element): UIContext {
 
 	return context;
 }
-

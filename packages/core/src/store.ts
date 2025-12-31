@@ -1,5 +1,5 @@
-import type { UIAIError, UIAIEvent, UIAIState } from "./types";
 import { notify } from "./events";
+import type { UIAIError, UIAIEvent, UIAIState } from "./types";
 
 /**
  * Module-level singleton state for UI context
@@ -150,4 +150,3 @@ export function clearContext(): void {
 	notifyStoreChange("state", undefined);
 	notifyStoreChange("error", undefined);
 }
-

@@ -1,5 +1,5 @@
-import React, { type ReactNode } from "react";
 import { Mark, useAssist } from "@quest/react";
+import type { ReactNode } from "react";
 
 interface FeatureCardProps {
 	id: string;
@@ -61,4 +61,3 @@ export function FeatureCard({
 		</Mark>
 	);
 }
-

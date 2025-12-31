@@ -1,4 +1,3 @@
-import React from "react";
 import { Mark, useAssist } from "@quest/react";
 import { useState } from "react";
 
@@ -13,7 +12,10 @@ export function ErrorMiniDemo() {
 			const error = new Error(
 				"Stripe connection failed (mini demo). Ask the assistant to retry.",
 			);
-			reportError(error, { surface: "feature-card", markerId: "error_demo_connect" });
+			reportError(error, {
+				surface: "feature-card",
+				markerId: "error_demo_connect",
+			});
 			return;
 		}
 
@@ -53,5 +55,3 @@ export function ErrorMiniDemo() {
 		</div>
 	);
 }
-
-
