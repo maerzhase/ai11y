@@ -80,7 +80,7 @@ You can extend the agent with custom tools using the `ToolRegistry`:
 
 ```ts
 import { questPlugin, createToolRegistry } from '@react-quest/server/fastify';
-import type { ToolDefinition, ToolExecutor, AssistContext } from '@react-quest/server';
+import type { ToolDefinition, ToolExecutor, UIContext } from '@react-quest/server';
 
 // Create a custom tool registry
 const registry = createToolRegistry();
@@ -170,7 +170,7 @@ interface ServerConfig {
 ```ts
 interface AgentRequest {
   input: string;
-  context: AssistContext;
+  context: UIContext;
 }
 ```
 
@@ -202,7 +202,7 @@ interface ToolDefinition {
 ```ts
 type ToolExecutor = (
   args: Record<string, unknown>,
-  context: AssistContext,
+  context: UIContext,
 ) => Promise<unknown> | unknown;
 ```
 

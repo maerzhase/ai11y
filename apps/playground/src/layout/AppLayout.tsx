@@ -1,4 +1,4 @@
-import { useAssist } from "@quest/react";
+import { navigateToRoute } from "@quest/core";
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { LogoCircular } from "../components/LogoCircular";
@@ -10,12 +10,11 @@ interface AppLayoutProps {
 
 export function AppLayout({ children }: AppLayoutProps) {
 	const location = useLocation();
-	const { navigate: assistNavigate } = useAssist();
 
-	// Sync React Router location with AssistProvider
+	// Sync React Router location with core store
 	React.useEffect(() => {
-		assistNavigate(location.pathname);
-	}, [location.pathname, assistNavigate]);
+		navigateToRoute(location.pathname);
+	}, [location.pathname]);
 
 	return (
 		<div className="min-h-screen bg-background text-foreground transition-colors">

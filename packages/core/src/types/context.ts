@@ -1,14 +1,16 @@
+import type { Marker } from "../marker";
+
 /**
- * Application state that can be tracked by the assist system
+ * Application state for UI-to-AI context binding
  */
-export interface AssistState {
+export interface UIAIState {
 	[key: string]: unknown;
 }
 
 /**
- * Error information tracked by the assist system
+ * Error information for UI-to-AI context binding
  */
-export interface AssistError {
+export interface UIAIError {
 	error: Error;
 	meta?: {
 		surface?: string;
@@ -18,21 +20,21 @@ export interface AssistError {
 }
 
 /**
- * Marker information for UI elements
+ * Event information for UI-to-AI context binding
  */
-export interface Marker {
-	id: string;
-	label: string;
-	intent: string;
+export interface UIAIEvent {
+	type: string;
+	payload?: unknown;
+	timestamp: number;
 }
 
 /**
  * Context information available to the agent
  * Contains current application state, route, errors, and available UI markers
  */
-export interface AssistContext {
-	currentRoute: string;
-	assistState: AssistState;
-	lastError: AssistError | null;
+export interface UIContext {
 	markers: Marker[];
+	route?: string;
+	state?: UIAIState;
+	error?: UIAIError | null;
 }

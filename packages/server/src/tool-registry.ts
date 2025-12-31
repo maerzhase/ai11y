@@ -1,5 +1,5 @@
 import type {
-	AssistContext,
+	UIContext,
 	ToolCall,
 	ToolDefinition,
 	ToolExecutor,
@@ -53,7 +53,7 @@ export class ToolRegistry {
 	async executeToolCall(
 		toolName: string,
 		args: Record<string, unknown>,
-		context: AssistContext,
+		context: UIContext,
 	): Promise<unknown> {
 		const tool = this.tools.get(toolName);
 		if (!tool) {

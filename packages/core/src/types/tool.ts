@@ -1,4 +1,4 @@
-import type { AssistContext } from "./context";
+import type { UIContext } from "./context";
 
 /**
  * Tool call types that the agent can execute
@@ -35,5 +35,5 @@ export interface ToolDefinition {
  */
 export type ToolExecutor = (
 	args: Record<string, unknown>,
-	context: AssistContext,
+	context: UIContext,
 ) => Promise<unknown> | unknown;

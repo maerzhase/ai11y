@@ -4,7 +4,7 @@
 export type {
 	AgentRequest,
 	AgentResponse,
-	AssistContext,
+	UIContext,
 	ServerConfig,
 	ToolCall,
 	ToolDefinition,

@@ -1,4 +1,10 @@
 import { MorphingBlob } from "@quest/ui";
+import {
+	formatMarkerId,
+	ATTRIBUTE_ID,
+	ATTRIBUTE_LABEL,
+	ATTRIBUTE_INTENT,
+} from "@quest/core";
 import React, { useEffect, useLayoutEffect, useMemo, useRef } from "react";
 import { createPortal } from "react-dom";
 import { useAssist } from "./AssistProvider";
@@ -13,10 +19,6 @@ interface MarkProps {
 	 */
 	showAssistBubble?: boolean;
 	children: React.ReactElement;
-}
-
-function formatMarkerId(id: string): string {
-	return id.replace(/_/g, " ").replace(/\b\w/g, (char) => char.toUpperCase());
 }
 
 function buildMarkerPrompt({
@@ -129,12 +131,15 @@ export function Mark({
 		};
 	}, [showAssistBubble, isHighlighted, highlightWrapper]);
 
-	// Clone child and attach ref (no wrapper needed)
+	// Clone child and attach ref + data-ai-* attributes (no wrapper needed)
 	const childWithRef = React.cloneElement(children, {
 		ref: (node: HTMLElement | null) => {
 			elementRef.current = node;
 			assignRef((children as any).ref, node);
 		},
+		[ATTRIBUTE_ID]: id,
+		...(label && { [ATTRIBUTE_LABEL]: label }),
+		...(intent && { [ATTRIBUTE_INTENT]: intent }),
 	} as any);
 
 	const handleBubbleClick = (e: React.MouseEvent) => {

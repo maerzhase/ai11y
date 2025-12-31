@@ -1,4 +1,4 @@
-import type { AgentResponse, AssistContext, LLMAgentConfig } from "./types";
+import type { AgentResponse, UIContext, LLMAgentConfig } from "./types";
 import type { ConversationMessage } from "@quest/core";
 
 /**
@@ -7,7 +7,7 @@ import type { ConversationMessage } from "@quest/core";
  */
 export async function runLLMAgent(
 	input: string,
-	context: AssistContext,
+	context: UIContext,
 	config: LLMAgentConfig,
 	messages?: ConversationMessage[],
 ): Promise<AgentResponse> {
@@ -20,18 +20,20 @@ export async function runLLMAgent(
 			body: JSON.stringify({
 				input,
 				context: {
-					currentRoute: context.currentRoute,
-					assistState: context.assistState,
-					lastError: context.lastError
-						? {
-								error: {
-									message: context.lastError.error.message,
-								},
-								meta: context.lastError.meta,
-								timestamp: context.lastError.timestamp,
-							}
-						: null,
 					markers: context.markers,
+					...(context.route !== undefined && { route: context.route }),
+					...(context.state !== undefined && { state: context.state }),
+					...(context.error !== undefined && {
+						error: context.error
+							? {
+									error: {
+										message: context.error.error.message,
+									},
+									meta: context.error.meta,
+									timestamp: context.error.timestamp,
+								}
+							: null,
+					}),
 				},
 				messages: messages?.slice(-10), // Send last 10 messages for context
 			}),

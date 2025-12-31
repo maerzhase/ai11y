@@ -7,21 +7,30 @@ import {
 	useRef,
 	useState,
 } from "react";
+import {
+	getUIContext,
+	setRoute,
+	setState,
+	setError,
+	getEvents,
+	subscribe,
+	track,
+} from "@quest/core";
 import type {
-	AssistContext,
-	AssistError,
-	AssistEvent,
-	AssistState,
+	UIContext,
+	UIAIError,
+	UIAIEvent,
+	UIAIState,
 	LLMAgentConfig,
 	MarkerMetadata,
 } from "./types";
 
 interface AssistContextValue {
 	// State
-	assistState: AssistState;
+	assistState: UIAIState;
 	currentRoute: string;
-	lastError: AssistError | null;
-	events: AssistEvent[];
+	lastError: UIAIError | null;
+	events: UIAIEvent[];
 
 	// Marker registry
 	markers: Map<string, MarkerMetadata>;
@@ -34,6 +43,10 @@ interface AssistContextValue {
 		children: React.ReactNode;
 		markerId: string;
 	}>;
+	// Internal: used by useAssistTools hook
+	addHighlight: (markerId: string, duration?: number) => void;
+	onHighlight?: (markerId: string, element: HTMLElement) => void;
+	onNavigate?: (route: string) => void;
 
 	// Focused marker (clicked marker bubble)
 	focusedMarkerId: string | null;
@@ -44,10 +57,9 @@ interface AssistContextValue {
 		error: Error,
 		meta?: { surface?: string; markerId?: string },
 	) => void;
-	navigate: (route: string) => void;
-	highlight: (markerId: string) => void;
-	scroll: (markerId: string) => void;
-	click: (markerId: string) => void;
+	// Note: Tool functions (navigate, highlight, scroll, click) are available via:
+	// - Core functions: import { navigateToRoute, highlightMarker, scrollToMarker, clickMarker } from "@quest/core"
+	// - React-specific wrappers: import { useAssistTools } from "@quest/react"
 
 	// Panel control
 	isPanelOpen: boolean;
@@ -58,7 +70,7 @@ interface AssistContextValue {
 	pendingMessage: string | null;
 
 	// Context for agent
-	getContext: () => AssistContext;
+	getContext: () => UIContext;
 
 	// LLM config
 	llmConfig: LLMAgentConfig | null;
@@ -76,7 +88,7 @@ export function useAssist() {
 
 interface AssistProviderProps {
 	children: React.ReactNode;
-	initialState?: AssistState;
+	initialState?: UIAIState;
 	onNavigate?: (route: string) => void;
 	/**
 	 * Event handler called when an element is highlighted.
@@ -102,10 +114,23 @@ export function AssistProvider({
 	highlightWrapper,
 	llmConfig = null,
 }: AssistProviderProps) {
-	const [assistState, _setAssistState] = useState<AssistState>(initialState);
+	const [assistState, _setAssistState] = useState<UIAIState>(initialState);
 	const [currentRoute, setCurrentRoute] = useState<string>("/");
-	const [lastError, setLastError] = useState<AssistError | null>(null);
-	const [events, setEvents] = useState<AssistEvent[]>([]);
+	const [lastError, setLastError] = useState<UIAIError | null>(null);
+
+	// Sync React state to singleton on mount and when state changes
+	useEffect(() => {
+		setRoute(currentRoute);
+	}, [currentRoute]);
+
+	useEffect(() => {
+		setState(Object.keys(assistState).length > 0 ? assistState : undefined);
+	}, [assistState]);
+
+	useEffect(() => {
+		setError(lastError);
+	}, [lastError]);
+	const [events, setEvents] = useState<UIAIEvent[]>([]);
 	const [markers, setMarkers] = useState<Map<string, MarkerMetadata>>(
 		new Map(),
 	);
@@ -139,40 +164,28 @@ export function AssistProvider({
 		});
 	}, []);
 
-	const track = useCallback((event: string, payload?: unknown) => {
-		setEvents((prev) => [
-			...prev.slice(-49), // Keep last 50 events
-			{
-				type: event,
-				payload,
-				timestamp: Date.now(),
-			},
-		]);
+	// Subscribe to events from core store for reactivity
+	useEffect(() => {
+		const unsubscribe = subscribe(() => {
+			setEvents([...getEvents()]);
+		});
+		return unsubscribe;
 	}, []);
 
 	const reportError = useCallback(
 		(error: Error, meta?: { surface?: string; markerId?: string }) => {
-			const assistError: AssistError = {
+			const assistError: UIAIError = {
 				error,
 				meta,
 				timestamp: Date.now(),
 			};
 			setLastError(assistError);
+			setError(assistError); // Sync to singleton
 			setIsPanelOpen(true);
+			// Track event - events will be synced via subscription
 			track("error", { error: error.message, meta });
 		},
 		[track],
-	);
-
-	const navigate = useCallback(
-		(route: string) => {
-			setCurrentRoute(route);
-			if (onNavigate) {
-				onNavigate(route);
-			}
-			track("navigate", { route });
-		},
-		[onNavigate, track],
 	);
 
 	const addHighlight = useCallback((markerId: string, duration = 2000) => {
@@ -201,121 +214,6 @@ export function AssistProvider({
 
 		highlightTimeoutRef.current.set(markerId, timeout);
 	}, []);
-
-	const highlight = useCallback(
-		(markerId: string) => {
-			const marker = markers.get(markerId);
-			if (!marker) {
-				console.warn(`Marker ${markerId} not found`);
-				return;
-			}
-
-			const element = marker.element;
-
-			// Scroll element into view
-			element.scrollIntoView({
-				behavior: "smooth",
-				block: "center",
-				inline: "nearest",
-			});
-
-			// Call event handler if provided (for side effects)
-			if (onHighlight) {
-				onHighlight(markerId, element);
-			}
-
-			// Always add to highlightedMarkers (for bubble emphasis)
-			addHighlight(markerId);
-
-			// If highlightWrapper is provided, let it handle visual highlighting
-			if (highlightWrapper) {
-				track("highlight", { markerId });
-				return;
-			}
-
-			// Default highlight behavior (inline styles)
-			const originalOutline = element.style.outline;
-			const originalOutlineOffset = element.style.outlineOffset;
-			const originalTransition = element.style.transition;
-
-			// Apply highlight
-			element.style.outline = "3px solid #3b82f6";
-			element.style.outlineOffset = "2px";
-			element.style.transition = "outline 0.2s ease";
-
-			// Remove highlight after 2 seconds
-			const timeout = window.setTimeout(() => {
-				element.style.outline = originalOutline;
-				element.style.outlineOffset = originalOutlineOffset;
-				element.style.transition = originalTransition;
-			}, 2000);
-
-			// Store separate timeout for element styles cleanup
-			const styleTimeoutKey = `${markerId}-style`;
-			const existingStyleTimeout = highlightTimeoutRef.current.get(styleTimeoutKey);
-			if (existingStyleTimeout) {
-				clearTimeout(existingStyleTimeout);
-			}
-			highlightTimeoutRef.current.set(styleTimeoutKey, timeout);
-
-			track("highlight", { markerId });
-		},
-		[markers, track, onHighlight, highlightWrapper, addHighlight],
-	);
-
-	const scroll = useCallback(
-		(markerId: string) => {
-			const marker = markers.get(markerId);
-			if (!marker) {
-				console.warn(`Marker ${markerId} not found`);
-				return;
-			}
-
-			const element = marker.element;
-
-			// Scroll element into view
-			element.scrollIntoView({
-				behavior: "smooth",
-				block: "center",
-				inline: "nearest",
-			});
-
-			// Highlight the bubble when scrolling to marker
-			addHighlight(markerId);
-
-			track("scroll", { markerId });
-		},
-		[markers, track, addHighlight],
-	);
-
-	const click = useCallback(
-		(markerId: string) => {
-			const marker = markers.get(markerId);
-			if (!marker) {
-				console.warn(`Marker ${markerId} not found`);
-				return;
-			}
-
-			const element = marker.element;
-
-			// Prefer native click to avoid double-firing handlers (important for toggles).
-			if ("click" in element && typeof element.click === "function") {
-				element.click();
-			} else {
-				// Fallback: dispatch a synthetic mouse event
-				const mouseEvent = new MouseEvent("click", {
-					view: window,
-					bubbles: true,
-					cancelable: true,
-					buttons: 1,
-				});
-				element.dispatchEvent(mouseEvent);
-			}
-
-			track("click", { markerId });
-		},
-		[markers, track],
-	);
 
 	const openPanelWithMessage = useCallback((message: string) => {
 		setPendingMessage(message);
@@ -347,18 +245,10 @@ export function AssistProvider({
 		setPendingMessage(null);
 	}, []);
 
-	const getContext = useCallback((): AssistContext => {
-		return {
-			currentRoute,
-			assistState,
-			lastError,
-			markers: Array.from(markers.values()).map((m) => ({
-				id: m.id,
-				label: m.label,
-				intent: m.intent,
-			})),
-		};
-	}, [currentRoute, assistState, lastError, markers]);
+	const getContext = useCallback((): UIContext => {
+		// Use getUIContext from core - it reads from singleton and scans DOM
+		return getUIContext();
+	}, []);
 
 	// Cleanup highlights on unmount
 	useEffect(() => {
@@ -388,13 +278,12 @@ export function AssistProvider({
 		unregisterMarker,
 		highlightedMarkers,
 		highlightWrapper,
+		addHighlight,
+		onHighlight,
+		onNavigate,
 		focusedMarkerId,
 		track,
 		reportError,
-		navigate,
-		highlight,
-		scroll,
-		click,
 		isPanelOpen,
 		setIsPanelOpen: handleSetIsPanelOpen,
 		openPanelWithMessage,

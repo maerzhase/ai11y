@@ -2,8 +2,8 @@
 	"compilerOptions": {
 		"target": "ES2022",
 		"module": "ESNext",
-		"lib": ["ES2022"],
-		"moduleResolution": "bundler",
+		"lib": ["ES2022", "DOM"],
+		"moduleResolution": "nodenext",
 		"declaration": true,
 		"declarationMap": true,
 		"strict": true,

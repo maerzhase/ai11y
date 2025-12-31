@@ -24,7 +24,7 @@ src/
 - `AgentResponse` - Response from the agent with reply and tool calls
 
 ### Context Types (`types/context.ts`)
-- `AssistContext` - Full context available to the agent
+- `UIContext` - Full context available to the agent
 - `AssistState` - Application state tracking
 - `AssistError` - Error information
 - `Marker` - UI element marker information
@@ -40,7 +40,7 @@ src/
 ## Usage
 
 ```typescript
-import type { ToolCall, AgentResponse, AssistContext } from "@quest/core";
+import type { ToolCall, AgentResponse, UIContext } from "@quest/core";
 ```
 
 All types are re-exported from the main entry point, so you can import everything from `@quest/core` directly.

@@ -1,10 +1,12 @@
 // Re-export shared types from core
 export type {
 	AgentResponse,
-	AssistContext,
-	AssistError,
-	AssistState,
+	UIContext,
+	UIAIError,
+	UIAIEvent,
+	UIAIState,
 	ToolCall,
+	Marker,
 } from "@quest/core";
 
 // React-specific types
@@ -13,12 +15,6 @@ export interface MarkerMetadata {
 	label: string;
 	intent: string;
 	element: HTMLElement;
-}
-
-export interface AssistEvent {
-	type: string;
-	payload?: unknown;
-	timestamp: number;
 }
 
 export interface LLMAgentConfig {

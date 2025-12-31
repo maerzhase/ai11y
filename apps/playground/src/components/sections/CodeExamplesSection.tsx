@@ -53,17 +53,18 @@ function App() {
 	},
 	{
 		id: "imperative",
-		title: "Imperative API",
-		code: `import { useAssist } from "@quest/react";
+		title: "Tool Functions",
+		code: `import { navigateToRoute, highlightMarker, clickMarker } from "@quest/core";
+import { useAssist } from "@quest/react";
 
 function MyComponent() {
-  const { navigate, highlight, click, track } = useAssist();
+  const { track } = useAssist();
   
   const handleAction = () => {
     track("custom_event");
-    navigate("/billing");
-    highlight("some_marker");
-    click("another_marker");
+    navigateToRoute("/billing");
+    highlightMarker("some_marker");
+    clickMarker("another_marker");
   };
 }`,
 	},

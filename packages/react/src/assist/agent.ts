@@ -1,6 +1,6 @@
-import type { AgentResponse, AssistContext, ToolCall } from "./types";
+import type { AgentResponse, UIContext, ToolCall } from "./types";
 
-export function runAgent(input: string, context: AssistContext): AgentResponse {
+export function runAgent(input: string, context: UIContext): AgentResponse {
 	const lowerInput = input.toLowerCase().trim();
 
 	// Handle navigation commands
@@ -39,7 +39,7 @@ export function runAgent(input: string, context: AssistContext): AgentResponse {
 			}
 		}
 
-		if (route !== context.currentRoute) {
+		if (route !== context.route) {
 			toolCalls.push({ type: "navigate", route });
 			return {
 				reply: `Navigating to ${route === "/" ? "home" : route}...`,
@@ -124,8 +124,8 @@ export function runAgent(input: string, context: AssistContext): AgentResponse {
 	}
 
 	// Handle error context
-	if (context.lastError) {
-		const error = context.lastError.error;
+	if (context.error) {
+		const error = context.error.error;
 		const errorMessage = error.message || "An error occurred";
 
 		if (
@@ -134,9 +134,9 @@ export function runAgent(input: string, context: AssistContext): AgentResponse {
 			lowerInput.includes("fix")
 		) {
 			// Try to find a retry action
-			if (context.lastError.meta?.markerId) {
+			if (context.error.meta?.markerId) {
 				const marker = context.markers.find(
-					(m) => m.id === context.lastError?.meta?.markerId,
+					(m) => m.id === context.error?.meta?.markerId,
 				);
 				if (marker) {
 					return {

@@ -7,6 +7,7 @@
 		"dev": "vite"
 	},
 	"dependencies": {
+		"@quest/core": "workspace:*",
 		"@quest/react": "workspace:*",
 		"@quest/ui": "workspace:*",
 		"@tailwindcss/vite": "4.1.18",

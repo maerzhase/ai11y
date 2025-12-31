@@ -17,6 +17,9 @@ importers:
 
   apps/playground:
     dependencies:
+      '@quest/core':
+        specifier: workspace:*
+        version: link:../../packages/core
       '@quest/react':
         specifier: workspace:*
         version: link:../../packages/react

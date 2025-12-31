@@ -11,7 +11,7 @@ export { createDefaultToolRegistry, ToolRegistry } from "./tool-registry";
 export type {
 	AgentRequest,
 	AgentResponse,
-	AssistContext,
+	UIContext,
 	ServerConfig,
 	ToolCall,
 	ToolDefinition,

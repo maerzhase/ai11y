@@ -1,4 +1,4 @@
-import type { AssistContext } from "./context";
+import type { UIContext } from "./context";
 import type { ToolCall } from "./tool";
 
 /**
@@ -22,7 +22,7 @@ export interface ConversationMessage {
  */
 export interface AgentRequest {
 	input: string;
-	context: AssistContext;
+	context: UIContext;
 	/**
 	 * Optional conversation history for context-aware responses
 	 */

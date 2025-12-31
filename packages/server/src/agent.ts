@@ -15,20 +15,22 @@ import type {
 function formatContextForPrompt(context: AgentRequest["context"]): string {
 	const parts: string[] = [];
 
-	parts.push(`Current route: ${context.currentRoute}`);
+	if (context.route) {
+		parts.push(`Current route: ${context.route}`);
+	}
 
-	if (context.lastError) {
-		const error = context.lastError.error;
+	if (context.error) {
+		const error = context.error.error;
 		parts.push(
-			`\n! Last error: ${error.message}${context.lastError.meta?.markerId ? ` (related to marker: ${context.lastError.meta.markerId})` : ""}`,
+			`\n! Last error: ${error.message}${context.error.meta?.markerId ? ` (related to marker: ${context.error.meta.markerId})` : ""}`,
 		);
 		parts.push(
 			"The user may want to retry the failed action. Look for markers related to the error.",
 		);
 	}
 
-	if (Object.keys(context.assistState).length > 0) {
-		parts.push(`\nApplication state: ${JSON.stringify(context.assistState)}`);
+	if (context.state && Object.keys(context.state).length > 0) {
+		parts.push(`\nApplication state: ${JSON.stringify(context.state)}`);
 	}
 
 	if (context.markers.length > 0) {

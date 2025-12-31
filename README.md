@@ -26,9 +26,12 @@ The `AssistProvider` is the central context provider that maintains:
 - **Imperative API**: Methods exposed via context:
   - `track(event, payload?)` - Track custom events
   - `reportError(error, meta?)` - Report errors (auto-opens panel)
-  - `navigate(route)` - Navigate to a route
-  - `highlight(markerId)` - Visually highlight an element for 2 seconds
-  - `click(markerId)` - Trigger a marker's action or click its element
+- **Tool Functions**: Available from `@quest/core`:
+  - `navigateToRoute(route)` - Navigate to a route
+  - `highlightMarker(markerId, options?)` - Visually highlight an element
+  - `scrollToMarker(markerId)` - Scroll to a marker element
+  - `clickMarker(markerId)` - Click a marker element
+- **React-Specific Tools**: Available via `useAssistTools()` hook (wraps core functions with React features like highlightWrapper, onHighlight callbacks)
 
 ### 2. Mark Component
 
@@ -86,7 +89,7 @@ The SDK includes server-side OpenAI integration with function calling. The agent
 If no LLM configuration is provided, the SDK falls back to a **rule-based local agent** that parses commands using pattern matching:
 
 ```typescript
-function runAgent(input: string, context: AssistContext): AgentResponse
+function runAgent(input: string, context: UIContext): AgentResponse
 ```
 
 **Supported Commands:**
@@ -238,18 +241,39 @@ function MyComponent() {
 - Works with any clickable element (buttons, links, divs with onClick, etc.)
 - Simplifies integration - no need to wrap existing components with action callbacks
 
-### Using the Imperative API
+### Using Tool Functions
+
+Tool functions are available directly from the core package:
 
 ```tsx
-import { useAssist } from "react-quest";
+import { navigateToRoute, highlightMarker, clickMarker } from "@quest/core";
+import { useAssist } from "@quest/react";
 
 function MyComponent() {
-  const { navigate, highlight, click, track } = useAssist();
+  const { track } = useAssist();
 
   const handleSomething = () => {
     track("custom_event", { data: "value" });
-    navigate("/billing");
-    highlight("some_marker");
+    navigateToRoute("/billing");
+    highlightMarker("some_marker");
+    clickMarker("another_marker");
+  };
+
+  return <button onClick={handleSomething}>Do Something</button>;
+}
+```
+
+For React-specific features (like `highlightWrapper` or `onHighlight` callbacks), use the `useAssistTools()` hook:
+
+```tsx
+import { useAssistTools } from "@quest/react";
+
+function MyComponent() {
+  const { navigate, highlight, click } = useAssistTools();
+
+  const handleSomething = () => {
+    navigate("/billing");  // Calls onNavigate callback if provided
+    highlight("some_marker");  // Uses highlightWrapper if provided
     click("another_marker");
   };
 

@@ -1,6 +1,11 @@
 import { AssistPanelPopover, ChatInput, MessageList } from "@quest/ui";
+import {
+	scrollToMarker,
+	clickMarker,
+} from "@quest/core";
 import { useEffect } from "react";
 import { useAssist } from "./AssistProvider";
+import { useAssistTools } from "./useAssistTools";
 import { runAgent } from "./agent";
 import { runLLMAgent } from "./llm-agent";
 import type { ToolCall } from "./types";
@@ -11,15 +16,12 @@ export function AssistPanel() {
 		isPanelOpen,
 		setIsPanelOpen,
 		getContext,
-		navigate,
-		highlight,
-		scroll,
-		click,
 		track,
 		llmConfig,
 		pendingMessage,
 		clearPendingMessage,
 	} = useAssist();
+	const { navigate, highlight } = useAssistTools();
 
 	const handleSubmit = async (
 		message: string,
@@ -71,12 +73,12 @@ export function AssistPanel() {
 				break;
 			case "scroll":
 				if (toolCall.markerId) {
-					scroll(toolCall.markerId);
+					scrollToMarker(toolCall.markerId);
 				}
 				break;
 			case "click":
 				if (toolCall.markerId) {
-					click(toolCall.markerId);
+					clickMarker(toolCall.markerId);
 				}
 				break;
 		}
