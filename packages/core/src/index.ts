@@ -20,6 +20,7 @@ export {
 	getEvents,
 	clearEvents,
 	clearContext,
+	subscribeToStore,
 } from "./store";
 export { subscribe, notify, getSubscriberCount } from "./events";
 export {

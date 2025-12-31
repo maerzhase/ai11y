@@ -9,11 +9,14 @@ import {
 } from "react";
 import {
 	getUIContext,
-	setRoute,
+	getRoute,
+	getState,
+	getError,
+	getEvents,
 	setState,
 	setError,
-	getEvents,
 	subscribe,
+	subscribeToStore,
 	track,
 } from "@quest/core";
 import type {
@@ -45,7 +48,6 @@ interface AssistContextValue {
 	}>;
 	// Internal: used by useAssistTools hook
 	addHighlight: (markerId: string, duration?: number) => void;
-	onHighlight?: (markerId: string, element: HTMLElement) => void;
 	onNavigate?: (route: string) => void;
 
 	// Focused marker (clicked marker bubble)
@@ -91,13 +93,9 @@ interface AssistProviderProps {
 	initialState?: UIAIState;
 	onNavigate?: (route: string) => void;
 	/**
-	 * Event handler called when an element is highlighted.
-	 * Use this for side effects like analytics, logging, or DOM manipulation.
-	 */
-	onHighlight?: (markerId: string, element: HTMLElement) => void;
-	/**
 	 * Component used to wrap highlighted elements.
 	 * Receives `{ children, markerId }` as props.
+	 * For side effects (analytics, logging), use the `onHighlight` option in `highlightMarker()` from `@quest/core`.
 	 */
 	highlightWrapper?: React.ComponentType<{
 		children: React.ReactNode;
@@ -110,27 +108,45 @@ export function AssistProvider({
 	children,
 	initialState = {},
 	onNavigate,
-	onHighlight,
 	highlightWrapper,
 	llmConfig = null,
 }: AssistProviderProps) {
-	const [assistState, _setAssistState] = useState<UIAIState>(initialState);
-	const [currentRoute, setCurrentRoute] = useState<string>("/");
-	const [lastError, setLastError] = useState<UIAIError | null>(null);
-
-	// Sync React state to singleton on mount and when state changes
+	// Initialize core store with initial state if provided
 	useEffect(() => {
-		setRoute(currentRoute);
-	}, [currentRoute]);
+		if (Object.keys(initialState).length > 0) {
+			setState(initialState);
+		}
+	}, []); // Only run on mount
 
-	useEffect(() => {
-		setState(Object.keys(assistState).length > 0 ? assistState : undefined);
-	}, [assistState]);
+	// Read from core store reactively
+	const [currentRoute, setCurrentRoute] = useState<string>(
+		() => getRoute() || "/",
+	);
+	const [assistState, setAssistState] = useState<UIAIState>(() => {
+		const coreState = getState();
+		return coreState || {};
+	});
+	const [lastError, setLastError] = useState<UIAIError | null>(() => {
+		const coreError = getError();
+		return coreError || null;
+	});
+	const [events, setEvents] = useState<UIAIEvent[]>(() => getEvents());
 
+	// Subscribe to store changes for reactivity
 	useEffect(() => {
-		setError(lastError);
-	}, [lastError]);
-	const [events, setEvents] = useState<UIAIEvent[]>([]);
+		const unsubscribe = subscribeToStore(
+			(type: "route" | "state" | "error", value: unknown) => {
+				if (type === "route") {
+					setCurrentRoute((value as string) || "/");
+				} else if (type === "state") {
+					setAssistState((value as UIAIState) || {});
+				} else if (type === "error") {
+					setLastError((value as UIAIError | null) || null);
+				}
+			},
+		);
+		return unsubscribe;
+	}, []);
 	const [markers, setMarkers] = useState<Map<string, MarkerMetadata>>(
 		new Map(),
 	);
@@ -179,8 +195,8 @@ export function AssistProvider({
 				meta,
 				timestamp: Date.now(),
 			};
-			setLastError(assistError);
-			setError(assistError); // Sync to singleton
+			// Set error in core store (will trigger subscription update)
+			setError(assistError);
 			setIsPanelOpen(true);
 			// Track event - events will be synced via subscription
 			track("error", { error: error.message, meta });
@@ -279,7 +295,6 @@ export function AssistProvider({
 		highlightedMarkers,
 		highlightWrapper,
 		addHighlight,
-		onHighlight,
 		onNavigate,
 		focusedMarkerId,
 		track,

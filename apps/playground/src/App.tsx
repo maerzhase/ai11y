@@ -49,11 +49,6 @@ function AppWithRouter() {
 					navigateRef.current(route);
 				}
 			}}
-			onHighlight={(markerId, element) => {
-				// Event handler for side effects (analytics, logging, etc.)
-				console.log(`Highlighted marker: ${markerId}`, element);
-				// You can also do DOM manipulation here if needed
-			}}
 			highlightWrapper={CustomHighlightWrapper}
 			llmConfig={llmConfig || undefined}
 		>

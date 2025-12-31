@@ -10,10 +10,12 @@ import { useAssist } from "./AssistProvider";
 /**
  * Hook that provides React-specific wrappers around core tool functions.
  * These wrappers integrate with React-specific features like:
- * - highlightWrapper component
- * - onHighlight callback
- * - onNavigate callback
+ * - highlightWrapper component (for visual highlighting)
+ * - onNavigate callback (for React Router integration)
  * - highlightedMarkers state (for bubble emphasis)
+ *
+ * For side effects when highlighting (analytics, logging), use the `onHighlight`
+ * option in `highlightMarker()` from `@quest/core`.
  *
  * @example
  * ```tsx
@@ -30,7 +32,6 @@ export function useAssistTools() {
 		highlightedMarkers,
 		addHighlight,
 		highlightWrapper,
-		onHighlight,
 		onNavigate,
 	} = useAssist();
 
@@ -50,26 +51,18 @@ export function useAssistTools() {
 			addHighlight(markerId);
 
 			// If highlightWrapper is provided, let it handle visual highlighting
-			// In this case, we still need to scroll and call onHighlight
+			// Skip default visual highlighting (wrapper handles it)
 			if (highlightWrapper) {
-				// Use core function but skip visual highlighting (wrapper handles it)
 				highlightMarker(markerId, {
-					onHighlight: onHighlight
-						? (id: string, el: Element) => onHighlight(id, el as HTMLElement)
-						: undefined,
 					duration: 0, // Don't apply default highlight styles
 				});
 				return;
 			}
 
 			// Use core function for default highlighting behavior
-			highlightMarker(markerId, {
-				onHighlight: onHighlight
-					? (id: string, el: Element) => onHighlight(id, el as HTMLElement)
-					: undefined,
-			});
+			highlightMarker(markerId);
 		},
-		[onHighlight, highlightWrapper, addHighlight],
+		[highlightWrapper, addHighlight],
 	);
 
 	const scroll = useCallback(

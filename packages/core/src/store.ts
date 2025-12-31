@@ -10,10 +10,41 @@ let error: UIAIError | null | undefined;
 let events: UIAIEvent[] = [];
 
 /**
+ * Store change listener type
+ */
+type StoreChangeListener = (
+	type: "route" | "state" | "error",
+	value: unknown,
+) => void;
+
+/**
+ * Set of store change listeners
+ */
+const storeListeners = new Set<StoreChangeListener>();
+
+/**
+ * Notify all listeners of a store change
+ */
+function notifyStoreChange(
+	type: "route" | "state" | "error",
+	value: unknown,
+): void {
+	for (const listener of storeListeners) {
+		try {
+			listener(type, value);
+		} catch (err) {
+			// Don't let one listener's error break others
+			console.error("Error in store change listener:", err);
+		}
+	}
+}
+
+/**
  * Set the current route
  */
 export function setRoute(newRoute: string | undefined): void {
 	route = newRoute;
+	notifyStoreChange("route", newRoute);
 }
 
 /**
@@ -28,6 +59,7 @@ export function getRoute(): string | undefined {
  */
 export function setState(newState: UIAIState | undefined): void {
 	state = newState;
+	notifyStoreChange("state", newState);
 }
 
 /**
@@ -42,6 +74,7 @@ export function getState(): UIAIState | undefined {
  */
 export function setError(newError: UIAIError | null | undefined): void {
 	error = newError;
+	notifyStoreChange("error", newError);
 }
 
 /**
@@ -82,6 +115,29 @@ export function clearEvents(): void {
 }
 
 /**
+ * Subscribe to store changes (route, state, error)
+ * Returns an unsubscribe function
+ *
+ * @param listener - Function called when route, state, or error changes
+ * @returns Unsubscribe function
+ *
+ * @example
+ * ```ts
+ * const unsubscribe = subscribeToStore((type, value) => {
+ *   if (type === 'route') console.log('Route changed:', value);
+ * });
+ * // Later...
+ * unsubscribe();
+ * ```
+ */
+export function subscribeToStore(listener: StoreChangeListener): () => void {
+	storeListeners.add(listener);
+	return () => {
+		storeListeners.delete(listener);
+	};
+}
+
+/**
  * Clear all context state
  */
 export function clearContext(): void {
@@ -89,5 +145,9 @@ export function clearContext(): void {
 	state = undefined;
 	error = undefined;
 	events = [];
+	// Notify listeners of the clear
+	notifyStoreChange("route", undefined);
+	notifyStoreChange("state", undefined);
+	notifyStoreChange("error", undefined);
 }
 
