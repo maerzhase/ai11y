@@ -16,9 +16,9 @@ The SDK consists of:
 
 ## Core Concepts
 
-### 1. AssistProvider
+### 1. UIAIProvider
 
-The `AssistProvider` is the central context provider that maintains:
+The `UIAIProvider` is the central context provider that maintains:
 
 - **Marker Registry**: A map of `markerId → metadata + DOM ref` for all marked elements
 - **Assist State**: User-defined JSON state that can be accessed by the agent
@@ -89,7 +89,7 @@ The SDK includes server-side OpenAI integration with function calling. The agent
 If no LLM configuration is provided, the SDK falls back to a **rule-based local agent** that parses commands using pattern matching:
 
 ```typescript
-function runAgent(input: string, context: UIContext): AgentResponse
+function runAgent(input: string, context: UIAIContext): AgentResponse
 ```
 
 **Supported Commands:**
@@ -136,14 +136,14 @@ When an error is reported:
 #### With Rule-Based Agent (Default)
 
 ```tsx
-import { AssistProvider, AssistPanel, Mark } from "react-quest";
+import { UIAIProvider, AssistPanel, Mark } from "react-quest";
 
 function App() {
   return (
-    <AssistProvider onNavigate={(route) => navigate(route)}>
+    <UIAIProvider onNavigate={(route) => navigate(route)}>
       <YourApp />
       <AssistPanel />
-    </AssistProvider>
+    </UIAIProvider>
   );
 }
 ```
@@ -183,7 +183,7 @@ await fastify.listen({ port: 3000 });
 **Step 3: Configure the client**
 
 ```tsx
-import { AssistProvider, AssistPanel, Mark } from "react-quest";
+import { UIAIProvider, AssistPanel, Mark } from "react-quest";
 
 function App() {
   const llmConfig = {
@@ -191,13 +191,13 @@ function App() {
   };
 
   return (
-    <AssistProvider 
+    <UIAIProvider 
       onNavigate={(route) => navigate(route)}
       llmConfig={llmConfig}
     >
       <YourApp />
       <AssistPanel />
-    </AssistProvider>
+    </UIAIProvider>
   );
 }
 ```

@@ -8,5 +8,5 @@ export type {
 	ToolCall,
 	ToolDefinition,
 	ToolExecutor,
-	UIContext,
+	UIAIContext,
 } from "@quest/core";

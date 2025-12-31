@@ -6,7 +6,7 @@ export type {
 	UIAIError,
 	UIAIEvent,
 	UIAIState,
-	UIContext,
+	UIAIContext,
 } from "@quest/core";
 
 // React-specific types

@@ -1,24 +1,24 @@
 import { getMarkers } from "./marker";
 import { getError, getRoute, getState } from "./store";
-import type { UIContext } from "./types";
+import type { UIAIContext } from "./types";
 
 /**
- * Composes a complete UIContext from singleton state and DOM markers
+ * Composes a complete UIAIContext from singleton state and DOM markers
  *
  * @param root - Optional DOM root element to scan for markers (defaults to document.body)
- * @returns A complete UIContext object with markers from DOM and state from singleton
+ * @returns A complete UIAIContext object with markers from DOM and state from singleton
  *
  * @example
  * ```ts
- * import { setRoute, setState, getUIContext } from '@quest/core';
+ * import { setRoute, setState, getContext } from '@quest/core';
  *
  * setRoute('/billing');
  * setState({ userId: '123' });
- * const context = getUIContext();
+ * const context = getContext();
  * ```
  */
-export function getUIContext(root?: Element): UIContext {
-	const context: UIContext = {
+export function getContext(root?: Element): UIAIContext {
+	const context: UIAIContext = {
 		markers: getMarkers(root),
 	};
 

@@ -1,4 +1,4 @@
-import { AssistPanel, AssistProvider } from "@quest/react";
+import { AssistPanel, UIAIProvider } from "@quest/react";
 import React from "react";
 import {
 	BrowserRouter,
@@ -42,7 +42,7 @@ function AppWithRouter() {
 	};
 
 	return (
-		<AssistProvider
+		<UIAIProvider
 			onNavigate={(route) => {
 				// When assistant navigates, update React Router
 				if (route !== locationRef.current) {
@@ -60,7 +60,7 @@ function AppWithRouter() {
 				</Routes>
 				<AssistPanel />
 			</AppLayout>
-		</AssistProvider>
+		</UIAIProvider>
 	);
 }
 

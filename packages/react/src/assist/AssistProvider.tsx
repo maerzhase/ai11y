@@ -3,7 +3,7 @@ import {
 	getEvents,
 	getRoute,
 	getState,
-	getUIContext,
+	getContext as getUIContextFromCore,
 	setError,
 	setState,
 	subscribe,
@@ -25,10 +25,10 @@ import type {
 	UIAIError,
 	UIAIEvent,
 	UIAIState,
-	UIContext,
+	UIAIContext,
 } from "./types";
 
-interface AssistContextValue {
+interface UIAIProviderContextValue {
 	// State
 	assistState: UIAIState;
 	currentRoute: string;
@@ -72,23 +72,23 @@ interface AssistContextValue {
 	pendingMessage: string | null;
 
 	// Context for agent
-	getContext: () => UIContext;
+	getContext: () => UIAIContext;
 
 	// LLM config
 	llmConfig: LLMAgentConfig | null;
 }
 
-const AssistReactContext = createContext<AssistContextValue | null>(null);
+const UIAIProviderContext = createContext<UIAIProviderContextValue | null>(null);
 
 export function useAssist() {
-	const context = useContext(AssistReactContext);
+	const context = useContext(UIAIProviderContext);
 	if (!context) {
-		throw new Error("useAssist must be used within AssistProvider");
+		throw new Error("useAssist must be used within UIAIProvider");
 	}
 	return context;
 }
 
-interface AssistProviderProps {
+interface UIAIProviderProps {
 	children: React.ReactNode;
 	initialState?: UIAIState;
 	onNavigate?: (route: string) => void;
@@ -104,13 +104,13 @@ interface AssistProviderProps {
 	llmConfig?: LLMAgentConfig | null;
 }
 
-export function AssistProvider({
+export function UIAIProvider({
 	children,
 	initialState = {},
 	onNavigate,
 	highlightWrapper,
 	llmConfig = null,
-}: AssistProviderProps) {
+}: UIAIProviderProps) {
 	// Initialize core store with initial state if provided
 	useEffect(() => {
 		if (Object.keys(initialState).length > 0) {
@@ -264,9 +264,9 @@ export function AssistProvider({
 		setPendingMessage(null);
 	}, []);
 
-	const getContext = useCallback((): UIContext => {
-		// Use getUIContext from core - it reads from singleton and scans DOM
-		return getUIContext();
+	const getContext = useCallback((): UIAIContext => {
+		// Use getContext from core - it reads from singleton and scans DOM
+		return getUIContextFromCore();
 	}, []);
 
 	// Cleanup highlights on unmount
@@ -287,7 +287,7 @@ export function AssistProvider({
 		}
 	}, []);
 
-	const value: AssistContextValue = {
+	const value: UIAIProviderContextValue = {
 		assistState,
 		currentRoute,
 		lastError,
@@ -313,8 +313,8 @@ export function AssistProvider({
 	};
 
 	return (
-		<AssistReactContext.Provider value={value}>
+		<UIAIProviderContext.Provider value={value}>
 			{children}
-		</AssistReactContext.Provider>
+		</UIAIProviderContext.Provider>
 	);
 }

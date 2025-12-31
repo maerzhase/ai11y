@@ -32,7 +32,7 @@ export interface UIAIEvent {
  * Context information available to the agent
  * Contains current application state, route, errors, and available UI markers
  */
-export interface UIContext {
+export interface UIAIContext {
 	markers: Marker[];
 	route?: string;
 	state?: UIAIState;

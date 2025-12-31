@@ -37,7 +37,7 @@ export function QuickStartGuide() {
 									<p className="text-muted-foreground mb-4">
 										Add{" "}
 										<code className="px-2 py-1 bg-muted rounded text-sm">
-											AssistProvider
+											UIAIProvider
 										</code>{" "}
 										and{" "}
 										<code className="px-2 py-1 bg-muted rounded text-sm">
@@ -46,14 +46,14 @@ export function QuickStartGuide() {
 										to your app
 									</p>
 									<CodeBlock
-										code={`import { AssistProvider, AssistPanel } from "@quest/react";
+										code={`import { UIAIProvider, AssistPanel } from "@quest/react";
 
 function App() {
   return (
-    <AssistProvider onNavigate={(route) => navigate(route)}>
+    <UIAIProvider onNavigate={(route) => navigate(route)}>
       <YourApp />
       <AssistPanel />
-    </AssistProvider>
+    </UIAIProvider>
   );
 }`}
 									/>

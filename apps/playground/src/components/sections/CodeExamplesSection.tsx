@@ -39,14 +39,14 @@ function MyComponent() {
 	{
 		id: "setup",
 		title: "Basic Setup",
-		code: `import { AssistProvider, AssistPanel } from "@quest/react";
+		code: `import { UIAIProvider, AssistPanel } from "@quest/react";
 
 function App() {
   return (
-    <AssistProvider onNavigate={(route) => navigate(route)}>
+    <UIAIProvider onNavigate={(route) => navigate(route)}>
       <YourApp />
       <AssistPanel />
-    </AssistProvider>
+    </UIAIProvider>
   );
 }`,
 	},

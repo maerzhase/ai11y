@@ -4,7 +4,7 @@
  * Core types and utilities shared across all React Quest packages.
  */
 
-export { getUIContext } from "./dom";
+export { getContext } from "./dom";
 export { getSubscriberCount, notify, subscribe } from "./events";
 export type { Marker } from "./marker";
 export { getMarkers } from "./marker";

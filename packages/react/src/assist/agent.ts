@@ -1,6 +1,6 @@
-import type { AgentResponse, ToolCall, UIContext } from "./types";
+import type { AgentResponse, ToolCall, UIAIContext } from "./types";
 
-export function runAgent(input: string, context: UIContext): AgentResponse {
+export function runAgent(input: string, context: UIAIContext): AgentResponse {
 	const lowerInput = input.toLowerCase().trim();
 
 	// Handle navigation commands

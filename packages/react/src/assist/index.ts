@@ -1,5 +1,5 @@
 export { AssistPanel } from "./AssistPanel";
-export { AssistProvider, useAssist } from "./AssistProvider";
+export { UIAIProvider, useAssist } from "./AssistProvider";
 export { runAgent } from "./agent";
 export { runLLMAgent } from "./llm-agent";
 export { Mark } from "./Mark";
@@ -12,7 +12,7 @@ export type {
 	UIAIError,
 	UIAIEvent,
 	UIAIState,
-	UIContext,
+	UIAIContext,
 } from "./types";
 export type { Message as ChatMessage } from "./useAssistChat";
 export { useAssistChat } from "./useAssistChat";

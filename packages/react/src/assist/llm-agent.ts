@@ -1,5 +1,5 @@
 import type { ConversationMessage } from "@quest/core";
-import type { AgentResponse, LLMAgentConfig, UIContext } from "./types";
+import type { AgentResponse, LLMAgentConfig, UIAIContext } from "./types";
 
 /**
  * LLM-based agent using server-side API endpoint.
@@ -7,7 +7,7 @@ import type { AgentResponse, LLMAgentConfig, UIContext } from "./types";
  */
 export async function runLLMAgent(
 	input: string,
-	context: UIContext,
+	context: UIAIContext,
 	config: LLMAgentConfig,
 	messages?: ConversationMessage[],
 ): Promise<AgentResponse> {
