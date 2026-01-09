@@ -28,24 +28,24 @@
 }
 
 .dark {
-	--background: 0 0% 8%;
-	--foreground: 0 0% 95%;
-	--card: 0 0% 12%;
-	--card-foreground: 0 0% 95%;
-	--popover: 0 0% 12%;
-	--popover-foreground: 0 0% 95%;
+	--background: 0 0% 4%;
+	--foreground: 0 0% 96%;
+	--card: 0 0% 7%;
+	--card-foreground: 0 0% 96%;
+	--popover: 0 0% 7%;
+	--popover-foreground: 0 0% 96%;
 	--primary: 11 100% 50%;
 	--primary-foreground: 0 0% 100%;
-	--secondary: 0 0% 18%;
-	--secondary-foreground: 0 0% 95%;
-	--muted: 0 0% 18%;
-	--muted-foreground: 0 0% 65%;
-	--accent: 0 0% 18%;
-	--accent-foreground: 0 0% 95%;
+	--secondary: 0 0% 12%;
+	--secondary-foreground: 0 0% 96%;
+	--muted: 0 0% 12%;
+	--muted-foreground: 0 0% 60%;
+	--accent: 0 0% 12%;
+	--accent-foreground: 0 0% 96%;
 	--destructive: 0 62.8% 50%;
 	--destructive-foreground: 0 0% 100%;
-	--border: 0 0% 25%;
-	--input: 0 0% 25%;
+	--border: 0 0% 18%;
+	--input: 0 0% 18%;
 	--ring: 11 100% 50%;
 	color-scheme: dark;
 }
@@ -231,10 +231,18 @@ pre[class*="language-"] {
 }
 
 /* Staggered animation delays */
-.stagger-1 { animation-delay: 0.1s; }
-.stagger-2 { animation-delay: 0.2s; }
-.stagger-3 { animation-delay: 0.3s; }
-.stagger-4 { animation-delay: 0.4s; }
+.stagger-1 {
+	animation-delay: 0.1s;
+}
+.stagger-2 {
+	animation-delay: 0.2s;
+}
+.stagger-3 {
+	animation-delay: 0.3s;
+}
+.stagger-4 {
+	animation-delay: 0.4s;
+}
 
 /* Scrolly layout helpers */
 .scrolly-container {

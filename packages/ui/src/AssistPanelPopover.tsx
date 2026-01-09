@@ -51,7 +51,7 @@ export function AssistPanelPopover({
 					sideOffset={8}
 					className="z-200"
 				>
-					<Popover.Popup className="relative origin-[var(--transform-origin)] w-[320px] h-[420px] max-h-[calc(100vh-80px)] rounded-xl bg-popover/70 backdrop-blur-2xl backdrop-saturate-150 text-popover-foreground shadow-xl shadow-black/10 border border-white/10 transition-[transform,scale,opacity] duration-200 ease-out data-[ending-style]:scale-95 data-[ending-style]:opacity-0 data-[starting-style]:scale-95 data-[starting-style]:opacity-0 flex flex-col z-200 overflow-hidden">
+					<Popover.Popup className="relative origin-[var(--transform-origin)] w-[320px] h-[420px] max-h-[calc(100vh-80px)] rounded-sm bg-popover/70 backdrop-blur-2xl backdrop-saturate-150 text-popover-foreground shadow-xl shadow-black/10 border border-white/10 transition-[transform,scale,opacity] duration-200 ease-out data-[ending-style]:scale-95 data-[ending-style]:opacity-0 data-[starting-style]:scale-95 data-[starting-style]:opacity-0 flex flex-col z-200 overflow-hidden">
 						{onClose && (
 							<button
 								type="button"

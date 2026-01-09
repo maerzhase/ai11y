@@ -29,7 +29,7 @@ export function CTASection() {
 								navigator.clipboard.writeText("pnpm add @ui4ai/react");
 								alert("Install command copied! Run: pnpm add @ui4ai/react");
 							}}
-							className="inline-flex items-center justify-center rounded-lg bg-primary px-8 py-4 text-lg font-semibold text-primary-foreground shadow-lg transition-all hover:bg-primary/90 hover:shadow-xl hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+							className="inline-flex items-center justify-center rounded-sm bg-primary px-8 py-4 text-lg font-semibold text-primary-foreground shadow-lg transition-all hover:bg-primary/90 hover:shadow-xl hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
 						>
 							📦 Install Now
 						</button>
@@ -46,7 +46,7 @@ export function CTASection() {
 									.getElementById("quick-start")
 									?.scrollIntoView({ behavior: "smooth" });
 							}}
-							className="inline-flex items-center justify-center rounded-lg border-2 border-border bg-background px-8 py-4 text-lg font-semibold text-foreground transition-all hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+							className="inline-flex items-center justify-center rounded-sm border-2 border-border bg-background px-8 py-4 text-lg font-semibold text-foreground transition-all hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
 						>
 							📚 View Docs
 						</button>

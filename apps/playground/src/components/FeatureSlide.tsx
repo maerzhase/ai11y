@@ -1,3 +1,4 @@
+import { Mark } from "@ui4ai/react";
 import type { ReactNode } from "react";
 import { useInView } from "../hooks/useInView";
 
@@ -8,6 +9,9 @@ interface FeatureSlideProps {
 	emoji: string;
 	children: ReactNode;
 	id?: string;
+	markerId?: string;
+	markerLabel?: string;
+	markerIntent?: string;
 }
 
 export function FeatureSlide({
@@ -17,13 +21,16 @@ export function FeatureSlide({
 	emoji,
 	children,
 	id,
+	markerId,
+	markerLabel,
+	markerIntent,
 }: FeatureSlideProps) {
 	const { ref, isInView } = useInView<HTMLDivElement>({
 		threshold: 0.2,
 		triggerOnce: true,
 	});
 
-	return (
+	const section = (
 		<section
 			id={id}
 			ref={ref}
@@ -53,7 +60,11 @@ export function FeatureSlide({
 					}`}
 				>
 					{/* Content side */}
-					<div className="flex-1 text-center lg:text-left">
+					<div
+						className={`flex-1 text-center lg:text-left ${
+							direction === "right" ? "lg:flex lg:flex-col" : ""
+						}`}
+					>
 						<div
 							className={`inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10 text-4xl mb-6 ${
 								direction === "right" ? "lg:ml-auto" : ""
@@ -87,4 +98,18 @@ export function FeatureSlide({
 			</div>
 		</section>
 	);
+
+	if (markerId) {
+		return (
+			<Mark
+				id={markerId}
+				label={markerLabel || title}
+				intent={markerIntent || `Navigate to the ${title} section`}
+			>
+				{section}
+			</Mark>
+		);
+	}
+
+	return section;
 }

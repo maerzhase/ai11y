@@ -5,7 +5,7 @@ export function LLMMiniDemo() {
 	const isLLMEnabled = agentConfig?.apiEndpoint !== undefined;
 
 	return (
-		<div className="rounded-lg border border-border bg-muted/30 p-3">
+		<div className="rounded-sm border border-border bg-muted/30 p-3">
 			<div className="text-xs text-muted-foreground mb-2">Mode</div>
 			<Mark
 				id="llm_demo_status"

@@ -1,4 +1,5 @@
 import { Mark, useAssist } from "@ui4ai/react";
+import { Card, Text, Badge } from "@ui4ai/ui";
 import { useState } from "react";
 
 export function IntegrationsPage() {
@@ -32,18 +33,18 @@ export function IntegrationsPage() {
 					label="Integrations Page Title"
 					intent="The integrations page title"
 				>
-					<h2 className="text-4xl font-bold mb-4 text-foreground tracking-tight">
+					<Text render="h2" size="4xl" weight="bold" className="mb-4 tracking-tight">
 						Integrations
-					</h2>
+					</Text>
 				</Mark>
-				<p className="text-muted-foreground mb-8 text-lg">
+				<Text size="lg" color="secondary" className="mb-8">
 					Connect third-party services to enhance your app. Try asking the
 					assistant to "click connect stripe" or "highlight the stripe card".
-				</p>
+				</Text>
 
-				<div className="rounded-xl border border-border bg-card p-8 shadow-sm mb-6">
+				<Card className="mb-6" padding="lg">
 					<div className="flex items-center gap-4 mb-6">
-						<div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+						<div className="w-12 h-12 rounded-sm bg-primary/10 flex items-center justify-center text-primary">
 							<svg
 								className="w-6 h-6"
 								fill="none"
@@ -64,19 +65,19 @@ export function IntegrationsPage() {
 								label="Stripe Integration Card"
 								intent="The Stripe integration card title"
 							>
-								<h3 className="text-2xl font-semibold text-card-foreground">
+								<Text render="h3" size="2xl" weight="semibold">
 									Stripe
-								</h3>
+								</Text>
 							</Mark>
-							<p className="text-muted-foreground text-sm">
+							<Text size="sm" color="secondary">
 								Connect Stripe to accept payments
-							</p>
+							</Text>
 						</div>
 					</div>
 					{isConnected ? (
-						<div className="rounded-lg border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/30 px-6 py-4 text-base font-medium text-emerald-800 dark:text-emerald-300">
+						<Badge variant="success" className="px-6 py-4 text-base">
 							✓ Connected Successfully
-						</div>
+						</Badge>
 					) : (
 						<Mark
 							id="connect_stripe"
@@ -86,18 +87,18 @@ export function IntegrationsPage() {
 							<button
 								type="button"
 								onClick={handleConnectStripe}
-								className="inline-flex items-center justify-center rounded-lg bg-primary px-8 py-4 text-lg font-semibold text-primary-foreground shadow-sm transition-all hover:bg-primary/90 hover:shadow-md hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+								className="inline-flex items-center justify-center rounded-sm bg-primary px-8 py-4 text-lg font-semibold text-primary-foreground shadow-sm transition-all hover:bg-primary/90 hover:shadow-md hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
 							>
 								{hasFailed ? "Retry Connection" : "Connect Stripe"}
 							</button>
 						</Mark>
 					)}
 					{hasFailed && !isConnected && (
-						<p className="text-destructive mt-4 text-sm">
+						<Text color="destructive" size="sm" className="mt-4">
 							Connection failed. Ask the assistant to retry!
-						</p>
+						</Text>
 					)}
-				</div>
+				</Card>
 			</div>
 		</div>
 	);

@@ -120,7 +120,7 @@ function App() {
 									<p className="text-muted-foreground mb-4">
 										Users can now interact with your app using natural language!
 									</p>
-									<div className="rounded-lg border border-border bg-muted/50 p-4 mb-4">
+									<div className="rounded-sm border border-border bg-muted/50 p-4 mb-4">
 										<p className="text-sm text-muted-foreground mb-2">
 											Try saying:
 										</p>

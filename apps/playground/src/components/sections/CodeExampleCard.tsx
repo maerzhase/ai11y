@@ -1,4 +1,5 @@
 import { Mark } from "@ui4ai/react";
+import { Card, CardHeader, CardTitle, Text } from "@ui4ai/ui";
 import { CodeBlock } from "../CodeBlock";
 
 interface CodeExampleCardProps {
@@ -14,12 +15,12 @@ export function CodeExampleCard({ id, title, code }: CodeExampleCardProps) {
 			label={`${title} Code Example`}
 			intent={`Code example showing ${title.toLowerCase()}`}
 		>
-			<div className="rounded-xl border border-border bg-card p-6 shadow-sm">
-				<h3 className="text-xl font-semibold mb-4 text-card-foreground">
-					{title}
-				</h3>
+			<Card padding="lg">
+				<CardHeader>
+					<CardTitle>{title}</CardTitle>
+				</CardHeader>
 				<CodeBlock code={code} />
-			</div>
+			</Card>
 		</Mark>
 	);
 }

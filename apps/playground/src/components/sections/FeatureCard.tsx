@@ -1,4 +1,5 @@
 import { Mark, useAssist } from "@ui4ai/react";
+import { Card, Text } from "@ui4ai/ui";
 import type { ReactNode } from "react";
 
 interface FeatureCardProps {
@@ -30,18 +31,21 @@ export function FeatureCard({
 			label={`${title} Feature`}
 			intent={`Feature card about ${title.toLowerCase()}`}
 		>
-			<div className="group relative overflow-hidden rounded-xl border border-border bg-card p-6 shadow-sm transition-all hover:shadow-lg hover:border-primary/50">
+			<Card
+				className="group relative overflow-hidden transition-all hover:shadow-lg hover:border-primary/50"
+				padding="lg"
+			>
 				<div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
 				<div className="relative">
-					<div className="w-12 h-12 rounded-lg bg-primary/10 mb-4 flex items-center justify-center text-primary text-2xl">
+					<div className="w-12 h-12 rounded-sm bg-primary/10 mb-4 flex items-center justify-center text-primary text-2xl">
 						{emoji}
 					</div>
-					<h3 className="text-xl font-semibold mb-2 text-card-foreground">
+					<Text render="h3" size="lg" weight="semibold" className="mb-2">
 						{title}
-					</h3>
-					<p className="text-muted-foreground text-sm mb-4 leading-relaxed">
+					</Text>
+					<Text size="sm" color="secondary" className="mb-4 leading-relaxed">
 						{description}
-					</p>
+					</Text>
 					<div className="flex items-center justify-between gap-3">
 						<button
 							type="button"
@@ -50,14 +54,14 @@ export function FeatureCard({
 						>
 							{tryLabel}
 						</button>
-						<code className="text-xs text-muted-foreground bg-muted/60 border border-border rounded px-2 py-1">
+						<code className="text-xs text-muted-foreground bg-muted/60 border border-border rounded-xs px-2 py-1">
 							{tryMessage}
 						</code>
 					</div>
 
 					{demo && <div className="mt-4">{demo}</div>}
 				</div>
-			</div>
+			</Card>
 		</Mark>
 	);
 }

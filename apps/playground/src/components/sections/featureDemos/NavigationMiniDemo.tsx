@@ -4,7 +4,7 @@ export function NavigationMiniDemo() {
 	const { currentRoute } = useAssist();
 
 	return (
-		<div className="rounded-lg border border-border bg-muted/30 p-3">
+		<div className="rounded-sm border border-border bg-muted/30 p-3">
 			<div className="text-xs text-muted-foreground mb-2">
 				Assistant context
 			</div>

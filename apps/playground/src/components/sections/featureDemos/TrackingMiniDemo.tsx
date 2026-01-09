@@ -5,7 +5,7 @@ export function TrackingMiniDemo() {
 	const last = events.slice(-3).reverse();
 
 	return (
-		<div className="rounded-lg border border-border bg-muted/30 p-3">
+		<div className="rounded-sm border border-border bg-muted/30 p-3">
 			<div className="flex items-center justify-between gap-3">
 				<div className="text-xs text-muted-foreground">Recent events</div>
 				<Mark

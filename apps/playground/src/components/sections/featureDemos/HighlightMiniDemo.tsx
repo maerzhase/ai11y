@@ -2,7 +2,7 @@ import { Mark } from "@ui4ai/react";
 
 export function HighlightMiniDemo() {
 	return (
-		<div className="rounded-lg border border-border bg-muted/30 p-3">
+		<div className="rounded-sm border border-border bg-muted/30 p-3">
 			<div className="text-xs text-muted-foreground mb-2">Highlight target</div>
 			<Mark
 				id="highlight_demo_target"

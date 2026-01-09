@@ -316,7 +316,7 @@ export function ScrollyHero() {
 								{recentMessages.map((msg) => (
 									<div
 										key={msg.id}
-										className={`text-sm px-3 py-2 rounded-lg ${
+										className={`text-sm px-3 py-2 rounded-sm ${
 											msg.type === "user"
 												? "bg-primary text-primary-foreground ml-6"
 												: "bg-muted/60 text-foreground mr-6"
@@ -326,7 +326,7 @@ export function ScrollyHero() {
 									</div>
 								))}
 								{isProcessing && (
-									<div className="text-sm px-3 py-2 rounded-lg bg-muted/60 text-muted-foreground mr-6">
+									<div className="text-sm px-3 py-2 rounded-sm bg-muted/60 text-muted-foreground mr-6">
 										<span className="inline-flex gap-1">
 											<span className="animate-bounce">·</span>
 											<span className="animate-bounce [animation-delay:0.1s]">
@@ -348,7 +348,7 @@ export function ScrollyHero() {
 						<button
 							type="button"
 							onClick={() => setShowMessages((v) => !v)}
-							className={`p-2 rounded-lg transition-colors ${
+							className={`p-2 rounded-sm transition-colors ${
 								showMessages
 									? "bg-primary/10 text-primary"
 									: "text-muted-foreground hover:text-foreground hover:bg-muted/50"

@@ -24,7 +24,7 @@ export function ErrorMiniDemo() {
 	};
 
 	return (
-		<div className="rounded-lg border border-border bg-muted/30 p-3">
+		<div className="rounded-sm border border-border bg-muted/30 p-3">
 			<div className="text-xs text-muted-foreground mb-2">Error + recovery</div>
 			{isConnected ? (
 				<div className="rounded-md border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/30 px-3 py-2 text-sm font-medium text-emerald-800 dark:text-emerald-300">

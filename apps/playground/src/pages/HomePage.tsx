@@ -1,4 +1,5 @@
 import { Mark } from "@ui4ai/react";
+import { Badge } from "@ui4ai/ui";
 import { useState } from "react";
 import { FeatureSlide } from "../components/FeatureSlide";
 import { ScrollyHero } from "../components/ScrollyHero";
@@ -30,7 +31,7 @@ function NavigationDemo() {
 						intent={`Navigate to ${route.label} page`}
 					>
 						<div
-							className={`flex items-center gap-3 px-4 py-3 rounded-xl border transition-all ${
+							className={`flex items-center gap-3 px-4 py-3 rounded-sm border transition-all ${
 								demoRoute === route.path
 									? "border-primary bg-primary/10 text-foreground"
 									: "border-border/50 bg-muted/30 text-muted-foreground hover:border-border hover:bg-muted/50"
@@ -39,9 +40,9 @@ function NavigationDemo() {
 							<span className="text-lg">{route.icon}</span>
 							<span className="font-medium">{route.label}</span>
 							{demoRoute === route.path && (
-								<span className="ml-auto text-xs px-2 py-0.5 rounded-full bg-primary text-primary-foreground">
+								<Badge variant="primary" className="ml-auto">
 									current
-								</span>
+								</Badge>
 							)}
 						</div>
 					</Mark>
@@ -54,7 +55,9 @@ function NavigationDemo() {
 // Navigation Demo with suggestions
 function NavigationDemoWithSuggestions({
 	onSuggestion,
-}: { onSuggestion: (s: string) => void }) {
+}: {
+	onSuggestion: (s: string) => void;
+}) {
 	return (
 		<div className="space-y-4">
 			<NavigationDemo />
@@ -62,9 +65,11 @@ function NavigationDemoWithSuggestions({
 				Try{" "}
 				<SuggestionChip onClick={() => onSuggestion("go to billing")}>
 					go to billing
-				</SuggestionChip>
-				{" "}or{" "}
-				<SuggestionChip onClick={() => onSuggestion("navigate to integrations")}>
+				</SuggestionChip>{" "}
+				or{" "}
+				<SuggestionChip
+					onClick={() => onSuggestion("navigate to integrations")}
+				>
 					navigate to integrations
 				</SuggestionChip>
 			</p>
@@ -75,7 +80,9 @@ function NavigationDemoWithSuggestions({
 // Enhanced Highlight Demo
 function HighlightDemoWithSuggestions({
 	onSuggestion,
-}: { onSuggestion: (s: string) => void }) {
+}: {
+	onSuggestion: (s: string) => void;
+}) {
 	return (
 		<div className="space-y-4">
 			<div className="text-sm text-muted-foreground mb-3">
@@ -124,8 +131,8 @@ function HighlightDemoWithSuggestions({
 				Try{" "}
 				<SuggestionChip onClick={() => onSuggestion("highlight feature badge")}>
 					highlight feature badge
-				</SuggestionChip>
-				{" "}or{" "}
+				</SuggestionChip>{" "}
+				or{" "}
 				<SuggestionChip onClick={() => onSuggestion("highlight status badge")}>
 					highlight status badge
 				</SuggestionChip>
@@ -137,7 +144,9 @@ function HighlightDemoWithSuggestions({
 // Enhanced Click Demo
 function ClickDemoWithSuggestions({
 	onSuggestion,
-}: { onSuggestion: (s: string) => void }) {
+}: {
+	onSuggestion: (s: string) => void;
+}) {
 	const [counter, setCounter] = useState(0);
 	const [isActive, setIsActive] = useState(false);
 
@@ -161,7 +170,7 @@ function ClickDemoWithSuggestions({
 						<button
 							type="button"
 							onClick={() => setCounter((c) => c - 1)}
-							className="w-10 h-10 rounded-lg border border-border bg-background text-foreground font-bold hover:bg-muted transition-colors"
+							className="w-10 h-10 rounded-sm border border-border bg-background text-foreground font-bold hover:bg-muted transition-colors"
 						>
 							−
 						</button>
@@ -175,7 +184,7 @@ function ClickDemoWithSuggestions({
 						<button
 							type="button"
 							onClick={() => setCounter((c) => c + 1)}
-							className="w-10 h-10 rounded-lg border border-border bg-background text-foreground font-bold hover:bg-muted transition-colors"
+							className="w-10 h-10 rounded-sm border border-border bg-background text-foreground font-bold hover:bg-muted transition-colors"
 						>
 							+
 						</button>
@@ -199,7 +208,7 @@ function ClickDemoWithSuggestions({
 					<button
 						type="button"
 						onClick={() => setIsActive((v) => !v)}
-						className={`px-4 py-2 rounded-lg font-medium transition-all ${
+						className={`px-4 py-2 rounded-sm font-medium transition-all ${
 							isActive
 								? "bg-emerald-500 text-white hover:bg-emerald-600"
 								: "border border-border bg-background text-foreground hover:bg-muted"
@@ -217,8 +226,8 @@ function ClickDemoWithSuggestions({
 				,{" "}
 				<SuggestionChip onClick={() => onSuggestion("click decrement")}>
 					click decrement
-				</SuggestionChip>
-				{" "}or{" "}
+				</SuggestionChip>{" "}
+				or{" "}
 				<SuggestionChip onClick={() => onSuggestion("toggle status")}>
 					toggle status
 				</SuggestionChip>
@@ -231,12 +240,12 @@ export function HomePage() {
 	// Pass suggestions to the floating input
 	const handleSuggestion = (suggestion: string) => {
 		const input = document.querySelector<HTMLInputElement>(
-			'input[placeholder="Ask anything..."]'
+			'input[placeholder="Ask anything..."]',
 		);
 		if (input) {
 			const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
 				window.HTMLInputElement.prototype,
-				"value"
+				"value",
 			)?.set;
 			nativeInputValueSetter?.call(input, suggestion);
 			input.dispatchEvent(new Event("input", { bubbles: true }));
@@ -253,44 +262,47 @@ export function HomePage() {
 			{/* Hero Section */}
 			<ScrollyHero />
 
-			{/* Feature Slides */}
-			<Mark
-				id="features_section"
-				label="Features Section"
-				intent="The main features showcase area"
+		{/* Feature Slides */}
+		<div>
+			<FeatureSlide
+				id="feature-navigation"
+				direction="left"
+				emoji="🧭"
+				title="Smart Navigation"
+				description="Navigate between pages using natural language. The assistant understands your app's routing structure and can take users anywhere they ask."
+				markerId="slide_navigation"
+				markerLabel="Smart Navigation Section"
+				markerIntent="Navigate to the Smart Navigation feature section"
 			>
-				<div>
-					<FeatureSlide
-						id="feature-navigation"
-						direction="left"
-						emoji="🧭"
-						title="Smart Navigation"
-						description="Navigate between pages using natural language. The assistant understands your app's routing structure and can take users anywhere they ask."
-					>
-						<NavigationDemoWithSuggestions onSuggestion={handleSuggestion} />
-					</FeatureSlide>
+				<NavigationDemoWithSuggestions onSuggestion={handleSuggestion} />
+			</FeatureSlide>
 
-					<FeatureSlide
-						id="feature-highlight"
-						direction="right"
-						emoji="✨"
-						title="Visual Highlighting"
-						description="Draw attention to any element with customizable highlight animations. Perfect for tutorials, onboarding flows, and guided experiences."
-					>
-						<HighlightDemoWithSuggestions onSuggestion={handleSuggestion} />
-					</FeatureSlide>
+			<FeatureSlide
+				id="feature-highlight"
+				direction="right"
+				emoji="✨"
+				title="Visual Highlighting"
+				description="Draw attention to any element with customizable highlight animations. Perfect for tutorials, onboarding flows, and guided experiences."
+				markerId="slide_highlight"
+				markerLabel="Visual Highlighting Section"
+				markerIntent="Navigate to the Visual Highlighting feature section"
+			>
+				<HighlightDemoWithSuggestions onSuggestion={handleSuggestion} />
+			</FeatureSlide>
 
-					<FeatureSlide
-						id="feature-click"
-						direction="left"
-						emoji="👆"
-						title="Smart Clicking"
-						description="Let the assistant interact with buttons, links, and any clickable element. Users can describe what they want to do in plain English."
-					>
-						<ClickDemoWithSuggestions onSuggestion={handleSuggestion} />
-					</FeatureSlide>
-				</div>
-			</Mark>
+			<FeatureSlide
+				id="feature-click"
+				direction="left"
+				emoji="👆"
+				title="Smart Clicking"
+				description="Let the assistant interact with buttons, links, and any clickable element. Users can describe what they want to do in plain English."
+				markerId="slide_click"
+				markerLabel="Smart Clicking Section"
+				markerIntent="Navigate to the Smart Clicking feature section"
+			>
+				<ClickDemoWithSuggestions onSuggestion={handleSuggestion} />
+			</FeatureSlide>
+		</div>
 
 			{/* Footer */}
 			<Footer />

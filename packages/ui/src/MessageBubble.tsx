@@ -15,7 +15,7 @@ export function MessageBubble({ message }: MessageBubbleProps) {
 			<div
 				className={`max-w-[85%] text-[13px] leading-snug ${
 					message.type === "user"
-						? "px-2.5 py-1.5 rounded-lg bg-foreground text-background"
+						? "px-2.5 py-1.5 rounded-sm bg-foreground text-background"
 						: message.type === "system"
 							? "text-muted-foreground text-xs italic"
 							: "text-foreground"

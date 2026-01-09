@@ -1,4 +1,5 @@
 import { Mark } from "@ui4ai/react";
+import { Card, Text } from "@ui4ai/ui";
 import { useState } from "react";
 
 export function BillingDemo() {
@@ -10,28 +11,28 @@ export function BillingDemo() {
 			label="Billing Demo Card"
 			intent="Billing settings demo card"
 		>
-			<div className="rounded-xl border border-border bg-card p-8 shadow-sm">
-				<h3 className="text-2xl font-semibold mb-4 text-card-foreground">
+			<Card padding="lg">
+				<Text render="h3" size="2xl" weight="semibold" className="mb-4">
 					💳 Billing Demo
-				</h3>
-				<p className="text-muted-foreground mb-6">
+				</Text>
+				<Text size="sm" color="secondary" className="mb-6">
 					Try:{" "}
-					<code className="px-2 py-1 bg-muted rounded text-sm">
+					<code className="px-2 py-1 bg-muted rounded-xs text-sm">
 						"click enable billing"
 					</code>{" "}
 					or{" "}
-					<code className="px-2 py-1 bg-muted rounded text-sm">
+					<code className="px-2 py-1 bg-muted rounded-xs text-sm">
 						"highlight the enable button"
 					</code>
-				</p>
+				</Text>
 				<div className="space-y-4">
 					<div>
-						<p className="text-sm text-muted-foreground mb-2">
+						<Text size="sm" color="secondary" className="mb-2">
 							Status:{" "}
-							<span className="font-semibold text-foreground">
+							<Text weight="semibold" color="primary" render="span">
 								{billingEnabled ? "✅ Enabled" : "❌ Disabled"}
-							</span>
-						</p>
+							</Text>
+						</Text>
 					</div>
 					<Mark
 						id="demo_enable_billing"
@@ -42,7 +43,7 @@ export function BillingDemo() {
 							type="button"
 							onClick={() => setBillingEnabled(true)}
 							disabled={billingEnabled}
-							className={`w-full inline-flex items-center justify-center rounded-lg px-6 py-3 font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
+							className={`w-full inline-flex items-center justify-center rounded-sm px-6 py-3 font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
 								billingEnabled
 									? "bg-muted text-muted-foreground cursor-not-allowed"
 									: "bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 hover:shadow-md"
@@ -52,7 +53,7 @@ export function BillingDemo() {
 						</button>
 					</Mark>
 				</div>
-			</div>
+			</Card>
 		</Mark>
 	);
 }
