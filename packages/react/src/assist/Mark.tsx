@@ -7,7 +7,7 @@ import {
 import { MorphingBlob } from "@quest/ui";
 import React, { useEffect, useLayoutEffect, useMemo, useRef } from "react";
 import { createPortal } from "react-dom";
-import { useAssist } from "./AssistProvider";
+import { useAssist } from "./AssistProvider.js";
 
 interface MarkProps {
 	id: string;

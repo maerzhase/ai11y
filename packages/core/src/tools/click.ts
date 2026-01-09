@@ -1,5 +1,5 @@
-import { track } from "../store";
-import { findMarkerElement } from "./find-element";
+import { track } from "../store.js";
+import { findMarkerElement } from "./find-element.js";
 
 /**
  * Clicks a marker element by its ID

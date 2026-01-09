@@ -1,5 +1,5 @@
 import type { ConversationMessage } from "@quest/core";
-import type { AgentResponse, ToolCall, UIAIContext } from "./types";
+import type { AgentResponse, ToolCall, UIAIContext } from "./types.js";
 
 /**
  * Simple dummy agent for offline or test environments.

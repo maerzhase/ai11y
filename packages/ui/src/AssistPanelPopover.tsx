@@ -4,7 +4,7 @@ import {
 } from "@base-ui/react/popover";
 import type React from "react";
 import { useCallback } from "react";
-import { AssistTrigger } from "./AssistTrigger";
+import { AssistTrigger } from "./AssistTrigger.js";
 
 export interface AssistPanelPopoverProps {
 	isOpen: boolean;

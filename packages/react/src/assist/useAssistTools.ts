@@ -5,7 +5,7 @@ import {
 	scrollToMarker,
 } from "@quest/core";
 import { useCallback } from "react";
-import { useAssist } from "./AssistProvider";
+import { useAssist } from "./AssistProvider.js";
 
 /**
  * Hook that provides React-specific wrappers around core tool functions.

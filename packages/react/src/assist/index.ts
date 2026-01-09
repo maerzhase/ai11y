@@ -1,10 +1,10 @@
-export { AssistPanel } from "./AssistPanel";
-export { UIAIProvider, useAssist } from "./AssistProvider";
-export { runAgent } from "./agent";
-export { runAgentAdapter, type AgentAdapterConfig } from "./agent-adapter";
-export { runDummyAgent } from "./dummy-agent";
-export { runLLMAgent } from "./llm-agent";
-export { Mark } from "./Mark";
+export { AssistPanel } from "./AssistPanel.js";
+export { UIAIProvider, useAssist } from "./AssistProvider.js";
+export { runAgent } from "./agent.js";
+export { runAgentAdapter, type AgentAdapterConfig } from "./agent-adapter.js";
+export { runDummyAgent } from "./dummy-agent.js";
+export { runLLMAgent } from "./llm-agent.js";
+export { Mark } from "./Mark.js";
 export type {
 	AgentConfig,
 	AgentMode,
@@ -16,7 +16,7 @@ export type {
 	UIAIEvent,
 	UIAIState,
 	UIAIContext,
-} from "./types";
-export type { Message as ChatMessage } from "./useAssistChat";
-export { useAssistChat } from "./useAssistChat";
-export { useAssistTools } from "./useAssistTools";
+} from "./types.js";
+export type { Message as ChatMessage } from "./useAssistChat.js";
+export { useAssistChat } from "./useAssistChat.js";
+export { useAssistTools } from "./useAssistTools.js";

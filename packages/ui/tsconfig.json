@@ -1,15 +1,22 @@
 {
-	"extends": "@tsconfig/create-react-app",
-	"include": ["src/**/*"],
-	"exclude": ["node_modules"],
 	"compilerOptions": {
-		"noImplicitReturns": true,
-		"rootDir": "src",
-		"paths": {
-			"@/*": ["./src/*"]
-		},
-		"outDir": "dist",
 		"target": "ES2022",
+		"module": "NodeNext",
+		"moduleResolution": "nodenext",
+		"lib": ["ES2022", "DOM", "DOM.Iterable"],
+		"jsx": "react-jsx",
+		"declaration": true,
+		"declarationMap": true,
+		"sourceMap": true,
+		"outDir": "dist",
+		"rootDir": "src",
+		"strict": true,
+		"esModuleInterop": true,
+		"skipLibCheck": true,
+		"forceConsistentCasingInFileNames": true,
+		"noImplicitReturns": true,
 		"noUnusedLocals": false
-	}
+	},
+	"include": ["src/**/*"],
+	"exclude": ["node_modules", "dist"]
 }

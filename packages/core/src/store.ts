@@ -1,5 +1,5 @@
-import { notify } from "./events";
-import type { UIAIError, UIAIEvent, UIAIState } from "./types";
+import { notify } from "./events.js";
+import type { UIAIError, UIAIEvent, UIAIState } from "./types/index.js";
 
 /**
  * Module-level singleton state for UI context

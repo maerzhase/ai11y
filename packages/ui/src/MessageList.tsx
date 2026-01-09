@@ -1,5 +1,5 @@
 import type React from "react";
-import { MessageBubble } from "./MessageBubble";
+import { MessageBubble } from "./MessageBubble.js";
 
 export interface Message {
 	type: "user" | "assistant" | "system";

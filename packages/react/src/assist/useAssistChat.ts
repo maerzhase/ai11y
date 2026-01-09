@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { AgentResponse, ToolCall } from "./types";
+import type { AgentResponse, ToolCall } from "./types.js";
 
 export interface Message {
 	id: string;

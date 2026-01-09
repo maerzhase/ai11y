@@ -4,7 +4,7 @@
  */
 
 import type { BaseChatModel } from "@langchain/core/language_models/chat_models";
-import type { ServerConfig } from "./types";
+import type { ServerConfig } from "./types.js";
 
 /**
  * Create a LangChain LLM instance for OpenAI

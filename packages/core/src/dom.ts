@@ -1,6 +1,6 @@
-import { getMarkers } from "./marker";
-import { getError, getRoute, getState } from "./store";
-import type { UIAIContext } from "./types";
+import { getMarkers } from "./marker.js";
+import { getError, getRoute, getState } from "./store.js";
+import type { UIAIContext } from "./types/index.js";
 
 /**
  * Composes a complete UIAIContext from singleton state and DOM markers

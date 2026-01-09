@@ -1,4 +1,4 @@
-import type { UIAIContext } from "./context";
+import type { UIAIContext } from "./context.js";
 
 /**
  * Tool call types that the agent can execute

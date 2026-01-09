@@ -1,4 +1,4 @@
-import { setRoute, track } from "../store";
+import { setRoute, track } from "../store.js";
 
 /**
  * Navigates to a route

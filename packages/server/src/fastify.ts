@@ -3,9 +3,9 @@ import type {
 	FastifyPluginOptions,
 	FastifyRequest,
 } from "fastify";
-import { runAgent } from "./agent";
-import { createDefaultToolRegistry, type ToolRegistry } from "./tool-registry";
-import type { AgentRequest, ServerConfig } from "./types";
+import { runAgent } from "./agent.js";
+import { createDefaultToolRegistry, type ToolRegistry } from "./tool-registry.js";
+import type { AgentRequest, ServerConfig } from "./types.js";
 
 interface FastifyQuestOptions extends FastifyPluginOptions {
 	config: ServerConfig;
@@ -102,4 +102,4 @@ export function createToolRegistry(): ToolRegistry {
 }
 
 // Re-export types for convenience
-export type { ServerConfig, ToolDefinition, ToolExecutor } from "./types";
+export type { ServerConfig, ToolDefinition, ToolExecutor } from "./types.js";

@@ -1,4 +1,4 @@
-import { getMarkerSelector } from "../util/attributes";
+import { getMarkerSelector } from "../util/attributes.js";
 
 /**
  * Finds an element by its marker ID (data-ai-id attribute)

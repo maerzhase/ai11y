@@ -1,13 +1,13 @@
 import { DynamicStructuredTool } from "@langchain/core/tools";
 import { z } from "zod";
-import { createLLM } from "./llm-provider";
-import { createDefaultToolRegistry, type ToolRegistry } from "./tool-registry";
+import { createLLM } from "./llm-provider.js";
+import { createDefaultToolRegistry, type ToolRegistry } from "./tool-registry.js";
 import type {
 	AgentRequest,
 	AgentResponse,
 	ServerConfig,
 	ToolCall,
-} from "./types";
+} from "./types.js";
 
 /**
  * Format context for the LLM prompt

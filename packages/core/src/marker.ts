@@ -3,8 +3,8 @@ import {
 	getMarkerId,
 	getMarkerIntent,
 	getMarkerLabel,
-} from "./util/attributes";
-import { formatMarkerId } from "./util/format";
+} from "./util/attributes.js";
+import { formatMarkerId } from "./util/format.js";
 
 /**
  * Marker information for UI elements

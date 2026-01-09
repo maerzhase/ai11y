@@ -1,1 +1,1 @@
-export * from "./assist";
+export * from "./assist/index.js";

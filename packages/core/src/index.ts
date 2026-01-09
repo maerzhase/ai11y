@@ -4,10 +4,10 @@
  * Core types and utilities shared across all React Quest packages.
  */
 
-export { getContext } from "./dom";
-export { getSubscriberCount, notify, subscribe } from "./events";
-export type { Marker } from "./marker";
-export { getMarkers } from "./marker";
+export { getContext } from "./dom.js";
+export { getSubscriberCount, notify, subscribe } from "./events.js";
+export type { Marker } from "./marker.js";
+export { getMarkers } from "./marker.js";
 export {
 	clearContext,
 	clearEvents,
@@ -20,13 +20,13 @@ export {
 	setState,
 	subscribeToStore,
 	track,
-} from "./store";
+} from "./store.js";
 export {
 	clickMarker,
 	type HighlightOptions,
 	highlightMarker,
 	navigateToRoute,
 	scrollToMarker,
-} from "./tools";
-export * from "./types";
-export * from "./util";
+} from "./tools/index.js";
+export * from "./types/index.js";
+export * from "./util/index.js";

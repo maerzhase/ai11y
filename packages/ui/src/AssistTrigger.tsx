@@ -1,4 +1,4 @@
-import { MorphingBlob } from "./MorphingBlob";
+import { MorphingBlob } from "./MorphingBlob.js";
 
 export interface AssistTriggerProps {
 	className?: string;

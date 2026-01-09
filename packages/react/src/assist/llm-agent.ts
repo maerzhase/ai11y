@@ -1,5 +1,5 @@
 import type { ConversationMessage } from "@quest/core";
-import type { AgentResponse, LLMAgentConfig, UIAIContext } from "./types";
+import type { AgentResponse, LLMAgentConfig, UIAIContext } from "./types.js";
 
 /**
  * LLM-based agent using server-side API endpoint.
@@ -51,7 +51,7 @@ export async function runLLMAgent(
 	} catch (error) {
 		// If API is not available or there's an error, fall back to rule-based
 		console.warn("LLM agent error, falling back to rule-based agent:", error);
-		const { runAgent } = await import("./agent");
+		const { runAgent } = await import("./agent.js");
 		return runAgent(input, context);
 	}
 }

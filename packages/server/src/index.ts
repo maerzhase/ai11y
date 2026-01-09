@@ -5,9 +5,9 @@
  * Handles LLM API calls securely on the server using LangChain.
  */
 
-export { runAgent } from "./agent";
-export { createLLM } from "./llm-provider";
-export { createDefaultToolRegistry, ToolRegistry } from "./tool-registry";
+export { runAgent } from "./agent.js";
+export { createLLM } from "./llm-provider.js";
+export { createDefaultToolRegistry, ToolRegistry } from "./tool-registry.js";
 export type {
 	AgentRequest,
 	AgentResponse,
@@ -16,4 +16,4 @@ export type {
 	ToolDefinition,
 	ToolExecutor,
 	UIAIContext,
-} from "./types";
+} from "./types.js";

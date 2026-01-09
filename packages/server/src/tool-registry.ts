@@ -3,7 +3,7 @@ import type {
 	ToolDefinition,
 	ToolExecutor,
 	UIAIContext,
-} from "./types";
+} from "./types.js";
 
 /**
  * Registry for managing tools that can be called by the LLM agent.

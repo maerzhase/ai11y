@@ -25,7 +25,7 @@ import type {
 	UIAIEvent,
 	UIAIState,
 	UIAIContext,
-} from "./types";
+} from "./types.js";
 
 interface UIAIProviderContextValue {
 	// State

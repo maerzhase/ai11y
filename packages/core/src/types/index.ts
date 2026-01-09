@@ -3,7 +3,7 @@
  * Organized by domain for better maintainability
  */
 
-export * from "./agent";
-export * from "./config";
-export * from "./context";
-export * from "./tool";
+export * from "./agent.js";
+export * from "./config.js";
+export * from "./context.js";
+export * from "./tool.js";

@@ -1,2 +1,2 @@
-export * from "./attributes";
-export * from "./format";
+export * from "./attributes.js";
+export * from "./format.js";

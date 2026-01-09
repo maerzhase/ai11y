@@ -1,4 +1,4 @@
-import type { Marker } from "../marker";
+import type { Marker } from "../marker.js";
 
 /**
  * Application state for UI-to-AI context binding

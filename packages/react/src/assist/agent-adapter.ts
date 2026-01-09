@@ -4,10 +4,10 @@ import type {
 	AgentResponse,
 	LLMAgentConfig,
 	UIAIContext,
-} from "./types";
-import { runAgent } from "./agent";
-import { runDummyAgent } from "./dummy-agent";
-import { runLLMAgent } from "./llm-agent";
+} from "./types.js";
+import { runAgent } from "./agent.js";
+import { runDummyAgent } from "./dummy-agent.js";
+import { runLLMAgent } from "./llm-agent.js";
 
 /**
  * Configuration for agent selection

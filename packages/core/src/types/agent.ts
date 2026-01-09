@@ -1,5 +1,5 @@
-import type { UIAIContext } from "./context";
-import type { ToolCall } from "./tool";
+import type { UIAIContext } from "./context.js";
+import type { ToolCall } from "./tool.js";
 
 /**
  * Response from the agent containing a reply and optional tool calls

@@ -1,5 +1,5 @@
 import type React from "react";
-import { Button } from "./Button";
+import { Button } from "./Button.js";
 
 export interface ChatInputProps {
 	value: string;
