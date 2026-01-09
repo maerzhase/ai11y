@@ -1,5 +1,6 @@
 import {
 	clickMarker,
+	fillInputMarker,
 	runAgentAdapter,
 	scrollToMarker,
 	type AgentAdapterConfig,
@@ -91,6 +92,11 @@ export function AssistPanel() {
 			case "click":
 				if (toolCall.markerId) {
 					clickMarker(toolCall.markerId);
+				}
+				break;
+			case "fillInput":
+				if (toolCall.markerId && toolCall.value !== undefined) {
+					fillInputMarker(toolCall.markerId, toolCall.value);
 				}
 				break;
 		}

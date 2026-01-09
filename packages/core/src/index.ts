@@ -34,6 +34,7 @@ export {
 } from "./store.js";
 export {
 	clickMarker,
+	fillInputMarker,
 	type HighlightOptions,
 	highlightMarker,
 	navigateToRoute,

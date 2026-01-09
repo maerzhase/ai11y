@@ -249,6 +249,138 @@ function ClickDemoWithSuggestions({
 	);
 }
 
+// Enhanced Input Fill Demo
+function InputFillDemoWithSuggestions({
+	onSuggestion,
+}: {
+	onSuggestion: (s: string) => void;
+}) {
+	const [email, setEmail] = useState("");
+	const [name, setName] = useState("");
+	const [message, setMessage] = useState("");
+
+	return (
+		<div className="space-y-4">
+			<div className="text-sm text-muted-foreground mb-3">
+				The assistant can fill input fields with values:
+			</div>
+			<div className="space-y-4">
+				<div className="space-y-2">
+					<label
+						htmlFor="fill_demo_email"
+						className="text-xs font-medium text-foreground"
+					>
+						Email Address
+					</label>
+					<Mark
+						id="fill_demo_email"
+						label="Email Input"
+						intent="Email address input field"
+						showAssistBubble
+					>
+						<input
+							type="email"
+							id="fill_demo_email"
+							value={email}
+							onChange={(e) => setEmail(e.target.value)}
+							placeholder="Enter your email"
+							className="w-full px-3 py-2 rounded-sm border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+						/>
+					</Mark>
+					{email && (
+						<div className="text-xs text-muted-foreground">
+							Current value: {email}
+						</div>
+					)}
+				</div>
+
+				<div className="space-y-2">
+					<label
+						htmlFor="fill_demo_name"
+						className="text-xs font-medium text-foreground"
+					>
+						Full Name
+					</label>
+					<Mark
+						id="fill_demo_name"
+						label="Name Input"
+						intent="Full name input field"
+					>
+						<input
+							type="text"
+							id="fill_demo_name"
+							value={name}
+							onChange={(e) => setName(e.target.value)}
+							placeholder="Enter your name"
+							className="w-full px-3 py-2 rounded-sm border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+						/>
+					</Mark>
+					{name && (
+						<div className="text-xs text-muted-foreground">
+							Current value: {name}
+						</div>
+					)}
+				</div>
+
+				<div className="space-y-2">
+					<label
+						htmlFor="fill_demo_message"
+						className="text-xs font-medium text-foreground"
+					>
+						Message
+					</label>
+					<Mark
+						id="fill_demo_message"
+						label="Message Textarea"
+						intent="Message textarea field"
+					>
+						<textarea
+							id="fill_demo_message"
+							value={message}
+							onChange={(e) => setMessage(e.target.value)}
+							placeholder="Enter your message"
+							rows={3}
+							className="w-full px-3 py-2 rounded-sm border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none"
+						/>
+					</Mark>
+					{message && (
+						<div className="text-xs text-muted-foreground">
+							Current value: {message.substring(0, 50)}
+							{message.length > 50 ? "..." : ""}
+						</div>
+					)}
+				</div>
+			</div>
+			<p className="text-xs text-muted-foreground pt-2">
+				Try{" "}
+				<SuggestionChip
+					onClick={() =>
+						onSuggestion("fill email with test@example.com")
+					}
+				>
+					fill email with test@example.com
+				</SuggestionChip>
+				,{" "}
+				<SuggestionChip
+					onClick={() => onSuggestion("fill name with John Doe")}
+				>
+					fill name with John Doe
+				</SuggestionChip>{" "}
+				or{" "}
+				<SuggestionChip
+					onClick={() =>
+						onSuggestion(
+							"fill message with Hello, this is a test message!"
+						)
+					}
+				>
+					fill message with Hello, this is a test message!
+				</SuggestionChip>
+			</p>
+		</div>
+	);
+}
+
 export function HomePage() {
 	// Pass suggestions to the floating input
 	const handleSuggestion = (suggestion: string) => {
@@ -314,6 +446,19 @@ export function HomePage() {
 				markerIntent="Navigate to the Smart Clicking feature section"
 			>
 				<ClickDemoWithSuggestions onSuggestion={handleSuggestion} />
+			</FeatureSlide>
+
+			<FeatureSlide
+				id="feature-fill-input"
+				direction="right"
+				emoji="⌨️"
+				title="Input Filling"
+				description="The assistant can fill form inputs with values using natural language. Works with text inputs, textareas, and emits native browser events for React compatibility."
+				markerId="slide_fill_input"
+				markerLabel="Input Filling Section"
+				markerIntent="Navigate to the Input Filling feature section"
+			>
+				<InputFillDemoWithSuggestions onSuggestion={handleSuggestion} />
 			</FeatureSlide>
 		</div>
 

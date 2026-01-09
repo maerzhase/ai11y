@@ -158,6 +158,77 @@ export function runRuleBasedAgent(
 		}
 	}
 
+	// Handle fill input commands
+	if (
+		lowerInput.includes("fill") ||
+		lowerInput.includes("enter") ||
+		lowerInput.includes("type") ||
+		lowerInput.includes("put")
+	) {
+		// Try to extract value from commands like:
+		// "fill email with test@example.com"
+		// "enter test@example.com in email"
+		// "type test@example.com in email input"
+		// "put test@example.com in email"
+		let value: string | undefined;
+		let markerSearchText = lowerInput;
+
+		// Pattern: "fill [marker] with [value]" or "fill [marker] [value]"
+		const fillWithMatch = lowerInput.match(
+			/(?:fill|enter|type|put)\s+(.+?)\s+(?:with|in|into)\s+(.+)/i,
+		);
+		if (fillWithMatch) {
+			markerSearchText = fillWithMatch[1].trim();
+			value = fillWithMatch[2].trim();
+		} else {
+			// Pattern: "fill [value] in [marker]" or "enter [value] in [marker]"
+			const fillInMatch = lowerInput.match(
+				/(?:fill|enter|type|put)\s+(.+?)\s+in\s+(.+)/i,
+			);
+			if (fillInMatch) {
+				value = fillInMatch[1].trim();
+				markerSearchText = fillInMatch[2].trim();
+			} else {
+				// Pattern: "[value] in [marker]"
+				const inMatch = lowerInput.match(/(.+?)\s+in\s+(.+)/i);
+				if (inMatch) {
+					value = inMatch[1].trim();
+					markerSearchText = inMatch[2].trim();
+				}
+			}
+		}
+
+		// Find matching marker (look for input-like elements)
+		const matchingMarker = context.markers.find((m) => {
+			const markerText = `${m.label} ${m.intent}`.toLowerCase();
+			const cleanedMarkerSearch = markerSearchText
+				.replace(/fill|enter|type|put|input|field/g, "")
+				.trim();
+			return (
+				markerText.includes(cleanedMarkerSearch) ||
+				cleanedMarkerSearch.includes(m.label.toLowerCase()) ||
+				cleanedMarkerSearch.includes(m.id.toLowerCase())
+			);
+		});
+
+		if (matchingMarker && value) {
+			return {
+				reply: `Filling ${matchingMarker.label} with "${value}"...`,
+				toolCalls: [
+					{
+						type: "fillInput",
+						markerId: matchingMarker.id,
+						value: value,
+					},
+				],
+			};
+		} else if (matchingMarker && !value) {
+			return {
+				reply: `I found ${matchingMarker.label}, but I need a value to fill. Please specify what to enter, for example: "fill ${matchingMarker.label.toLowerCase()} with [value]"`,
+			};
+		}
+	}
+
 	// Handle error context
 	if (context.error) {
 		const error = context.error.error;
@@ -193,6 +264,6 @@ export function runRuleBasedAgent(
 
 	// Default response
 	return {
-		reply: `I can help you navigate, click buttons, or highlight elements. Try saying "go to billing", "click connect stripe", or "show me the enable billing button".`,
+		reply: `I can help you navigate, click buttons, highlight elements, or fill inputs. Try saying "go to billing", "click connect stripe", "show me the enable billing button", or "fill email with test@example.com".`,
 	};
 }

@@ -1,5 +1,6 @@
 import {
 	clickMarker,
+	fillInputMarker,
 	highlightMarker,
 	navigateToRoute,
 	scrollToMarker,
@@ -77,10 +78,16 @@ export function useAssistTools() {
 		clickMarker(markerId);
 	}, []);
 
+	const fill = useCallback((markerId: string, value: string) => {
+		// Use core function (tracks event automatically)
+		fillInputMarker(markerId, value);
+	}, []);
+
 	return {
 		navigate,
 		highlight,
 		scroll,
 		click,
+		fill,
 	};
 }

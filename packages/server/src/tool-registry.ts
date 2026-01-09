@@ -89,6 +89,13 @@ export class ToolRegistry {
 		if (toolCall.function.name === "scroll") {
 			return { type: "scroll", markerId: args.markerId };
 		}
+		if (toolCall.function.name === "fillInput") {
+			return {
+				type: "fillInput",
+				markerId: args.markerId,
+				value: args.value,
+			};
+		}
 
 		// For custom tools, we return null and let the executor handle it
 		// The executor result can be used for follow-up messages
@@ -198,6 +205,37 @@ export function createDefaultToolRegistry(): ToolRegistry {
 		async (args) => {
 			// Navigation is handled client-side, just return success
 			return { success: true, route: args.route };
+		},
+	);
+
+	registry.register(
+		{
+			name: "fillInput",
+			description:
+				"Fill an input field (input, textarea) with a value by its marker ID. Emits native browser events to trigger React onChange handlers and form validation. Use when the user wants to enter text into a form field.",
+			parameters: {
+				type: "object",
+				properties: {
+					markerId: {
+						type: "string",
+						description:
+							"The ID of the marker for the input element to fill",
+					},
+					value: {
+						type: "string",
+						description: "The value to fill the input field with",
+					},
+				},
+				required: ["markerId", "value"],
+			},
+		},
+		async (args) => {
+			// FillInput is handled client-side, just return success
+			return {
+				success: true,
+				markerId: args.markerId,
+				value: args.value,
+			};
 		},
 	);
 
