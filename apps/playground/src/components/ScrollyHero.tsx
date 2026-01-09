@@ -276,7 +276,6 @@ export function ScrollyHero() {
 								id="hero_title"
 								label="ui4ai"
 								intent="The main hero title - A semantic UI context layer for AI agents"
-								showAssistBubble
 							>
 								<h1 className="text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent tracking-tight text-center">
 									ui4ai

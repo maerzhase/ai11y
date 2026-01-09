@@ -106,7 +106,6 @@ function HighlightDemoWithSuggestions({
 					id="highlight_demo_badge_1"
 					label="Feature Badge"
 					intent="A badge demonstrating the highlight feature"
-					showAssistBubble
 				>
 					<div className="flex items-center justify-center px-4 py-6 rounded-xl bg-gradient-to-br from-violet-500/20 to-purple-500/20 border border-violet-500/30">
 						<span className="text-2xl">✨</span>
@@ -178,7 +177,6 @@ function ClickDemoWithSuggestions({
 						id="click_demo_decrement"
 						label="Decrement Button"
 						intent="Decreases the counter by 1"
-						showAssistBubble
 					>
 						<button
 							type="button"
@@ -192,7 +190,6 @@ function ClickDemoWithSuggestions({
 						id="click_demo_increment"
 						label="Increment Button"
 						intent="Increases the counter by 1"
-						showAssistBubble
 					>
 						<button
 							type="button"
@@ -276,7 +273,6 @@ function InputFillDemoWithSuggestions({
 						id="fill_demo_email"
 						label="Email Input"
 						intent="Email address input field"
-						showAssistBubble
 					>
 						<input
 							type="email"
