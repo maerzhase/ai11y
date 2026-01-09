@@ -1,24 +1,34 @@
-import { navigateToRoute } from "@ui4ai/core";
 import React from "react";
 import { DebugPanel } from "../components/DebugPanel";
-import { useDemoRoute } from "../context/DemoRouteContext";
+import { DebugDrawerProvider, useDebugDrawer } from "../context/DebugDrawerContext";
 
 interface AppLayoutProps {
 	children: React.ReactNode;
 }
 
-export function AppLayout({ children }: AppLayoutProps) {
-	const { demoRoute } = useDemoRoute();
-
-	// Sync demo route with core store
-	React.useEffect(() => {
-		navigateToRoute(demoRoute);
-	}, [demoRoute]);
+function AppLayoutContent({ children }: AppLayoutProps) {
+	const { isOpen, setIsOpen } = useDebugDrawer();
 
 	return (
-		<div className="min-h-screen bg-background text-foreground transition-colors">
-			<DebugPanel />
-			{children}
+		<div className="min-h-screen bg-background text-foreground transition-colors overflow-x-hidden">
+			<DebugPanel isOpen={isOpen} onOpenChange={setIsOpen} />
+			<div
+				className={`min-h-screen transition-all duration-300 ease-in-out ${
+					isOpen
+						? "mr-96 w-[calc(100%-24rem)]"
+						: "mr-0 w-full"
+				}`}
+			>
+				{children}
+			</div>
 		</div>
+	);
+}
+
+export function AppLayout({ children }: AppLayoutProps) {
+	return (
+		<DebugDrawerProvider>
+			<AppLayoutContent>{children}</AppLayoutContent>
+		</DebugDrawerProvider>
 	);
 }

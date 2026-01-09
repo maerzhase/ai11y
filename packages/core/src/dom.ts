@@ -1,6 +1,59 @@
+import { getAllMarkersSelector } from "./util/attributes.js";
+import { getMarkerId } from "./util/attributes.js";
 import { getMarkers } from "./marker.js";
 import { getError, getRoute, getState } from "./store.js";
 import type { UIAIContext } from "./types/index.js";
+
+/**
+ * Detects which markers are currently visible in the viewport
+ *
+ * @param root - Optional DOM root element to scan for markers (defaults to document.body)
+ * @returns Array of marker IDs that are currently in view
+ */
+function getInViewMarkerIds(root?: Element): string[] {
+	// Check if we're in a browser environment
+	if (typeof document === "undefined" || typeof window === "undefined") {
+		return [];
+	}
+
+	const scanRoot = root ?? document.body;
+	if (!scanRoot) {
+		return [];
+	}
+
+	// Find all elements with data-ai-id attribute
+	const elements = scanRoot.querySelectorAll(getAllMarkersSelector());
+	const inViewIds: string[] = [];
+
+	// Use IntersectionObserver to check visibility
+	// For synchronous checking, we'll use getBoundingClientRect
+	for (let i = 0; i < elements.length; i++) {
+		const element = elements[i];
+		const id = getMarkerId(element);
+		if (!id) continue;
+
+		// Check if element is in viewport
+		const rect = element.getBoundingClientRect();
+		const isInView =
+			rect.top >= 0 &&
+			rect.left >= 0 &&
+			rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+			rect.right <= (window.innerWidth || document.documentElement.clientWidth);
+
+		// Also check if element is partially visible (more lenient check)
+		const isPartiallyVisible =
+			rect.top < (window.innerHeight || document.documentElement.clientHeight) &&
+			rect.bottom > 0 &&
+			rect.left < (window.innerWidth || document.documentElement.clientWidth) &&
+			rect.right > 0;
+
+		if (isInView || isPartiallyVisible) {
+			inViewIds.push(id);
+		}
+	}
+
+	return inViewIds;
+}
 
 /**
  * Composes a complete UIAIContext from singleton state and DOM markers
@@ -20,6 +73,7 @@ import type { UIAIContext } from "./types/index.js";
 export function getContext(root?: Element): UIAIContext {
 	const context: UIAIContext = {
 		markers: getMarkers(root),
+		inViewMarkerIds: getInViewMarkerIds(root),
 	};
 
 	// Get state from singleton

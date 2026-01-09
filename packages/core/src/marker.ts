@@ -13,6 +13,7 @@ export interface Marker {
 	id: string;
 	label: string;
 	intent: string;
+	elementType: string;
 }
 
 /**
@@ -59,11 +60,13 @@ export function getMarkers(root?: Element): Marker[] {
 
 		const label = getMarkerLabel(element) || formatMarkerId(id);
 		const intent = getMarkerIntent(element) || "";
+		const elementType = element.tagName.toLowerCase();
 
 		markers.push({
 			id,
 			label,
 			intent,
+			elementType,
 		});
 	}
 

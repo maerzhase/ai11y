@@ -1,7 +1,10 @@
 import { DynamicStructuredTool } from "@langchain/core/tools";
 import { z } from "zod";
 import { createLLM } from "./llm-provider.js";
-import { createDefaultToolRegistry, type ToolRegistry } from "./tool-registry.js";
+import {
+	createDefaultToolRegistry,
+	type ToolRegistry,
+} from "./tool-registry.js";
 import type {
 	AgentRequest,
 	AgentResponse,
@@ -36,10 +39,20 @@ function formatContextForPrompt(context: AgentRequest["context"]): string {
 	if (context.markers.length > 0) {
 		parts.push("\nAvailable UI elements (markers):");
 		for (const marker of context.markers) {
-			parts.push(`  - ${marker.label} (ID: ${marker.id}): ${marker.intent}`);
+			const isInView = context.inViewMarkerIds?.includes(marker.id) ?? false;
+			const inViewStatus = isInView ? " [IN VIEW]" : "";
+			parts.push(
+				`  - ${marker.label} (ID: ${marker.id}, Type: ${marker.elementType})${inViewStatus}: ${marker.intent}`,
+			);
 		}
 	} else {
 		parts.push("\nNo UI elements are currently available.");
+	}
+
+	if (context.inViewMarkerIds && context.inViewMarkerIds.length > 0) {
+		parts.push(
+			`\nVisible markers: ${context.inViewMarkerIds.join(", ")}`,
+		);
 	}
 
 	return parts.join("\n");
@@ -97,6 +110,67 @@ function createLangChainTools(
 }
 
 /**
+ * Check if user input matches any marker and return matching marker info
+ * Also checks if user is referring to a UI element (button, link, etc.) vs just a route
+ */
+function findMatchingMarker(
+	input: string,
+	markers: AgentRequest["context"]["markers"],
+): {
+	marker: AgentRequest["context"]["markers"][0];
+	searchText: string;
+	isElementReference: boolean;
+} | null {
+	const lowerInput = input.toLowerCase().trim();
+
+	// Check if input contains navigation language
+	const hasNavigationLanguage =
+		lowerInput.includes("go to") ||
+		lowerInput.includes("navigate to") ||
+		lowerInput.includes("open") ||
+		lowerInput.includes("take me to");
+
+	if (!hasNavigationLanguage) {
+		return null;
+	}
+
+	// Check if user is referring to a UI element (button, link, nav button, etc.)
+	const elementKeywords = [
+		"button",
+		"link",
+		"nav button",
+		"navigation button",
+		"nav link",
+		"navigation link",
+		"element",
+		"item",
+		"tab",
+	];
+	const isElementReference = elementKeywords.some((keyword) =>
+		lowerInput.includes(keyword),
+	);
+
+	// Extract search text by removing navigation keywords
+	const searchText = lowerInput
+		.replace(/go to|navigate to|open|take me to/g, "")
+		.trim();
+
+	// Find matching marker
+	const matchingMarker = markers.find((m) => {
+		const markerText = `${m.label} ${m.intent}`.toLowerCase();
+		return (
+			markerText.includes(searchText) ||
+			lowerInput.includes(m.label.toLowerCase()) ||
+			lowerInput.includes(m.intent.toLowerCase())
+		);
+	});
+
+	return matchingMarker
+		? { marker: matchingMarker, searchText, isElementReference }
+		: null;
+}
+
+/**
  * Run the LLM agent on the server
  */
 export async function runAgent(
@@ -106,6 +180,12 @@ export async function runAgent(
 ): Promise<AgentResponse> {
 	// Create LLM instance
 	const llm = await createLLM(config);
+
+	// Check if user input matches a marker (for scroll vs navigate decision)
+	const markerMatch = findMatchingMarker(
+		request.input,
+		request.context.markers,
+	);
 
 	// Format context for the prompt
 	const contextPrompt = formatContextForPrompt(request.context);
@@ -137,19 +217,37 @@ export async function runAgent(
 		}
 	}
 
-	const systemPrompt = `You are a helpful AI assistant embedded in a web application. Your role is to help users navigate the app, interact with UI elements, and resolve errors.
+	// Add marker match guidance if found
+	let markerMatchGuidance = "";
+	if (markerMatch) {
+		const marker = markerMatch.marker;
+		const isInView =
+			request.context.inViewMarkerIds?.includes(marker.id) ?? false;
+		const isLink = marker.elementType === "a";
 
-${contextPrompt}${recentMarkerContext}
+		if (isLink && isInView) {
+			markerMatchGuidance = `\n\n⚠️ Match found: "${marker.label}" (${marker.id}) is a visible link. Use 'click' tool.`;
+		} else if (isLink && !isInView) {
+			markerMatchGuidance = `\n\n🚨 Match found: "${marker.label}" (${marker.id}) is a link NOT in view. DO NOT use 'click' - use 'scroll' tool instead.`;
+		} else if (!isInView) {
+			markerMatchGuidance = `\n\n🚨 Match found: "${marker.label}" (${marker.id}) is NOT in view. DO NOT use 'click' - use 'scroll' tool instead.`;
+		} else {
+			markerMatchGuidance = `\n\nMatch found: "${marker.label}" (${marker.id}) is an element. Use 'scroll' tool.`;
+		}
+	}
 
-When the user asks you to do something:
-1. Use the available markers to understand what actions are possible
-2. If there's an error, explain it clearly and suggest how to fix it
-3. Use the appropriate tools to perform actions
-4. Be conversational and helpful in your responses
+	const systemPrompt = `You are a helpful AI assistant embedded in a web application. Help users navigate, interact with UI elements, and resolve errors.
 
-IMPORTANT: When a user gives an affirmative response (like "yes", "yeah", "I would like to see", "please do it", "show me", etc.) after you've asked about a marker or suggested an action, they want you to interact with that marker. Look at the conversation history to see what marker was just discussed, then use the appropriate tool (click, highlight, or navigate) to interact with it.
+${contextPrompt}${recentMarkerContext}${markerMatchGuidance}
 
-Available markers: ${request.context.markers.map((m) => `${m.label} (${m.id})`).join(", ") || "none"}`;
+Navigation rules:
+- "navigate to [element]" = scroll to that element (use 'scroll' tool)
+- "navigate to [route]" = route navigation (use 'navigate' tool with route path)
+- CRITICAL: Check inViewMarkerIds before using 'click'. NEVER use 'click' if markerId is NOT in inViewMarkerIds - use 'scroll' instead.
+- If marker matches and is in inViewMarkerIds + elementType='a' → use 'click'
+- If marker matches but NOT in inViewMarkerIds → use 'scroll' (DO NOT use 'click')
+- If no marker matches → use 'navigate' with route path
+- For affirmative responses after discussing a marker, interact with that marker using the appropriate tool.`;
 
 	// Build conversation messages
 	const conversationMessages: Array<{ role: string; content: string }> = [

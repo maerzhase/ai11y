@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export function ThemeToggle() {
+export function ThemeToggle(props: React.ButtonHTMLAttributes<HTMLButtonElement>) {
 	const [theme, setTheme] = useState<"light" | "dark">(() => {
 		// Check localStorage first
 		const stored = localStorage.getItem("theme");
@@ -47,10 +47,17 @@ export function ThemeToggle() {
 		setTheme((prev) => (prev === "light" ? "dark" : "light"));
 	};
 
+	const { onClick, ref, ...restProps } = props;
+
 	return (
 		<button
+			{...restProps}
+			ref={ref}
 			type="button"
-			onClick={toggleTheme}
+			onClick={(e) => {
+				toggleTheme();
+				onClick?.(e);
+			}}
 			className="relative inline-flex h-9 w-9 items-center justify-center rounded-md border border-border bg-background hover:bg-accent hover:text-accent-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
 			aria-label="Toggle theme"
 		>

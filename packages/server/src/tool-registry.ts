@@ -109,39 +109,19 @@ export class ToolRegistry {
 export function createDefaultToolRegistry(): ToolRegistry {
 	const registry = new ToolRegistry();
 
-	// Register built-in tools
-	registry.register(
-		{
-			name: "navigate",
-			description: "Navigate to a different route/page in the application",
-			parameters: {
-				type: "object",
-				properties: {
-					route: {
-						type: "string",
-						description:
-							"The route to navigate to (e.g., '/billing', '/integrations', '/')",
-					},
-				},
-				required: ["route"],
-			},
-		},
-		async (args) => {
-			// Navigation is handled client-side, just return success
-			return { success: true, route: args.route };
-		},
-	);
-
+	// Register built-in tools in order of preference
 	registry.register(
 		{
 			name: "click",
-			description: "Click a button or interactive element by its marker ID",
+			description:
+				"Click a visible interactive element (link, button, etc.) by its marker ID. CRITICAL: Only use when markerId is in inViewMarkerIds. NEVER use if markerId is NOT in inViewMarkerIds - use 'scroll' instead.",
 			parameters: {
 				type: "object",
 				properties: {
 					markerId: {
 						type: "string",
-						description: "The ID of the marker to click",
+						description:
+							"The ID of the marker to click. REQUIRED: Check inViewMarkerIds first. If NOT in list, use 'scroll' tool instead.",
 					},
 				},
 				required: ["markerId"],
@@ -149,6 +129,29 @@ export function createDefaultToolRegistry(): ToolRegistry {
 		},
 		async (args) => {
 			// Click is handled client-side, just return success
+			return { success: true, markerId: args.markerId };
+		},
+	);
+
+	registry.register(
+		{
+			name: "scroll",
+			description:
+				"Scroll to a UI element by its marker ID to bring it into view. Use this when 'navigate to [element]' means scrolling to an element, or when the marker is not in inViewMarkerIds. For visible link markers, use 'click' instead.",
+			parameters: {
+				type: "object",
+				properties: {
+					markerId: {
+						type: "string",
+						description:
+							"The ID of the marker to scroll to. Use when marker is not in inViewMarkerIds.",
+					},
+				},
+				required: ["markerId"],
+			},
+		},
+		async (args) => {
+			// Scroll is handled client-side, just return success
 			return { success: true, markerId: args.markerId };
 		},
 	);
@@ -177,23 +180,24 @@ export function createDefaultToolRegistry(): ToolRegistry {
 
 	registry.register(
 		{
-			name: "scroll",
+			name: "navigate",
 			description:
-				"Scroll to a UI element by its marker ID to bring it into view without highlighting",
+				"Navigate to a different route/page using a route path (e.g., '/billing', '/integrations'). Use only when 'navigate to [X]' refers to a route path, not a UI element. If X matches a marker, use 'scroll' instead (navigate to element = scroll to it).",
 			parameters: {
 				type: "object",
 				properties: {
-					markerId: {
+					route: {
 						type: "string",
-						description: "The ID of the marker to scroll to",
+						description:
+							"The route path to navigate to (e.g., '/billing', '/integrations', '/').",
 					},
 				},
-				required: ["markerId"],
+				required: ["route"],
 			},
 		},
 		async (args) => {
-			// Scroll is handled client-side, just return success
-			return { success: true, markerId: args.markerId };
+			// Navigation is handled client-side, just return success
+			return { success: true, route: args.route };
 		},
 	);
 

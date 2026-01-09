@@ -22,6 +22,9 @@ export async function runLLMAgent(
 				input,
 				context: {
 					markers: context.markers,
+					...(context.inViewMarkerIds !== undefined && {
+						inViewMarkerIds: context.inViewMarkerIds,
+					}),
 					...(context.route !== undefined && { route: context.route }),
 					...(context.state !== undefined && { state: context.state }),
 					...(context.error !== undefined && {

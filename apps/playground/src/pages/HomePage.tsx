@@ -9,13 +9,24 @@ import { useDemoRoute } from "../context/DemoRouteContext";
 
 // Enhanced Navigation Demo
 function NavigationDemo() {
-	const { demoRoute } = useDemoRoute();
+	const { demoRoute, setDemoRoute } = useDemoRoute();
 
 	const routes = [
 		{ path: "/", label: "Home", icon: "🏠" },
 		{ path: "/billing", label: "Billing", icon: "💳" },
 		{ path: "/integrations", label: "Integrations", icon: "🔌" },
 	];
+
+	const handleRouteClick = (
+		e: React.MouseEvent<HTMLAnchorElement>,
+		path: string,
+	) => {
+		e.preventDefault();
+		if (path !== demoRoute) {
+			window.history.pushState({}, "", path);
+			setDemoRoute(path);
+		}
+	};
 
 	return (
 		<div className="space-y-4">
@@ -30,7 +41,9 @@ function NavigationDemo() {
 						label={`${route.label} Route`}
 						intent={`Navigate to ${route.label} page`}
 					>
-						<div
+						<a
+							href={route.path}
+							onClick={(e) => handleRouteClick(e, route.path)}
 							className={`flex items-center gap-3 px-4 py-3 rounded-sm border transition-all ${
 								demoRoute === route.path
 									? "border-primary bg-primary/10 text-foreground"
@@ -44,7 +57,7 @@ function NavigationDemo() {
 									current
 								</Badge>
 							)}
-						</div>
+						</a>
 					</Mark>
 				))}
 			</div>

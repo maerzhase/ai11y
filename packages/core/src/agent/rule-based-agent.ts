@@ -19,6 +19,49 @@ export function runRuleBasedAgent(
 		lowerInput.includes("open") ||
 		lowerInput.includes("take me to")
 	) {
+		// First, check if input matches any marker
+		const searchText = lowerInput
+			.replace(/go to|navigate to|open|take me to/g, "")
+			.trim();
+		const matchingMarker = context.markers.find((m) => {
+			const markerText = `${m.label} ${m.intent}`.toLowerCase();
+			return (
+				markerText.includes(searchText) ||
+				lowerInput.includes(m.label.toLowerCase()) ||
+				lowerInput.includes(m.intent.toLowerCase())
+			);
+		});
+
+		// If a marker matches, decide based on element type and visibility
+		if (matchingMarker) {
+			const isInView =
+				context.inViewMarkerIds?.includes(matchingMarker.id) ?? false;
+			const isLink = matchingMarker.elementType === "a";
+
+			// If it's a link marker and in view, click it (navigate)
+			if (isLink && isInView) {
+				return {
+					reply: `Navigating to ${matchingMarker.label}...`,
+					toolCalls: [{ type: "click", markerId: matchingMarker.id }],
+				};
+			}
+
+			// If it's a link marker but not in view, scroll to it first
+			if (isLink && !isInView) {
+				return {
+					reply: `Scrolling to ${matchingMarker.label}...`,
+					toolCalls: [{ type: "scroll", markerId: matchingMarker.id }],
+				};
+			}
+
+			// For non-link markers (sections, divs), scroll to them
+			return {
+				reply: `Scrolling to ${matchingMarker.label}...`,
+				toolCalls: [{ type: "scroll", markerId: matchingMarker.id }],
+			};
+		}
+
+		// No marker found, proceed with route navigation
 		const toolCalls: ToolCall[] = [];
 
 		// Extract route from input
@@ -29,23 +72,6 @@ export function runRuleBasedAgent(
 			route = "/integrations";
 		} else if (lowerInput.includes("home")) {
 			route = "/";
-		} else {
-			// Try to find a marker that matches
-			const matchingMarker = context.markers.find(
-				(m) =>
-					lowerInput.includes(m.label.toLowerCase()) ||
-					lowerInput.includes(m.intent.toLowerCase()),
-			);
-			if (matchingMarker) {
-				// If it's a navigation marker, extract route from intent
-				if (matchingMarker.intent.toLowerCase().includes("billing")) {
-					route = "/billing";
-				} else if (
-					matchingMarker.intent.toLowerCase().includes("integrations")
-				) {
-					route = "/integrations";
-				}
-			}
 		}
 
 		if (route !== context.route) {

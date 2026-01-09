@@ -34,6 +34,7 @@ export interface UIAIEvent {
  */
 export interface UIAIContext {
 	markers: Marker[];
+	inViewMarkerIds?: string[];
 	route?: string;
 	state?: UIAIState;
 	error?: UIAIError | null;
