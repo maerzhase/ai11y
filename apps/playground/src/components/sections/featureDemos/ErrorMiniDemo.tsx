@@ -10,7 +10,7 @@ export function ErrorMiniDemo() {
 		if (!hasFailed) {
 			setHasFailed(true);
 			const error = new Error(
-				"Stripe connection failed (mini demo). Ask the assistant to retry.",
+				"Stripe connection failed (mini demo). Ask the agent to retry.",
 			);
 			reportError(error, {
 				surface: "feature-card",

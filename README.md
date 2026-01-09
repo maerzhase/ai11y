@@ -1,6 +1,6 @@
 # ui4ai - A semantic UI context layer for AI agents
 
-A minimal but powerful SDK that provides semantic UI context for AI agents. The assistant can understand annotated UI elements ("markers"), react to runtime errors, and navigate/interact with your app based on natural language commands.
+A minimal but powerful SDK that provides semantic UI context for AI agents. The agent can understand annotated UI elements ("markers"), react to runtime errors, and navigate/interact with your app based on natural language commands.
 
 ## Architecture
 
@@ -37,7 +37,7 @@ The `UIAIProvider` is the central context provider that maintains:
 
 ### 2. Mark Component
 
-The `Mark` component is a semantic wrapper that registers UI elements with the assistant:
+The `Mark` component is a semantic wrapper that registers UI elements with the agent:
 
 ```tsx
 <Mark
@@ -54,13 +54,13 @@ The `Mark` component is a semantic wrapper that registers UI elements with the a
 - On unmount: Unregisters the marker
 - The DOM element is discoverable for highlighting and simulated clicks
 - Uses React refs (not CSS selectors) for reliable element access
-- **No action prop needed**: The assistant simulates browser events (clicks) on the wrapped element, which naturally triggers your existing `onClick` handlers
+- **No action prop needed**: The agent simulates browser events (clicks) on the wrapped element, which naturally triggers your existing `onClick` handlers
 
 ### 3. AssistPanel
 
 A floating chat panel in the bottom-right corner that provides:
 
-- Chat transcript showing user messages, assistant replies, and system messages
+- Chat transcript showing user messages, agent replies, and system messages
 - Input box for user commands
 - Context collection before sending to agent:
   - Current route
@@ -239,7 +239,7 @@ function MyComponent() {
 
 **Key Points:**
 - No `action` prop needed - just use regular `onClick` handlers
-- The assistant simulates browser click events, which trigger your existing handlers
+- The agent simulates browser click events, which trigger your existing handlers
 - Works with any clickable element (buttons, links, divs with onClick, etc.)
 - Simplifies integration - no need to wrap existing components with action callbacks
 
@@ -340,17 +340,17 @@ pnpm watch
 
 - **Visual Highlighting**: When `highlight(markerId)` is called, the element is outlined with a blue border for 2 seconds
 - **Click Simulation**: `click(markerId)` either calls the marker's `action` function or triggers a native click on the element
-- **Navigation**: When the assistant navigates, the route actually changes (integrated with your router)
+- **Navigation**: When the agent navigates, the route actually changes (integrated with your router)
 - **System Messages**: The panel shows system messages like "Navigated to /billing" and "Clicked Connect Stripe"
-- **Error Recovery**: When errors occur, the assistant explains them and guides recovery
+- **Error Recovery**: When errors occur, the agent explains them and guides recovery
 
 ## Success Criteria
 
 A user can:
 - Open the app
-- Ask the assistant "take me to billing" → See navigation happen
+- Ask the agent "take me to billing" → See navigation happen
 - Ask "click enable billing" → Button is clicked
-- Trigger an error in integrations → Watch the assistant explain and guide recovery
+- Trigger an error in integrations → Watch the agent explain and guide recovery
 
 This feels like a real product primitive, not a demo chatbot.
 

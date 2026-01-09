@@ -279,7 +279,7 @@ export async function runAgent(
 		}
 	}
 
-	const systemPrompt = `You are a helpful AI assistant embedded in a web application. Help users navigate, interact with UI elements, and resolve errors.
+	const systemPrompt = `You are a helpful AI agent embedded in a web application. Help users navigate, interact with UI elements, and resolve errors.
 
 ${contextPrompt}${recentMarkerContext}${markerMatchGuidance}
 

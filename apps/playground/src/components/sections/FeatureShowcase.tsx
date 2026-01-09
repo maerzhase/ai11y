@@ -12,7 +12,7 @@ export function FeatureShowcase() {
 		{
 			id: "navigation",
 			emoji: "🧭",
-			title: "Smart Navigation",
+			title: "Navigation",
 			description:
 				"Navigate between pages using natural language. Works with any routing library.",
 			tryMessage: "go to billing",
@@ -30,7 +30,7 @@ export function FeatureShowcase() {
 		{
 			id: "click",
 			emoji: "👆",
-			title: "Smart Clicking",
+			title: "Clicking",
 			description:
 				"Trigger clicks on any marked element. Works with buttons, links, and custom components.",
 			tryMessage: "click demo toggle",
@@ -41,7 +41,7 @@ export function FeatureShowcase() {
 			emoji: "🛡️",
 			title: "Error Recovery",
 			description:
-				"Automatic error detection and recovery suggestions. The assistant helps users fix issues.",
+				"Automatic error detection and recovery suggestions. The agent helps users fix issues.",
 			tryMessage: "click connect stripe mini demo",
 			demo: <ErrorMiniDemo />,
 		},
@@ -50,7 +50,7 @@ export function FeatureShowcase() {
 			emoji: "📊",
 			title: "Event Tracking",
 			description:
-				"Track user interactions and assistant actions. Perfect for analytics and debugging.",
+				"Track user interactions and agent actions. Perfect for analytics and debugging.",
 			tryMessage: "click track demo event",
 			demo: <TrackingMiniDemo />,
 		},

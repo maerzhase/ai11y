@@ -18,7 +18,7 @@ export function BillingPage() {
 					</Text>
 				</Mark>
 				<Text size="lg" color="secondary" className="mb-8">
-					Manage your billing settings here. Try asking the assistant to
+					Manage your billing settings here. Try asking the agent to
 					"highlight the enable billing button" or "click enable billing".
 				</Text>
 

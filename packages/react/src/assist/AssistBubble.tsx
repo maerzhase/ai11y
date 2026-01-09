@@ -100,7 +100,7 @@ export function AssistBubble({
 		<button
 			ref={buttonRef}
 			type="button"
-			aria-label={`Ask assistant about ${label || id}`}
+			aria-label={`Ask agent about ${label || id}`}
 			onPointerDown={(e) => {
 				e.preventDefault();
 				e.stopPropagation();

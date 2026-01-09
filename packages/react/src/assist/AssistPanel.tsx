@@ -67,7 +67,7 @@ export function AssistPanel() {
 		);
 
 		// Track the interaction
-		track("assistant_message", { input: message, response });
+		track("agent_message", { input: message, response });
 
 		return response;
 	};

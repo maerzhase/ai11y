@@ -62,7 +62,7 @@ export function IntegrationsDemo() {
 							</Mark>
 							{stripeFailed && (
 								<Text color="destructive" size="sm">
-									Connection failed. Ask the assistant to retry!
+									Connection failed. Ask the agent to retry!
 								</Text>
 							)}
 						</>

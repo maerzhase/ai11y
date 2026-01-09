@@ -39,7 +39,7 @@ export function IntegrationsPage() {
 				</Mark>
 				<Text size="lg" color="secondary" className="mb-8">
 					Connect third-party services to enhance your app. Try asking the
-					assistant to "click connect stripe" or "highlight the stripe card".
+					agent to "click connect stripe" or "highlight the stripe card".
 				</Text>
 
 				<Card className="mb-6" padding="lg">
@@ -95,7 +95,7 @@ export function IntegrationsPage() {
 					)}
 					{hasFailed && !isConnected && (
 						<Text color="destructive" size="sm" className="mt-4">
-							Connection failed. Ask the assistant to retry!
+							Connection failed. Ask the agent to retry!
 						</Text>
 					)}
 				</Card>

@@ -67,15 +67,15 @@ If you want to run things separately:
 
 ## Features Demonstrated
 
-- **Navigation**: Ask the assistant to navigate between pages
-- **Button Clicks**: Ask the assistant to click buttons
-- **Error Handling**: Trigger an error in the Integrations page and see the assistant help recover
+- **Navigation**: Ask the agent to navigate between pages
+- **Button Clicks**: Ask the agent to click buttons
+- **Error Handling**: Trigger an error in the Integrations page and see the agent help recover
 - **LLM Agent**: If configured, uses LLM for natural language understanding
 - **Rule-Based Fallback**: Works without LLM using pattern matching
 
 ## Try It Out
 
-1. Open the assistant panel (bottom-right button)
+1. Open the agent panel (bottom-right button)
 2. Try commands like:
    - "Take me to billing"
    - "Click enable billing"

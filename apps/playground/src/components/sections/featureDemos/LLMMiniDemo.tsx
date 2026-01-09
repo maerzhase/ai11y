@@ -10,7 +10,7 @@ export function LLMMiniDemo() {
 			<Mark
 				id="llm_demo_status"
 				label="LLM Mode Status"
-				intent="Shows whether the assistant is using an LLM agent or rule-based fallback"
+				intent="Shows whether the agent is using an LLM agent or rule-based fallback"
 			>
 				<div className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-3 py-1 text-xs font-medium text-foreground">
 					<span

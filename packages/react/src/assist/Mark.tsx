@@ -133,7 +133,7 @@ export function Mark({
 			<button
 				ref={bubbleRef}
 				type="button"
-				aria-label={`Ask assistant about ${label || id}`}
+				aria-label={`Ask agent about ${label || id}`}
 				onClick={handleBubbleClick}
 				style={{
 					position: "fixed",

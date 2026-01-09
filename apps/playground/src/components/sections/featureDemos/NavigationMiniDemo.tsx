@@ -6,12 +6,12 @@ export function NavigationMiniDemo() {
 	return (
 		<div className="rounded-sm border border-border bg-muted/30 p-3">
 			<div className="text-xs text-muted-foreground mb-2">
-				Assistant context
+				Agent context
 			</div>
 			<Mark
 				id="nav_demo_current_route"
 				label="Current Route (Demo)"
-				intent="Shows the current route the assistant sees"
+				intent="Shows the current route the agent sees"
 			>
 				<div className="text-sm font-mono text-foreground">{currentRoute}</div>
 			</Mark>

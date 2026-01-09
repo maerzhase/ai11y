@@ -31,7 +31,7 @@ function NavigationDemo() {
 	return (
 		<div className="space-y-4">
 			<div className="text-sm text-muted-foreground mb-3">
-				The assistant understands your routes:
+				The agent understands your routes:
 			</div>
 			<div className="space-y-2">
 				{routes.map((route) => (
@@ -166,7 +166,7 @@ function ClickDemoWithSuggestions({
 	return (
 		<div className="space-y-4">
 			<div className="text-sm text-muted-foreground mb-3">
-				The assistant can interact with buttons:
+				The agent can interact with buttons:
 			</div>
 			<div className="flex items-center justify-between p-4 rounded-xl bg-muted/30 border border-border/50">
 				<div>
@@ -262,7 +262,7 @@ function InputFillDemoWithSuggestions({
 	return (
 		<div className="space-y-4">
 			<div className="text-sm text-muted-foreground mb-3">
-				The assistant can fill input fields with values:
+				The agent can fill input fields with values:
 			</div>
 			<div className="space-y-4">
 				<div className="space-y-2">
@@ -413,11 +413,11 @@ export function HomePage() {
 				id="feature-navigation"
 				direction="left"
 				emoji="🧭"
-				title="Smart Navigation"
-				description="Navigate between pages using natural language. The assistant understands your app's routing structure and can take users anywhere they ask."
+				title="Navigation"
+				description="Navigate between pages using natural language. The agent understands your app's routing structure and can take users anywhere they ask."
 				markerId="slide_navigation"
-				markerLabel="Smart Navigation Section"
-				markerIntent="Navigate to the Smart Navigation feature section"
+				markerLabel="Navigation Section"
+				markerIntent="Navigate to the Navigation feature section"
 			>
 				<NavigationDemoWithSuggestions onSuggestion={handleSuggestion} />
 			</FeatureSlide>
@@ -439,11 +439,11 @@ export function HomePage() {
 				id="feature-click"
 				direction="left"
 				emoji="👆"
-				title="Smart Clicking"
-				description="Let the assistant interact with buttons, links, and any clickable element. Users can describe what they want to do in plain English."
+				title="Clicking"
+				description="Let the agent interact with buttons, links, and any clickable element. Users can describe what they want to do in natural language."
 				markerId="slide_click"
-				markerLabel="Smart Clicking Section"
-				markerIntent="Navigate to the Smart Clicking feature section"
+				markerLabel="Clicking Section"
+				markerIntent="Navigate to the Clicking feature section"
 			>
 				<ClickDemoWithSuggestions onSuggestion={handleSuggestion} />
 			</FeatureSlide>
@@ -453,7 +453,7 @@ export function HomePage() {
 				direction="right"
 				emoji="⌨️"
 				title="Input Filling"
-				description="The assistant can fill form inputs with values using natural language. Works with text inputs, textareas, and emits native browser events for React compatibility."
+				description="The agent can fill form inputs with values using natural language. Works with text inputs, textareas, and emits native browser events for React compatibility."
 				markerId="slide_fill_input"
 				markerLabel="Input Filling Section"
 				markerIntent="Navigate to the Input Filling feature section"

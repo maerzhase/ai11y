@@ -9,7 +9,7 @@ export function InteractiveDemoSection() {
 					Try It Live
 				</h2>
 				<p className="text-center text-muted-foreground mb-12 text-lg max-w-2xl mx-auto">
-					Interact with the assistant panel in the bottom right. Try the demos
+					Interact with the agent panel in the bottom right. Try the demos
 					below!
 				</p>
 

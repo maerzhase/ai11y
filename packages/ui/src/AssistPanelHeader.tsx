@@ -6,7 +6,7 @@ export interface AssistPanelHeaderProps {
 }
 
 export function AssistPanelHeader({
-	title = "Assistant",
+	title = "Agent",
 	onClose,
 }: AssistPanelHeaderProps) {
 	return (

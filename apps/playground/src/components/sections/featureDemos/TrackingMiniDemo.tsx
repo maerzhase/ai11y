@@ -26,7 +26,7 @@ export function TrackingMiniDemo() {
 			<div className="mt-2 space-y-1">
 				{last.length === 0 ? (
 					<div className="text-xs text-muted-foreground">
-						No events yet — click “Track” or ask the assistant to do something.
+						No events yet — click "Track" or ask the agent to do something.
 					</div>
 				) : (
 					last.map((e, idx) => (

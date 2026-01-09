@@ -27,7 +27,7 @@ export interface UseAssistChatReturn {
 export function useAssistChat({
 	onSubmit,
 	onToolCall,
-	initialMessage = "Hi! I'm your AI assistant. I can help you navigate, click buttons, and highlight elements. Try saying 'go to billing' or 'click connect stripe'.",
+	initialMessage = "Hi! I'm your AI agent. I can help you navigate, click buttons, and highlight elements. Try saying 'go to billing' or 'click connect stripe'.",
 }: UseAssistChatOptions): UseAssistChatReturn {
 	const [messages, setMessages] = useState<Message[]>([
 		{
@@ -79,7 +79,7 @@ export function useAssistChat({
 				// Call onSubmit with the updated messages (outside of state setter)
 				const response = await onSubmit(userMessage, updatedMessages);
 
-				// Add assistant reply only if we're still processing (prevent duplicates)
+				// Add agent reply only if we're still processing (prevent duplicates)
 				if (processingRef.current) {
 					messageIdCounterRef.current += 1;
 					const assistantMsg: Message = {
