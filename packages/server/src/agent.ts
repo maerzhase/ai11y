@@ -73,7 +73,7 @@ function createLangChainTools(
 
 		// Convert parameters to Zod schema
 		const zodSchema: Record<string, z.ZodTypeAny> = {};
-		for (const [key, param] of Object.entries(def.parameters.properties)) {
+		for (const [key, param] of Object.entries(def.parameters.properties) as Array<[string, { type: string; description: string }]>) {
 			const zodType =
 				param.type === "string"
 					? z.string()
@@ -81,7 +81,7 @@ function createLangChainTools(
 						? z.number()
 						: param.type === "boolean"
 							? z.boolean()
-							: z.any();
+							: z.unknown();
 			zodSchema[key] = zodType.describe(param.description);
 		}
 
@@ -168,6 +168,49 @@ function findMatchingMarker(
 	return matchingMarker
 		? { marker: matchingMarker, searchText, isElementReference }
 		: null;
+}
+
+/**
+ * LangChain response with tool calls
+ */
+interface LangChainResponseWithTools {
+	tool_calls?: Array<{
+		name?: string;
+		args?: Record<string, unknown>;
+		function?: {
+			name?: string;
+			arguments?: string | Record<string, unknown>;
+		};
+	}>;
+	additional_kwargs?: {
+		tool_calls?: Array<{
+			name?: string;
+			args?: Record<string, unknown>;
+			function?: {
+				name?: string;
+				arguments?: string | Record<string, unknown>;
+			};
+		}>;
+	};
+}
+
+/**
+ * Type guard to check if response has tool calls
+ */
+function hasToolCalls(
+	response: unknown,
+): response is LangChainResponseWithTools {
+	return (
+		typeof response === "object" &&
+		response !== null &&
+		(("tool_calls" in response) ||
+			("additional_kwargs" in response &&
+				typeof (response as LangChainResponseWithTools).additional_kwargs ===
+					"object" &&
+				(response as LangChainResponseWithTools).additional_kwargs !== null &&
+				"tool_calls" in
+					(response as LangChainResponseWithTools).additional_kwargs!))
+	);
 }
 
 /**
@@ -296,10 +339,16 @@ Navigation rules:
 
 	// Extract tool calls from LangChain response
 	// LangChain stores tool calls in response.tool_calls or response.additional_kwargs.tool_calls
-	const toolCallObjects =
-		(response as any).tool_calls ||
-		(response as any).additional_kwargs?.tool_calls ||
-		[];
+	const toolCallObjects: Array<{
+		name?: string;
+		args?: Record<string, unknown>;
+		function?: {
+			name?: string;
+			arguments?: string | Record<string, unknown>;
+		};
+	}> = hasToolCalls(response)
+		? response.tool_calls || response.additional_kwargs?.tool_calls || []
+		: [];
 
 	for (const toolCall of toolCallObjects) {
 		const toolName = toolCall.name || toolCall.function?.name;

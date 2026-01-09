@@ -2,6 +2,7 @@ import type {
 	FastifyInstance,
 	FastifyPluginOptions,
 	FastifyRequest,
+	FastifyReply,
 } from "fastify";
 import { runAgent } from "./agent.js";
 import { createDefaultToolRegistry, type ToolRegistry } from "./tool-registry.js";
@@ -10,10 +11,6 @@ import type { AgentRequest, ServerConfig } from "./types.js";
 interface FastifyUi4aiOptions extends FastifyPluginOptions {
 	config: ServerConfig;
 	toolRegistry?: ToolRegistry;
-}
-
-interface Ui4aiRequest extends FastifyRequest {
-	body: AgentRequest;
 }
 
 /**
@@ -52,18 +49,24 @@ export async function ui4aiPlugin(
 	 * POST /ui4ai/agent
 	 * Main endpoint for agent requests
 	 */
-	fastify.post<Ui4aiRequest>("/ui4ai/agent", async (request, reply) => {
-		try {
-			const response = await runAgent(request.body, config, toolRegistry);
-			return reply.send(response);
-		} catch (error) {
-			fastify.log.error(error, "Error processing agent request");
-			return reply.status(500).send({
-				error: "Failed to process agent request",
-				message: error instanceof Error ? error.message : "Unknown error",
-			});
-		}
-	});
+	fastify.post<{ Body: AgentRequest }>(
+		"/ui4ai/agent",
+		async (
+			request: FastifyRequest<{ Body: AgentRequest }>,
+			reply: FastifyReply,
+		) => {
+			try {
+				const response = await runAgent(request.body, config, toolRegistry);
+				return reply.send(response);
+			} catch (error) {
+				fastify.log.error(error, "Error processing agent request");
+				return reply.status(500).send({
+					error: "Failed to process agent request",
+					message: error instanceof Error ? error.message : "Unknown error",
+				});
+			}
+		},
+	);
 
 	/**
 	 * GET /ui4ai/health
