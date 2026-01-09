@@ -290,7 +290,14 @@ Navigation rules:
 - If marker matches and is in inViewMarkerIds + elementType='a' → use 'click'
 - If marker matches but NOT in inViewMarkerIds → use 'scroll' (DO NOT use 'click')
 - If no marker matches → use 'navigate' with route path
-- For affirmative responses after discussing a marker, interact with that marker using the appropriate tool.`;
+- For affirmative responses after discussing a marker, interact with that marker using the appropriate tool.
+
+Relative scrolling rules (for "scroll to next" or "scroll to previous"):
+- Markers are listed in document order (top to bottom) in the markers array
+- CRITICAL: Always skip markers that are in inViewMarkerIds - only scroll to markers NOT currently in view
+- For "scroll to next": Find the first marker in the markers array that comes after any currently visible markers and is NOT in inViewMarkerIds
+- For "scroll to previous": Find the first marker in the markers array that comes before any currently visible markers and is NOT in inViewMarkerIds
+- This prevents getting stuck on sections already in view`;
 
 	// Build conversation messages
 	const conversationMessages: Array<{ role: string; content: string }> = [

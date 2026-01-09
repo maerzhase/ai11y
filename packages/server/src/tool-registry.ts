@@ -137,14 +137,14 @@ export function createDefaultToolRegistry(): ToolRegistry {
 		{
 			name: "scroll",
 			description:
-				"Scroll to a UI element by its marker ID to bring it into view. Use this when 'navigate to [element]' means scrolling to an element, or when the marker is not in inViewMarkerIds. For visible link markers, use 'click' instead.",
+				"Scroll to a UI element by its marker ID to bring it into view. Use this when 'navigate to [element]' means scrolling to an element, or when the marker is not in inViewMarkerIds. For visible link markers, use 'click' instead. For relative scrolling ('scroll to next' or 'scroll to previous'): CRITICAL - Skip markers that are in inViewMarkerIds. Find the next/previous marker in document order (markers array order) that is NOT in inViewMarkerIds. For 'next': find the first marker after any visible ones. For 'previous': find the first marker before any visible ones.",
 			parameters: {
 				type: "object",
 				properties: {
 					markerId: {
 						type: "string",
 						description:
-							"The ID of the marker to scroll to. Use when marker is not in inViewMarkerIds.",
+							"The ID of the marker to scroll to. Use when marker is not in inViewMarkerIds. For relative scrolling: find the next/previous marker in the markers array that is NOT in inViewMarkerIds. Always skip markers already in view to avoid getting stuck.",
 					},
 				},
 				required: ["markerId"],
