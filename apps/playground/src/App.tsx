@@ -1,37 +1,29 @@
-import { AgentConfig, AssistPanel, UIAIProvider } from "@quest/react";
+import { type AgentConfig, UIAIProvider } from "@quest/react";
 import React from "react";
-import {
-	BrowserRouter,
-	Route,
-	Routes,
-	useLocation,
-	useNavigate,
-} from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 import { CustomHighlightWrapper } from "./components/CustomHighlight";
+import { DemoRouteProvider, useDemoRoute } from "./context/DemoRouteContext";
 import { AppLayout } from "./layout/AppLayout";
-import { BillingPage } from "./pages/BillingPage";
 import { HomePage } from "./pages/HomePage";
-import { IntegrationsPage } from "./pages/IntegrationsPage";
 
 function App() {
 	return (
 		<BrowserRouter>
-			<AppWithRouter />
+			<DemoRouteProvider>
+				<AppWithRouter />
+			</DemoRouteProvider>
 		</BrowserRouter>
 	);
 }
 
 function AppWithRouter() {
-	const navigate = useNavigate();
-	const location = useLocation();
-	const navigateRef = React.useRef(navigate);
-	const locationRef = React.useRef(location.pathname);
+	const { demoRoute, setDemoRoute } = useDemoRoute();
+	const demoRouteRef = React.useRef(demoRoute);
 
-	// Keep refs up to date
+	// Keep ref up to date
 	React.useEffect(() => {
-		navigateRef.current = navigate;
-		locationRef.current = location.pathname;
-	}, [navigate, location.pathname]);
+		demoRouteRef.current = demoRoute;
+	}, [demoRoute]);
 
 	// Optional: Configure agent
 	const apiEndpoint =
@@ -42,24 +34,35 @@ function AppWithRouter() {
 		mode: "auto" as const,
 	};
 
+	const handleNavigate = React.useCallback(
+		(route: string) => {
+			if (route !== demoRouteRef.current) {
+				// Update URL without page navigation
+				window.history.pushState({}, "", route);
+				// Update demo route state
+				setDemoRoute(route);
+			}
+		},
+		[setDemoRoute]
+	);
+
+	// Listen for popstate (browser back/forward)
+	React.useEffect(() => {
+		const handlePopState = () => {
+			setDemoRoute(window.location.pathname);
+		};
+		window.addEventListener("popstate", handlePopState);
+		return () => window.removeEventListener("popstate", handlePopState);
+	}, [setDemoRoute]);
+
 	return (
 		<UIAIProvider
-			onNavigate={(route) => {
-				// When assistant navigates, update React Router
-				if (route !== locationRef.current) {
-					navigateRef.current(route);
-				}
-			}}
+			onNavigate={handleNavigate}
 			highlightWrapper={CustomHighlightWrapper}
 			agentConfig={agentConfig}
 		>
 			<AppLayout>
-				<Routes>
-					<Route path="/" element={<HomePage />} />
-					<Route path="/billing" element={<BillingPage />} />
-					<Route path="/integrations" element={<IntegrationsPage />} />
-				</Routes>
-				<AssistPanel />
+				<HomePage />
 			</AppLayout>
 		</UIAIProvider>
 	);

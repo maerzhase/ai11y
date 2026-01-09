@@ -173,3 +173,92 @@ code[class*="language-"],
 pre[class*="language-"] {
 	font-family: "Geist Mono", "Courier New", monospace;
 }
+
+/* Scrolly-telling animations */
+@keyframes slide-in-left {
+	from {
+		opacity: 0;
+		transform: translateX(-60px);
+	}
+	to {
+		opacity: 1;
+		transform: translateX(0);
+	}
+}
+
+@keyframes slide-in-right {
+	from {
+		opacity: 0;
+		transform: translateX(60px);
+	}
+	to {
+		opacity: 1;
+		transform: translateX(0);
+	}
+}
+
+@keyframes fade-up {
+	from {
+		opacity: 0;
+		transform: translateY(30px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.slide-from-left {
+	opacity: 0;
+	transform: translateX(-60px);
+}
+
+.slide-from-right {
+	opacity: 0;
+	transform: translateX(60px);
+}
+
+.slide-visible {
+	animation: slide-in-left 0.6s ease-out forwards;
+}
+
+.slide-visible-right {
+	animation: slide-in-right 0.6s ease-out forwards;
+}
+
+.fade-up {
+	animation: fade-up 0.5s ease-out forwards;
+}
+
+/* Staggered animation delays */
+.stagger-1 { animation-delay: 0.1s; }
+.stagger-2 { animation-delay: 0.2s; }
+.stagger-3 { animation-delay: 0.3s; }
+.stagger-4 { animation-delay: 0.4s; }
+
+/* Scrolly layout helpers */
+.scrolly-container {
+	position: relative;
+}
+
+.scrolly-spacer {
+	height: 50vh;
+}
+
+/* Custom scrollbar for messages */
+.scrollbar-thin::-webkit-scrollbar {
+	width: 4px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+	background: hsl(var(--muted-foreground) / 0.2);
+	border-radius: 2px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+	background: hsl(var(--muted-foreground) / 0.3);
+}
