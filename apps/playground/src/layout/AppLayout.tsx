@@ -1,5 +1,6 @@
 import { navigateToRoute } from "@ui4ai/core";
 import React from "react";
+import { DebugPanel } from "../components/DebugPanel";
 import { useDemoRoute } from "../context/DemoRouteContext";
 
 interface AppLayoutProps {
@@ -16,6 +17,7 @@ export function AppLayout({ children }: AppLayoutProps) {
 
 	return (
 		<div className="min-h-screen bg-background text-foreground transition-colors">
+			<DebugPanel />
 			{children}
 		</div>
 	);
