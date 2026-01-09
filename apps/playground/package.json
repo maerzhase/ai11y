@@ -1,5 +1,5 @@
 {
-	"name": "react-quest-playground",
+	"name": "ui4ai-playground",
 	"author": "maerzhase3000",
 	"private": true,
 	"type": "module",
@@ -7,9 +7,9 @@
 		"dev": "vite"
 	},
 	"dependencies": {
-		"@quest/core": "workspace:*",
-		"@quest/react": "workspace:*",
-		"@quest/ui": "workspace:*",
+		"@ui4ai/core": "workspace:*",
+		"@ui4ai/react": "workspace:*",
+		"@ui4ai/ui": "workspace:*",
 		"@tailwindcss/vite": "4.1.18",
 		"react": "19.2.3",
 		"react-dom": "19.2.3",

@@ -1,6 +1,6 @@
 @import "tailwindcss";
-@source "../node_modules/@quest/ui";
-@source "../node_modules/@quest/react";
+@source "../node_modules/@ui4ai/ui";
+@source "../node_modules/@ui4ai/react";
 
 /* Modern theme system with CSS variables (shadcn-style) */
 :root {

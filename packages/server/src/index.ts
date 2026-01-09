@@ -1,7 +1,7 @@
 /**
- * React Quest Server
+ * ui4ai Server
  *
- * Server-side agent implementation for React Quest.
+ * Server-side agent implementation for ui4ai.
  * Handles LLM API calls securely on the server using LangChain.
  */
 

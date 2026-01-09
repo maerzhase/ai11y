@@ -1,6 +1,6 @@
-# Playground - React Quest Demo App
+# Playground - ui4ai Demo App
 
-This is a demo application showcasing the React Quest AI Assistant SDK.
+This is a demo application showcasing ui4ai - a semantic UI context layer for AI agents.
 
 ## Setup
 
@@ -16,15 +16,15 @@ pnpm install
 # Create apps/server/.env with your OpenAI API key
 echo "OPENAI_API_KEY=your-api-key-here" > apps/server/.env
 
-# Optionally configure playground endpoint (defaults to http://localhost:3000/quest/agent)
-echo "VITE_QUEST_API_ENDPOINT=http://localhost:3000/quest/agent" > apps/playground/.env
+# Optionally configure playground endpoint (defaults to http://localhost:3000/ui4ai/agent)
+echo "VITE_UI4AI_API_ENDPOINT=http://localhost:3000/ui4ai/agent" > apps/playground/.env
 
 # Run everything (builds packages, starts server + playground)
 pnpm dev
 ```
 
 This will:
-- Build `react-quest` package
+- Build ui4ai packages
 - Start the server on `http://localhost:3000` (if `OPENAI_API_KEY` is set in `apps/server/.env`)
 - Start the playground on `http://localhost:5173`
 - The playground will automatically connect to the server endpoint
@@ -45,18 +45,18 @@ If you want to run things separately:
    ```
    Then run:
    ```bash
-   pnpm --filter @react-quest/server-app dev
+   pnpm --filter ui4ai-server-app dev
    ```
 
 3. **Configure playground (optional - for LLM):**
    Create a `.env` file in this directory:
    ```bash
-   VITE_QUEST_API_ENDPOINT=http://localhost:3000/quest/agent
+   VITE_UI4AI_API_ENDPOINT=http://localhost:3000/ui4ai/agent
    ```
 
 4. **Run the playground:**
    ```bash
-   pnpm --filter react-quest-playground dev
+   pnpm --filter ui4ai-playground dev
    ```
 
 **Important:** 
@@ -70,7 +70,7 @@ If you want to run things separately:
 - **Navigation**: Ask the assistant to navigate between pages
 - **Button Clicks**: Ask the assistant to click buttons
 - **Error Handling**: Trigger an error in the Integrations page and see the assistant help recover
-- **LLM Agent**: If configured, uses OpenAI GPT for natural language understanding
+- **LLM Agent**: If configured, uses LLM for natural language understanding
 - **Rule-Based Fallback**: Works without LLM using pattern matching
 
 ## Try It Out
@@ -81,4 +81,3 @@ If you want to run things separately:
    - "Click enable billing"
    - "Go to integrations"
    - "Connect stripe" (will fail first time, then ask to retry)
-

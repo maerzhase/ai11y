@@ -1,4 +1,4 @@
-import { Mark } from "@quest/react";
+import { Mark } from "@ui4ai/react";
 
 export function CTASection() {
 	return (
@@ -14,20 +14,20 @@ export function CTASection() {
 					</h2>
 				</Mark>
 				<p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-					Add AI assistance to your React app in minutes. No complex setup, no
+					Add AI assistance into your app in minutes. No complex setup, no
 					vendor lock-in.
 				</p>
 				<div className="flex gap-4 justify-center flex-wrap">
 					<Mark
 						id="cta_install"
 						label="Install Button"
-						intent="Button to install React Quest"
+						intent="Button to install ui4ai"
 					>
 						<button
 							type="button"
 							onClick={() => {
-								navigator.clipboard.writeText("pnpm add @quest/react");
-								alert("Install command copied! Run: pnpm add @quest/react");
+								navigator.clipboard.writeText("pnpm add @ui4ai/react");
+								alert("Install command copied! Run: pnpm add @ui4ai/react");
 							}}
 							className="inline-flex items-center justify-center rounded-lg bg-primary px-8 py-4 text-lg font-semibold text-primary-foreground shadow-lg transition-all hover:bg-primary/90 hover:shadow-xl hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
 						>

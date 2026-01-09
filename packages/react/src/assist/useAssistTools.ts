@@ -3,7 +3,7 @@ import {
 	highlightMarker,
 	navigateToRoute,
 	scrollToMarker,
-} from "@quest/core";
+} from "@ui4ai/core";
 import { useCallback } from "react";
 import { useAssist } from "./AssistProvider.js";
 
@@ -15,7 +15,7 @@ import { useAssist } from "./AssistProvider.js";
  * - highlightedMarkers state (for bubble emphasis)
  *
  * For side effects when highlighting (analytics, logging), use the `onHighlight`
- * option in `highlightMarker()` from `@quest/core`.
+ * option in `highlightMarker()` from `@ui4ai/core`.
  *
  * @example
  * ```tsx

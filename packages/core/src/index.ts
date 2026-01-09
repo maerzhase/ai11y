@@ -1,7 +1,7 @@
 /**
- * @quest/core
+ * @ui4ai/core
  *
- * Core types and utilities shared across all React Quest packages.
+ * Core types and utilities shared across all ui4ai packages.
  */
 
 // Agent module

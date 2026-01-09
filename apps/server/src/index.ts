@@ -6,7 +6,7 @@
 
 import "dotenv/config";
 import cors from "@fastify/cors";
-import { questPlugin } from "@quest/server/fastify";
+import { ui4aiPlugin } from "@ui4ai/server/fastify";
 import Fastify from "fastify";
 
 // Determine provider and validate API key
@@ -106,8 +106,8 @@ async function start() {
 		process.exit(1);
 	}
 
-	// Register the quest plugin
-	await fastify.register(questPlugin, {
+	// Register the ui4ai plugin
+	await fastify.register(ui4aiPlugin, {
 		config,
 	});
 
@@ -115,7 +115,7 @@ async function start() {
 		const port = Number(process.env.PORT) || 3000;
 		await fastify.listen({ port, host: "0.0.0.0" });
 		console.log(`🚀 Server listening on http://localhost:${port}`);
-		console.log(`📡 Agent endpoint: http://localhost:${port}/quest/agent`);
+		console.log(`📡 Agent endpoint: http://localhost:${port}/ui4ai/agent`);
 		console.log(`🌐 CORS enabled for localhost origins`);
 		console.log(`🤖 LLM Provider: ${provider} (${config.model})`);
 	} catch (err) {

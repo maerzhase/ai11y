@@ -1,11 +1,11 @@
-import { Mark } from "@quest/react";
+import { Mark } from "@ui4ai/react";
 import { CodeExampleCard } from "./CodeExampleCard";
 
 const codeExamples = [
 	{
 		id: "mark",
 		title: "Marking Elements",
-		code: `import { Mark } from "@quest/react";
+		code: `import { Mark } from "@ui4ai/react";
 
 <Mark
   id="my_button"
@@ -20,7 +20,7 @@ const codeExamples = [
 	{
 		id: "error",
 		title: "Error Reporting",
-		code: `import { useAssist } from "@quest/react";
+		code: `import { useAssist } from "@ui4ai/react";
 
 function MyComponent() {
   const { reportError } = useAssist();
@@ -39,7 +39,7 @@ function MyComponent() {
 	{
 		id: "setup",
 		title: "Basic Setup",
-		code: `import { UIAIProvider, AssistPanel } from "@quest/react";
+		code: `import { UIAIProvider, AssistPanel } from "@ui4ai/react";
 
 function App() {
   return (
@@ -53,8 +53,8 @@ function App() {
 	{
 		id: "imperative",
 		title: "Tool Functions",
-		code: `import { navigateToRoute, highlightMarker, clickMarker } from "@quest/core";
-import { useAssist } from "@quest/react";
+		code: `import { navigateToRoute, highlightMarker, clickMarker } from "@ui4ai/core";
+import { useAssist } from "@ui4ai/react";
 
 function MyComponent() {
   const { track } = useAssist();
@@ -83,7 +83,7 @@ export function CodeExamplesSection() {
 					</h2>
 				</Mark>
 				<p className="text-center text-muted-foreground mb-16 text-lg max-w-2xl mx-auto">
-					See how easy it is to integrate React Quest
+					See how easy it is to integrate ui4ai into your app
 				</p>
 
 				<div className="grid md:grid-cols-2 gap-8">

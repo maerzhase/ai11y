@@ -1,5 +1,5 @@
 {
-	"name": "server-app",
+	"name": "ui4ai-server-app",
 	"version": "0.0.0",
 	"private": true,
 	"type": "module",
@@ -10,7 +10,7 @@
 	},
 	"dependencies": {
 		"@fastify/cors": "11.2.0",
-		"@quest/server": "workspace:*",
+		"@ui4ai/server": "workspace:*",
 		"dotenv": "17.2.3",
 		"fastify": "5.6.2"
 	},

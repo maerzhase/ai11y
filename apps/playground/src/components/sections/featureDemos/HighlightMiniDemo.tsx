@@ -1,4 +1,4 @@
-import { Mark } from "@quest/react";
+import { Mark } from "@ui4ai/react";
 
 export function HighlightMiniDemo() {
 	return (

@@ -1,11 +1,13 @@
-# @react-quest/server
+# @ui4ai/server
 
-Server-side package for React Quest that securely handles OpenAI API calls and provides extensible tool support.
+Server-side package for ui4ai that securely handles LLM API calls and provides extensible tool support.
+
+A semantic UI context layer for AI agents.
 
 ## Installation
 
 ```bash
-pnpm add @react-quest/server openai
+pnpm add @ui4ai/server
 ```
 
 ## Quick Start
@@ -14,11 +16,11 @@ pnpm add @react-quest/server openai
 
 ```ts
 import Fastify from 'fastify';
-import { questPlugin } from '@react-quest/server/fastify';
+import { ui4aiPlugin } from '@ui4ai/server/fastify';
 
 const fastify = Fastify();
 
-await fastify.register(questPlugin, {
+await fastify.register(ui4aiPlugin, {
   config: {
     apiKey: process.env.OPENAI_API_KEY!,
     model: 'gpt-4o-mini', // Optional, defaults to gpt-4o-mini
@@ -30,8 +32,8 @@ await fastify.listen({ port: 3000 });
 ```
 
 The plugin will register the following routes:
-- `POST /quest/agent` - Main agent endpoint
-- `GET /quest/health` - Health check endpoint
+- `POST /ui4ai/agent` - Main agent endpoint
+- `GET /ui4ai/health` - Health check endpoint
 
 **Example App:** See `apps/server/` in this monorepo for a complete example server implementation.
 
@@ -40,7 +42,7 @@ The plugin will register the following routes:
 ```ts
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
-import { questPlugin } from '@react-quest/server/fastify';
+import { ui4aiPlugin } from '@ui4ai/server/fastify';
 
 const fastify = Fastify();
 
@@ -48,7 +50,7 @@ await fastify.register(cors, {
   origin: 'http://localhost:5173', // Your frontend URL
 });
 
-await fastify.register(questPlugin, {
+await fastify.register(ui4aiPlugin, {
   config: {
     apiKey: process.env.OPENAI_API_KEY!,
   }
@@ -58,8 +60,8 @@ await fastify.register(questPlugin, {
 ### Standalone Usage
 
 ```ts
-import { runAgent, createDefaultToolRegistry } from '@react-quest/server';
-import type { AgentRequest, ServerConfig } from '@react-quest/server';
+import { runAgent, createDefaultToolRegistry } from '@ui4ai/server';
+import type { AgentRequest, ServerConfig } from '@ui4ai/server';
 
 const config: ServerConfig = {
   apiKey: process.env.OPENAI_API_KEY!,
@@ -79,8 +81,8 @@ async function handleRequest(request: AgentRequest) {
 You can extend the agent with custom tools using the `ToolRegistry`:
 
 ```ts
-import { questPlugin, createToolRegistry } from '@react-quest/server/fastify';
-import type { ToolDefinition, ToolExecutor, UIAIContext } from '@react-quest/server';
+import { ui4aiPlugin, createToolRegistry } from '@ui4ai/server/fastify';
+import type { ToolDefinition, ToolExecutor, UIAIContext } from '@ui4ai/server';
 
 // Create a custom tool registry
 const registry = createToolRegistry();
@@ -109,7 +111,7 @@ registry.register(
 );
 
 // Use the custom registry with the plugin
-await fastify.register(questPlugin, {
+await fastify.register(ui4aiPlugin, {
   config: {
     apiKey: process.env.OPENAI_API_KEY!,
   },
@@ -125,7 +127,7 @@ Runs the LLM agent with the given request and configuration.
 
 **Parameters:**
 - `request: AgentRequest` - The agent request containing input and context
-- `config: ServerConfig` - Server configuration with OpenAI API key
+- `config: ServerConfig` - Server configuration with API key
 - `toolRegistry?: ToolRegistry` - Optional tool registry (defaults to built-in tools)
 
 **Returns:** `Promise<AgentResponse>`
@@ -137,7 +139,7 @@ A registry for managing tools that can be called by the LLM agent.
 **Methods:**
 - `register(definition: ToolDefinition, executor: ToolExecutor)` - Register a new tool
 - `unregister(name: string)` - Unregister a tool
-- `getToolDefinitions()` - Get all tool definitions for OpenAI
+- `getToolDefinitions()` - Get all tool definitions for LLM
 - `executeToolCall(name, args, context)` - Execute a tool call
 - `hasTool(name)` - Check if a tool is registered
 
@@ -145,7 +147,7 @@ A registry for managing tools that can be called by the LLM agent.
 
 Creates a tool registry with built-in tools (navigate, click, highlight).
 
-### `questPlugin`
+### `ui4aiPlugin`
 
 Fastify plugin that registers the agent endpoints.
 
@@ -205,4 +207,3 @@ type ToolExecutor = (
   context: UIAIContext,
 ) => Promise<unknown> | unknown;
 ```
-

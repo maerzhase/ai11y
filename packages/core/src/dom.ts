@@ -10,7 +10,7 @@ import type { UIAIContext } from "./types/index.js";
  *
  * @example
  * ```ts
- * import { setRoute, setState, getContext } from '@quest/core';
+ * import { setRoute, setState, getContext } from '@ui4ai/core';
  *
  * setRoute('/billing');
  * setState({ userId: '123' });

@@ -1,4 +1,4 @@
-import { Mark } from "@quest/react";
+import { Mark } from "@ui4ai/react";
 import { FeatureCard } from "./FeatureCard";
 import { ClickMiniDemo } from "./featureDemos/ClickMiniDemo";
 import { ErrorMiniDemo } from "./featureDemos/ErrorMiniDemo";

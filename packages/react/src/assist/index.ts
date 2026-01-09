@@ -23,9 +23,9 @@ export {
 	runLLMAgent,
 	runRuleBasedAgent,
 	type AgentAdapterConfig,
-} from "@quest/core";
+} from "@ui4ai/core";
 
 /**
- * @deprecated Use runRuleBasedAgent from @quest/core instead
+ * @deprecated Use runRuleBasedAgent from @ui4ai/core instead
  */
-export { runRuleBasedAgent as runAgent } from "@quest/core";
+export { runRuleBasedAgent as runAgent } from "@ui4ai/core";

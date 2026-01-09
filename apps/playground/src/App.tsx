@@ -1,4 +1,4 @@
-import { type AgentConfig, UIAIProvider } from "@quest/react";
+import { type AgentConfig, UIAIProvider } from "@ui4ai/react";
 import React from "react";
 import { BrowserRouter } from "react-router-dom";
 import { CustomHighlightWrapper } from "./components/CustomHighlight";
@@ -27,8 +27,8 @@ function AppWithRouter() {
 
 	// Optional: Configure agent
 	const apiEndpoint =
-		import.meta.env.VITE_QUEST_API_ENDPOINT ||
-		"http://localhost:3000/quest/agent";
+		import.meta.env.VITE_UI4AI_API_ENDPOINT ||
+		"http://localhost:3000/ui4ai/agent";
 	const agentConfig: AgentConfig = {
 		apiEndpoint,
 		mode: "auto" as const,

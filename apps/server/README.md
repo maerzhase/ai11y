@@ -1,6 +1,8 @@
-# React Quest Server App
+# ui4ai Server App
 
-Example server application using the `@react-quest/server` package.
+Example server application using the `@ui4ai/server` package.
+
+A semantic UI context layer for AI agents.
 
 ## Setup
 
@@ -35,12 +37,12 @@ export OPENAI_API_KEY=your-api-key-here
 pnpm dev
 
 # Or from monorepo root
-pnpm --filter @react-quest/server-app dev
+pnpm --filter ui4ai-server-app dev
 ```
 
 The server will start on `http://localhost:3000` (or the port specified in `PORT` env var) with the following endpoints:
-- `POST /quest/agent` - Main agent endpoint
-- `GET /quest/health` - Health check endpoint
+- `POST /ui4ai/agent` - Main agent endpoint
+- `GET /ui4ai/health` - Health check endpoint
 
 **CORS:** The server has CORS enabled to allow requests from localhost origins (for development). In production, you should configure specific allowed origins.
 
@@ -107,4 +109,3 @@ OPENAI_API_KEY=not-needed
 LLM_MODEL=llama-2
 LLM_BASE_URL=http://localhost:11434/v1
 ```
-

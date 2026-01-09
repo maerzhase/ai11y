@@ -1,4 +1,4 @@
-import { navigateToRoute } from "@quest/core";
+import { navigateToRoute } from "@ui4ai/core";
 import React from "react";
 import { useDemoRoute } from "../context/DemoRouteContext";
 

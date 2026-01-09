@@ -1,4 +1,4 @@
-import { Mark, useAssist } from "@quest/react";
+import { Mark, useAssist } from "@ui4ai/react";
 
 export function LLMMiniDemo() {
 	const { agentConfig } = useAssist();

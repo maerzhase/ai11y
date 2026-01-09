@@ -10,4 +10,4 @@ export type {
 	UIAIError,
 	UIAIEvent,
 	UIAIState,
-} from "@quest/core";
+} from "@ui4ai/core";

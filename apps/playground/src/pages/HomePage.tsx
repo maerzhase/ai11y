@@ -1,4 +1,4 @@
-import { Mark } from "@quest/react";
+import { Mark } from "@ui4ai/react";
 import { useState } from "react";
 import { FeatureSlide } from "../components/FeatureSlide";
 import { ScrollyHero } from "../components/ScrollyHero";

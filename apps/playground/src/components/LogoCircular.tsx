@@ -1,4 +1,4 @@
-import { MorphingBlob } from "@quest/ui";
+import { MorphingBlob } from "@ui4ai/ui";
 
 interface LogoCircularProps {
 	className?: string;

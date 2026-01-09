@@ -1,4 +1,4 @@
-import { Mark, useAssist } from "@quest/react";
+import { Mark, useAssist } from "@ui4ai/react";
 import { useState } from "react";
 
 export function ErrorMiniDemo() {

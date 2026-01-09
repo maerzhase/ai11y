@@ -9,7 +9,7 @@ import {
 	subscribe,
 	subscribeToStore,
 	track,
-} from "@quest/core";
+} from "@ui4ai/core";
 import type React from "react";
 import {
 	createContext,
@@ -55,8 +55,8 @@ interface UIAIProviderContextValue {
 		meta?: { surface?: string; markerId?: string },
 	) => void;
 	// Note: Tool functions (navigate, highlight, scroll, click) are available via:
-	// - Core functions: import { navigateToRoute, highlightMarker, scrollToMarker, clickMarker } from "@quest/core"
-	// - React-specific wrappers: import { useAssistTools } from "@quest/react"
+	// - Core functions: import { navigateToRoute, highlightMarker, scrollToMarker, clickMarker } from "@ui4ai/core"
+	// - React-specific wrappers: import { useAssistTools } from "@ui4ai/react"
 
 	// Panel control
 	isPanelOpen: boolean;
@@ -90,7 +90,7 @@ interface UIAIProviderProps {
 	/**
 	 * Component used to wrap highlighted elements.
 	 * Receives `{ children, markerId }` as props.
-	 * For side effects (analytics, logging), use the `onHighlight` option in `highlightMarker()` from `@quest/core`.
+	 * For side effects (analytics, logging), use the `onHighlight` option in `highlightMarker()` from `@ui4ai/core`.
 	 */
 	highlightWrapper?: React.ComponentType<{
 		children: React.ReactNode;

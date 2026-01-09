@@ -7,26 +7,26 @@ import { runAgent } from "./agent.js";
 import { createDefaultToolRegistry, type ToolRegistry } from "./tool-registry.js";
 import type { AgentRequest, ServerConfig } from "./types.js";
 
-interface FastifyQuestOptions extends FastifyPluginOptions {
+interface FastifyUi4aiOptions extends FastifyPluginOptions {
 	config: ServerConfig;
 	toolRegistry?: ToolRegistry;
 }
 
-interface QuestRequest extends FastifyRequest {
+interface Ui4aiRequest extends FastifyRequest {
 	body: AgentRequest;
 }
 
 /**
- * Fastify plugin for React Quest server
+ * Fastify plugin for ui4ai server
  *
  * @example
  * ```ts
  * import Fastify from 'fastify';
- * import { questPlugin } from '@quest/server/fastify';
+ * import { ui4aiPlugin } from '@ui4ai/server/fastify';
  *
  * const fastify = Fastify();
  *
- * await fastify.register(questPlugin, {
+ * await fastify.register(ui4aiPlugin, {
  *   config: {
  *     provider: 'openai',
  *     apiKey: process.env.OPENAI_API_KEY!,
@@ -37,9 +37,9 @@ interface QuestRequest extends FastifyRequest {
  * await fastify.listen({ port: 3000 });
  * ```
  */
-export async function questPlugin(
+export async function ui4aiPlugin(
 	fastify: FastifyInstance,
-	options: FastifyQuestOptions,
+	options: FastifyUi4aiOptions,
 ) {
 	const { config, toolRegistry = createDefaultToolRegistry() } = options;
 
@@ -49,10 +49,10 @@ export async function questPlugin(
 	}
 
 	/**
-	 * POST /quest/agent
+	 * POST /ui4ai/agent
 	 * Main endpoint for agent requests
 	 */
-	fastify.post<QuestRequest>("/quest/agent", async (request, reply) => {
+	fastify.post<Ui4aiRequest>("/ui4ai/agent", async (request, reply) => {
 		try {
 			const response = await runAgent(request.body, config, toolRegistry);
 			return reply.send(response);
@@ -66,10 +66,10 @@ export async function questPlugin(
 	});
 
 	/**
-	 * GET /quest/health
+	 * GET /ui4ai/health
 	 * Health check endpoint
 	 */
-	fastify.get("/quest/health", async (_request, reply) => {
+	fastify.get("/ui4ai/health", async (_request, reply) => {
 		return reply.send({ status: "ok" });
 	});
 }

@@ -1,4 +1,4 @@
-import { Mark, useAssist } from "@quest/react";
+import { Mark, useAssist } from "@ui4ai/react";
 
 export function TrackingMiniDemo() {
 	const { events, track } = useAssist();

@@ -4,14 +4,14 @@ import {
 	scrollToMarker,
 	type AgentAdapterConfig,
 	type LLMAgentConfig,
-} from "@quest/core";
+} from "@ui4ai/core";
 import {
 	Mark,
 	useAssist,
 	useAssistChat,
 	useAssistTools,
 	type ToolCall,
-} from "@quest/react";
+} from "@ui4ai/react";
 import { useEffect, useRef, useState } from "react";
 import { ThemeToggle } from "./ThemeToggle";
 
@@ -149,10 +149,10 @@ export function ScrollyHero() {
 					<div className="max-w-screen-xl mx-auto px-4 py-3 flex items-center justify-between">
 						<div className="flex items-center gap-3">
 							<h1 className="text-lg font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-								React Quest
+								ui4ai
 							</h1>
 							<span className="text-xs text-muted-foreground hidden sm:block">
-								AI Assistant SDK for React
+								A semantic UI context layer for AI agents
 							</span>
 						</div>
 						<ThemeToggle />
@@ -184,17 +184,17 @@ export function ScrollyHero() {
 							{/* Title */}
 							<Mark
 								id="hero_title"
-								label="React Quest"
-								intent="The main hero title - AI Assistant SDK for React"
+								label="ui4ai"
+								intent="The main hero title - A semantic UI context layer for AI agents"
 								showAssistBubble
 							>
 								<h1 className="text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent tracking-tight text-center">
-									React Quest
+									ui4ai
 								</h1>
 							</Mark>
 
 							<p className="text-lg text-muted-foreground mb-6 text-center max-w-md mx-auto">
-								Add an AI assistant to your React app in minutes
+								A semantic UI context layer for AI agents
 							</p>
 
 							{/* Messages area */}

@@ -1,20 +1,34 @@
-# @quest/core
+# @ui4ai/core
 
-Core types and utilities shared across all React Quest packages.
+Core types and utilities shared across all ui4ai packages.
 
-This package contains **no runtime code**, only TypeScript type definitions. It serves as the single source of truth for shared types used across `@quest/react`, `@quest/server`, and other packages.
+A semantic UI context layer for AI agents.
 
 ## Structure
 
 ```
 src/
+├── agent/
+│   ├── agent-adapter.ts  # Unified agent adapter
+│   ├── llm-agent.ts      # LLM-based agent
+│   ├── rule-based-agent.ts # Rule-based fallback
+│   └── types.ts          # Agent configuration types
+├── tools/
+│   ├── click.ts          # Click marker tool
+│   ├── highlight.ts      # Highlight marker tool
+│   ├── navigate.ts       # Navigate to route tool
+│   └── scroll.ts         # Scroll to marker tool
 ├── types/
-│   ├── agent.ts      # Agent request/response types
-│   ├── config.ts     # Server configuration types
-│   ├── context.ts    # Assist context and state types
-│   ├── tool.ts       # Tool call and tool definition types
-│   └── index.ts      # Barrel export for all types
-└── index.ts          # Main entry point
+│   ├── agent.ts          # Agent request/response types
+│   ├── config.ts         # Server configuration types
+│   ├── context.ts        # Assist context and state types
+│   ├── tool.ts           # Tool call and tool definition types
+│   └── index.ts          # Barrel export for all types
+├── dom.ts                # DOM utilities
+├── events.ts             # Event system
+├── marker.ts             # Marker registry
+├── store.ts              # State store
+└── index.ts              # Main entry point
 ```
 
 ## Types
@@ -40,8 +54,8 @@ src/
 ## Usage
 
 ```typescript
-import type { ToolCall, AgentResponse, UIAIContext } from "@quest/core";
+import type { ToolCall, AgentResponse, UIAIContext } from "@ui4ai/core";
+import { navigateToRoute, highlightMarker, clickMarker } from "@ui4ai/core";
 ```
 
-All types are re-exported from the main entry point, so you can import everything from `@quest/core` directly.
-
+All types are re-exported from the main entry point, so you can import everything from `@ui4ai/core` directly.

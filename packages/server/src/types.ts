@@ -9,4 +9,4 @@ export type {
 	ToolDefinition,
 	ToolExecutor,
 	UIAIContext,
-} from "@quest/core";
+} from "@ui4ai/core";

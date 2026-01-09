@@ -1,5 +1,5 @@
 {
-	"name": "@quest/react",
+	"name": "@ui4ai/react",
 	"author": "maerzhase3000",
 	"version": "0.0.0",
 	"type": "module",
@@ -15,8 +15,8 @@
 	},
 	"sideEffects": false,
 	"dependencies": {
-		"@quest/core": "workspace:*",
-		"@quest/ui": "workspace:*"
+		"@ui4ai/core": "workspace:*",
+		"@ui4ai/ui": "workspace:*"
 	},
 	"peerDependencies": {
 		"react": "19.2.3",

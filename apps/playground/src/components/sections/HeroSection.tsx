@@ -1,4 +1,4 @@
-import { Mark } from "@quest/react";
+import { Mark } from "@ui4ai/react";
 
 export function HeroSection() {
 	return (
@@ -8,16 +8,16 @@ export function HeroSection() {
 			<div className="relative max-w-5xl mx-auto text-center px-6 py-20">
 				<Mark
 					id="hero_title"
-					label="React Quest"
-					intent="The main hero title - AI Assistant SDK for React"
+					label="ui4ai"
+					intent="The main hero title - A semantic UI context layer for AI agents"
 					showAssistBubble
 				>
 					<h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent tracking-tight">
-						React Quest
+						ui4ai
 					</h1>
 				</Mark>
 				<p className="text-xl md:text-2xl text-muted-foreground mb-4 max-w-2xl mx-auto leading-relaxed">
-					Add an AI assistant to your React app in minutes. Let users navigate,
+					A semantic UI context layer for AI agents. Let users navigate,
 					interact, and explore with natural language.
 				</p>
 				<p className="text-lg text-muted-foreground/80 mb-10 max-w-xl mx-auto">

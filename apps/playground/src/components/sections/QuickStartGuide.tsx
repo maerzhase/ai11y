@@ -1,4 +1,4 @@
-import { Mark } from "@quest/react";
+import { Mark } from "@ui4ai/react";
 import { CodeBlock } from "../CodeBlock";
 
 export function QuickStartGuide() {
@@ -46,7 +46,7 @@ export function QuickStartGuide() {
 										to your app
 									</p>
 									<CodeBlock
-										code={`import { UIAIProvider, AssistPanel } from "@quest/react";
+										code={`import { UIAIProvider, AssistPanel } from "@ui4ai/react";
 
 function App() {
   return (
@@ -85,7 +85,7 @@ function App() {
 										component
 									</p>
 									<CodeBlock
-										code={`import { Mark } from "@quest/react";
+										code={`import { Mark } from "@ui4ai/react";
 
 <Mark
   id="my_button"

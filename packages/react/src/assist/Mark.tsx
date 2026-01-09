@@ -3,8 +3,8 @@ import {
 	ATTRIBUTE_INTENT,
 	ATTRIBUTE_LABEL,
 	formatMarkerId,
-} from "@quest/core";
-import { MorphingBlob } from "@quest/ui";
+} from "@ui4ai/core";
+import { MorphingBlob } from "@ui4ai/ui";
 import React, { useEffect, useLayoutEffect, useMemo, useRef } from "react";
 import { createPortal } from "react-dom";
 import { useAssist } from "./AssistProvider.js";

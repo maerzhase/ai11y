@@ -1,14 +1,16 @@
-# React Quest - In-App AI Assistant SDK
+# ui4ai - A semantic UI context layer for AI agents
 
-A minimal but real MVP of an "in-app AI assistant SDK" for React. The assistant can understand annotated UI elements ("markers"), react to runtime errors, and navigate/click inside the app based on chat commands.
+A minimal but powerful SDK that provides semantic UI context for AI agents. The assistant can understand annotated UI elements ("markers"), react to runtime errors, and navigate/interact with your app based on natural language commands.
 
 ## Architecture
 
 The SDK consists of:
 
 **Packages (libraries):**
-- **`packages/react-quest/`** - Core React SDK (provider, markers, hooks, client-side agent)
-- **`packages/react-quest-server/`** - Server-side package for secure OpenAI API calls with extensible tool support
+- **`packages/core/`** - Core SDK (markers, store, agents, tool definitions)
+- **`packages/react/`** - React bindings (provider, hooks, components)
+- **`packages/ui/`** - UI components (chat panel, triggers, message bubbles)
+- **`packages/server/`** - Server-side package for secure LLM API calls with extensible tool support
 
 **Apps (applications):**
 - **`apps/playground/`** - Demo app that uses the SDK
@@ -26,7 +28,7 @@ The `UIAIProvider` is the central context provider that maintains:
 - **Imperative API**: Methods exposed via context:
   - `track(event, payload?)` - Track custom events
   - `reportError(error, meta?)` - Report errors (auto-opens panel)
-- **Tool Functions**: Available from `@quest/core`:
+- **Tool Functions**: Available from `@ui4ai/core`:
   - `navigateToRoute(route)` - Navigate to a route
   - `highlightMarker(markerId, options?)` - Visually highlight an element
   - `scrollToMarker(markerId)` - Scroll to a marker element
@@ -73,7 +75,7 @@ The SDK supports **two agent modes**:
 
 #### LLM Agent (Recommended)
 
-The SDK includes server-side OpenAI integration with function calling. The agent runs securely on your server (not in the browser) and uses GPT models to understand natural language and intelligently interact with your app.
+The SDK includes server-side LLM integration with function calling. The agent runs securely on your server (not in the browser) and uses AI models to understand natural language and intelligently interact with your app.
 
 **Features:**
 - Natural language understanding
@@ -136,7 +138,7 @@ When an error is reported:
 #### With Rule-Based Agent (Default)
 
 ```tsx
-import { UIAIProvider, AssistPanel, Mark } from "react-quest";
+import { UIAIProvider, AssistPanel, Mark } from "@ui4ai/react";
 
 function App() {
   return (
@@ -154,9 +156,9 @@ function App() {
 
 ```bash
 # Install the server package
-pnpm add @react-quest/server openai
+pnpm add @ui4ai/server
 
-# Set your OpenAI API key in a .env file (recommended)
+# Set your API key in a .env file (recommended)
 # Create a .env file in your server directory:
 echo "OPENAI_API_KEY=your-api-key-here" > .env
 ```
@@ -166,11 +168,11 @@ echo "OPENAI_API_KEY=your-api-key-here" > .env
 ```ts
 // server.ts
 import Fastify from 'fastify';
-import { questPlugin } from '@react-quest/server/fastify';
+import { ui4aiPlugin } from '@ui4ai/server/fastify';
 
 const fastify = Fastify();
 
-await fastify.register(questPlugin, {
+await fastify.register(ui4aiPlugin, {
   config: {
     apiKey: process.env.OPENAI_API_KEY!,
     model: 'gpt-4o-mini', // Optional
@@ -183,17 +185,17 @@ await fastify.listen({ port: 3000 });
 **Step 3: Configure the client**
 
 ```tsx
-import { UIAIProvider, AssistPanel, Mark } from "react-quest";
+import { UIAIProvider, AssistPanel, Mark } from "@ui4ai/react";
 
 function App() {
-  const llmConfig = {
-    apiEndpoint: "http://localhost:3000/quest/agent",
+  const agentConfig = {
+    apiEndpoint: "http://localhost:3000/ui4ai/agent",
   };
 
   return (
     <UIAIProvider 
       onNavigate={(route) => navigate(route)}
-      llmConfig={llmConfig}
+      agentConfig={agentConfig}
     >
       <YourApp />
       <AssistPanel />
@@ -205,12 +207,12 @@ function App() {
 **Important:** 
 - The LLM agent automatically falls back to rule-based if the API endpoint is unavailable or misconfigured.
 - API keys are kept secure on the server, never exposed to the browser.
-- See `packages/react-quest-server/README.md` for more details on extending with custom tools.
+- See `packages/server/README.md` for more details on extending with custom tools.
 
 ### Marking Elements
 
 ```tsx
-import { Mark, useAssist } from "react-quest";
+import { Mark, useAssist } from "@ui4ai/react";
 
 function MyComponent() {
   const { reportError } = useAssist();
@@ -246,8 +248,8 @@ function MyComponent() {
 Tool functions are available directly from the core package:
 
 ```tsx
-import { navigateToRoute, highlightMarker, clickMarker } from "@quest/core";
-import { useAssist } from "@quest/react";
+import { navigateToRoute, highlightMarker, clickMarker } from "@ui4ai/core";
+import { useAssist } from "@ui4ai/react";
 
 function MyComponent() {
   const { track } = useAssist();
@@ -266,7 +268,7 @@ function MyComponent() {
 For React-specific features (like `highlightWrapper` or `onHighlight` callbacks), use the `useAssistTools()` hook:
 
 ```tsx
-import { useAssistTools } from "@quest/react";
+import { useAssistTools } from "@ui4ai/react";
 
 function MyComponent() {
   const { navigate, highlight, click } = useAssistTools();
@@ -304,14 +306,14 @@ pnpm install
 export OPENAI_API_KEY=your-api-key-here  # For server (optional)
 
 # Create .env file for playground (optional, for LLM support)
-echo "VITE_QUEST_API_ENDPOINT=http://localhost:3000/quest/agent" > apps/playground/.env
+echo "VITE_UI4AI_API_ENDPOINT=http://localhost:3000/ui4ai/agent" > apps/playground/.env
 
 # Run everything (frontend + backend) in one command
 pnpm dev
 ```
 
 This will:
-- Build `react-quest` package
+- Build ui4ai packages
 - Start the server on `http://localhost:3000` (if `OPENAI_API_KEY` is set)
 - Start the playground on `http://localhost:5173`
 
@@ -330,7 +332,7 @@ pnpm watch
 1. Set `OPENAI_API_KEY` environment variable
 2. Create a `.env` file in `apps/playground/` with:
    ```
-   VITE_QUEST_API_ENDPOINT=http://localhost:3000/quest/agent
+   VITE_UI4AI_API_ENDPOINT=http://localhost:3000/ui4ai/agent
    ```
    (The playground will use the rule-based agent if this is not set)
 
@@ -338,13 +340,13 @@ pnpm watch
 
 - **Visual Highlighting**: When `highlight(markerId)` is called, the element is outlined with a blue border for 2 seconds
 - **Click Simulation**: `click(markerId)` either calls the marker's `action` function or triggers a native click on the element
-- **Navigation**: When the assistant navigates, the route actually changes (integrated with React Router)
+- **Navigation**: When the assistant navigates, the route actually changes (integrated with your router)
 - **System Messages**: The panel shows system messages like "Navigated to /billing" and "Clicked Connect Stripe"
 - **Error Recovery**: When errors occur, the assistant explains them and guides recovery
 
 ## Success Criteria
 
-✅ A user can:
+A user can:
 - Open the app
 - Ask the assistant "take me to billing" → See navigation happen
 - Ask "click enable billing" → Button is clicked
@@ -355,31 +357,31 @@ This feels like a real product primitive, not a demo chatbot.
 ## Technical Details
 
 - **TypeScript**: Strict mode enabled
-- **Minimal Dependencies**: Core SDK only depends on React
+- **Minimal Dependencies**: Core SDK has zero dependencies
 - **Refs-Based**: Uses React refs for element access (no CSS selectors)
 - **Memory-Only**: No persistence beyond runtime
 - **Dual Agent Mode**: LLM agent (server-side) with rule-based fallback
-- **Function Calling**: Uses OpenAI's function calling API for structured tool execution
+- **Function Calling**: Uses LLM function calling API for structured tool execution
 - **Secure**: API keys never exposed to the browser
 - **Extensible**: Server package supports custom tools via `ToolRegistry`
 
 ## Server Package
 
-The `@react-quest/server` package provides:
+The `@ui4ai/server` package provides:
 
-- **Secure API handling**: OpenAI API calls happen server-side
+- **Secure API handling**: LLM API calls happen server-side
 - **Fastify middleware**: Easy integration with Fastify servers
 - **Extensible tool system**: Register custom tools that the LLM can call
 - **Type-safe**: Full TypeScript support
 
-See `packages/react-quest-server/README.md` for detailed documentation on:
+See `packages/server/README.md` for detailed documentation on:
 - Setting up the server
 - Extending with custom tools
 - API reference
 
 ## Future Enhancements
 
-- Support for other LLM providers (Anthropic, local models, etc.)
+- Support for other frameworks (Vue, Svelte, etc.)
 - Add persistence layer for state/events
 - Add analytics dashboard
 - Add authentication

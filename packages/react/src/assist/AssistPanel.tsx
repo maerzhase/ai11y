@@ -4,8 +4,8 @@ import {
 	scrollToMarker,
 	type AgentAdapterConfig,
 	type LLMAgentConfig,
-} from "@quest/core";
-import { AssistPanelPopover, ChatInput, MessageList } from "@quest/ui";
+} from "@ui4ai/core";
+import { AssistPanelPopover, ChatInput, MessageList } from "@ui4ai/ui";
 import { useEffect } from "react";
 import { useAssist } from "./AssistProvider.js";
 import type { AgentConfig, ToolCall } from "./types.js";
