@@ -1,9 +1,14 @@
-import { clickMarker, scrollToMarker } from "@quest/core";
+import {
+	clickMarker,
+	runAgentAdapter,
+	scrollToMarker,
+	type AgentAdapterConfig,
+	type LLMAgentConfig,
+} from "@quest/core";
 import { AssistPanelPopover, ChatInput, MessageList } from "@quest/ui";
 import { useEffect } from "react";
 import { useAssist } from "./AssistProvider.js";
-import { runAgentAdapter, type AgentAdapterConfig } from "./agent-adapter.js";
-import type { AgentConfig, LLMAgentConfig, ToolCall } from "./types.js";
+import type { AgentConfig, ToolCall } from "./types.js";
 import { useAssistChat } from "./useAssistChat.js";
 import { useAssistTools } from "./useAssistTools.js";
 
@@ -47,8 +52,7 @@ export function AssistPanel() {
 		// Convert AgentConfig to AgentAdapterConfig format
 		const adapterConfig: AgentAdapterConfig = {
 			mode: agentConfig?.mode ?? "auto",
-			forceOffline: agentConfig?.forceOffline,
-			useDummyInTest: agentConfig?.useDummyInTest,
+			forceRuleBased: agentConfig?.forceRuleBased,
 			llmConfig:
 				agentConfig?.apiEndpoint !== undefined
 					? ({ apiEndpoint: agentConfig.apiEndpoint } as LLMAgentConfig)

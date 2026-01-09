@@ -4,6 +4,17 @@
  * Core types and utilities shared across all React Quest packages.
  */
 
+// Agent module
+export {
+	runAgentAdapter,
+	runLLMAgent,
+	runRuleBasedAgent,
+	type AgentAdapterConfig,
+	type AgentConfig,
+	type AgentMode,
+	type LLMAgentConfig,
+} from "./agent/index.js";
+
 export { getContext } from "./dom.js";
 export { getSubscriberCount, notify, subscribe } from "./events.js";
 export type { Marker } from "./marker.js";
