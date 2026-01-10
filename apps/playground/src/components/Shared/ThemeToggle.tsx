@@ -41,7 +41,21 @@ export function ThemeToggle(props: React.ButtonHTMLAttributes<HTMLButtonElement>
 			root.classList.remove("dark");
 		}
 		localStorage.setItem("theme", theme);
+		// Dispatch custom event to sync other instances in the same tab
+		window.dispatchEvent(new CustomEvent("themechange", { detail: theme }));
 	}, [theme]);
+
+	// Listen for theme changes to sync between multiple instances
+	useEffect(() => {
+		const handleThemeChange = (e: Event) => {
+			const customEvent = e as CustomEvent<string>;
+			if (customEvent.detail === "dark" || customEvent.detail === "light") {
+				setTheme(customEvent.detail);
+			}
+		};
+		window.addEventListener("themechange", handleThemeChange);
+		return () => window.removeEventListener("themechange", handleThemeChange);
+	}, []);
 
 	const toggleTheme = () => {
 		setTheme((prev) => (prev === "light" ? "dark" : "light"));

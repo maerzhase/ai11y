@@ -32,6 +32,15 @@ export {
 export type { InputProps } from "./Input.js";
 export { Input, InputSlot } from "./Input.js";
 
+export type { TextareaProps } from "./Textarea.js";
+export { Textarea } from "./Textarea.js";
+
+export type { FieldProps } from "./Field.js";
+export { Field } from "./Field.js";
+
+export type { FormProps } from "./Form.js";
+export { Form } from "./Form.js";
+
 // Assist Components
 export type { AssistPanelHeaderProps } from "./AssistPanelHeader.js";
 export { AssistPanelHeader } from "./AssistPanelHeader.js";

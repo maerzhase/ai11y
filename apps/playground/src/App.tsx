@@ -1,29 +1,27 @@
 import { type AgentConfig, UIAIProvider } from "@ui4ai/react";
 import React from "react";
-import { BrowserRouter } from "react-router-dom";
-import { CustomHighlightWrapper } from "./components/CustomHighlight";
-import { DemoRouteProvider, useDemoRoute } from "./context/DemoRouteContext";
+import { BrowserRouter, useLocation, useNavigate } from "react-router-dom";
+import { CustomHighlightWrapper } from "./components/Shared/CustomHighlight";
 import { AppLayout } from "./layout/AppLayout";
 import { HomePage } from "./pages/HomePage";
 
 function App() {
 	return (
 		<BrowserRouter>
-			<DemoRouteProvider>
-				<AppWithRouter />
-			</DemoRouteProvider>
+			<AppWithRouter />
 		</BrowserRouter>
 	);
 }
 
 function AppWithRouter() {
-	const { demoRoute, setDemoRoute } = useDemoRoute();
-	const demoRouteRef = React.useRef(demoRoute);
+	const location = useLocation();
+	const navigate = useNavigate();
+	const locationRef = React.useRef(location.pathname);
 
 	// Keep ref up to date
 	React.useEffect(() => {
-		demoRouteRef.current = demoRoute;
-	}, [demoRoute]);
+		locationRef.current = location.pathname;
+	}, [location.pathname]);
 
 	// Optional: Configure agent
 	const apiEndpoint =
@@ -36,24 +34,12 @@ function AppWithRouter() {
 
 	const handleNavigate = React.useCallback(
 		(route: string) => {
-			if (route !== demoRouteRef.current) {
-				// Update URL without page navigation
-				window.history.pushState({}, "", route);
-				// Update demo route state
-				setDemoRoute(route);
+			if (route !== locationRef.current) {
+				navigate(route);
 			}
 		},
-		[setDemoRoute]
+		[navigate]
 	);
-
-	// Listen for popstate (browser back/forward)
-	React.useEffect(() => {
-		const handlePopState = () => {
-			setDemoRoute(window.location.pathname);
-		};
-		window.addEventListener("popstate", handlePopState);
-		return () => window.removeEventListener("popstate", handlePopState);
-	}, [setDemoRoute]);
 
 	return (
 		<UIAIProvider

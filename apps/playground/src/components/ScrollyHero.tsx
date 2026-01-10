@@ -15,13 +15,18 @@ import {
 } from "@ui4ai/react";
 import { useEffect, useRef, useState } from "react";
 import { useDebugDrawer } from "../context/DebugDrawerContext";
-import { ThemeToggle } from "./ThemeToggle";
+import { ThemeToggle } from "./Shared/ThemeToggle";
 
 export function ScrollyHero() {
 	const { getContext, track, agentConfig } = useAssist();
 	const { navigate, highlight } = useAssistTools();
 	const { isOpen: isDebugOpen, setIsOpen: setDebugOpen } = useDebugDrawer();
-	const [isCompact, setIsCompact] = useState(false);
+	const [isCompact, setIsCompact] = useState(() => {
+		// Initialize based on current scroll position
+		const scrollY = window.scrollY;
+		const threshold = window.innerHeight * 0.6;
+		return scrollY > threshold;
+	});
 	const [showMessages, setShowMessages] = useState(false);
 	const heroRef = useRef<HTMLElement>(null);
 
@@ -32,6 +37,9 @@ export function ScrollyHero() {
 			const threshold = window.innerHeight * 0.6;
 			setIsCompact(scrollY > threshold);
 		};
+
+		// Check initial scroll position
+		handleScroll();
 
 		window.addEventListener("scroll", handleScroll, { passive: true });
 		return () => window.removeEventListener("scroll", handleScroll);
@@ -145,81 +153,16 @@ export function ScrollyHero() {
 
 	return (
 		<>
-			{/* Fixed Header - appears when scrolled */}
-			<header
-				className={`fixed top-0 left-0 z-50 transition-all duration-300 ${
+			{/* Fixed buttons - always visible with higher z-index */}
+			<div
+				className={`fixed top-0 left-0 z-[60] transition-all duration-300 ${
 					isDebugOpen ? "right-96" : "right-0"
-				} ${
-					isCompact
-						? "opacity-100 translate-y-0"
-						: "opacity-0 -translate-y-full pointer-events-none"
 				}`}
 			>
-				<div className="bg-background/80 backdrop-blur-xl">
-					<div className="max-w-screen-xl mx-auto px-4 py-3 flex items-center justify-between">
-						<div className="flex items-center gap-3">
-							<h1 className="text-lg font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-								ui4ai
-							</h1>
-							<span className="text-xs text-muted-foreground hidden sm:block">
-								A semantic UI context layer for AI agents
-							</span>
-						</div>
-						<div className="flex items-center gap-2">
-							<Mark
-								id="theme_toggle_header"
-								label="Theme Toggle"
-								intent="Toggle between light and dark theme"
-							>
-								<ThemeToggle />
-							</Mark>
-							{!isDebugOpen && (
-								<Mark
-									id="debug_panel_toggle_header"
-									label="Debug Panel Toggle"
-									intent="Open the debug panel to view events, markers, and UI context"
-								>
-									<button
-										type="button"
-										onClick={() => setDebugOpen(true)}
-										className="inline-flex items-center gap-2 px-3 py-2 rounded-md border border-border bg-background hover:bg-accent hover:text-accent-foreground transition-colors text-sm font-medium shadow-sm"
-										aria-label="Open debug panel"
-									>
-										<svg
-											className="h-4 w-4"
-											fill="none"
-											stroke="currentColor"
-											viewBox="0 0 24 24"
-											xmlns="http://www.w3.org/2000/svg"
-										>
-											<path
-												strokeLinecap="round"
-												strokeLinejoin="round"
-												strokeWidth={2}
-												d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-											/>
-										</svg>
-										Debug
-									</button>
-								</Mark>
-							)}
-						</div>
-					</div>
-				</div>
-			</header>
-
-			{/* Theme toggle and debug button when hero is visible */}
-			{!isCompact && (
-				<div
-					className={`fixed top-0 z-50 p-4 transition-all duration-300 ${
-						isDebugOpen ? "right-96" : "right-0"
-					} ${
-						isCompact ? "opacity-0 pointer-events-none" : "opacity-100"
-					}`}
-				>
+				<div className="max-w-screen-xl mx-auto px-4 py-3 flex items-center justify-end min-h-[57px]">
 					<div className="flex items-center gap-2">
 						<Mark
-							id="theme_toggle_hero"
+							id="theme_toggle"
 							label="Theme Toggle"
 							intent="Toggle between light and dark theme"
 						>
@@ -227,7 +170,7 @@ export function ScrollyHero() {
 						</Mark>
 						{!isDebugOpen && (
 							<Mark
-								id="debug_panel_toggle_hero"
+								id="debug_panel_toggle"
 								label="Debug Panel Toggle"
 								intent="Open the debug panel to view events, markers, and UI context"
 							>
@@ -257,7 +200,31 @@ export function ScrollyHero() {
 						)}
 					</div>
 				</div>
-			)}
+			</div>
+
+			{/* Fixed Header - slides in below buttons when scrolled */}
+			<header
+				className={`fixed top-0 left-0 z-50 transition-all duration-300 ${
+					isDebugOpen ? "right-96" : "right-0"
+				} ${
+					isCompact
+						? "opacity-100 translate-y-0"
+						: "opacity-0 -translate-y-full pointer-events-none"
+				}`}
+			>
+				<div className="bg-background/80 backdrop-blur-xl">
+					<div className="max-w-screen-xl mx-auto px-4 py-3 flex items-center justify-between min-h-[57px]">
+						<div className="flex items-center gap-3">
+							<h1 className="text-lg font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+								ui4ai
+							</h1>
+							<span className="text-xs text-muted-foreground hidden sm:block">
+								A semantic UI context layer for AI agents
+							</span>
+						</div>
+					</div>
+				</div>
+			</header>
 
 			{/* Full Hero Section - Static, not sticky */}
 			<section

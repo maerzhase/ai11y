@@ -1,5 +1,5 @@
 import React from "react";
-import { DebugPanel } from "../components/DebugPanel";
+import { DebugPanel } from "../components/Shared/DebugPanel";
 import { DebugDrawerProvider, useDebugDrawer } from "../context/DebugDrawerContext";
 
 interface AppLayoutProps {

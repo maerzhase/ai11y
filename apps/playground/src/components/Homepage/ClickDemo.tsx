@@ -1,0 +1,95 @@
+import { Mark } from "@ui4ai/react";
+import { useState } from "react";
+import { SuggestionChip } from "../SuggestionChip";
+
+export function ClickDemoWithSuggestions({
+	onSuggestion,
+}: {
+	onSuggestion: (s: string) => void;
+}) {
+	const [counter, setCounter] = useState(0);
+	const [isActive, setIsActive] = useState(false);
+
+	return (
+		<div className="space-y-4">
+			<div className="text-sm text-muted-foreground mb-3">
+				The agent can interact with buttons:
+			</div>
+			<div className="flex items-center justify-between p-4 rounded-xl bg-muted/30 border border-border/50">
+				<div>
+					<div className="text-xs text-muted-foreground mb-1">Counter</div>
+					<div className="text-2xl font-bold text-foreground">{counter}</div>
+				</div>
+				<div className="flex gap-2">
+					<Mark
+						id="click_demo_decrement"
+						label="Decrement Button"
+						intent="Decreases the counter by 1"
+					>
+						<button
+							type="button"
+							onClick={() => setCounter((c) => c - 1)}
+							className="w-10 h-10 rounded-sm border border-border bg-background text-foreground font-bold hover:bg-muted transition-colors"
+						>
+							−
+						</button>
+					</Mark>
+					<Mark
+						id="click_demo_increment"
+						label="Increment Button"
+						intent="Increases the counter by 1"
+					>
+						<button
+							type="button"
+							onClick={() => setCounter((c) => c + 1)}
+							className="w-10 h-10 rounded-sm border border-border bg-background text-foreground font-bold hover:bg-muted transition-colors"
+						>
+							+
+						</button>
+					</Mark>
+				</div>
+			</div>
+			<div className="flex items-center justify-between p-4 rounded-xl bg-muted/30 border border-border/50">
+				<div>
+					<div className="text-xs text-muted-foreground mb-1">Status</div>
+					<div
+						className={`text-sm font-medium ${isActive ? "text-emerald-500" : "text-muted-foreground"}`}
+					>
+						{isActive ? "Active" : "Inactive"}
+					</div>
+				</div>
+				<Mark
+					id="click_demo_toggle"
+					label="Toggle Status"
+					intent="Toggles the active status"
+				>
+					<button
+						type="button"
+						onClick={() => setIsActive((v) => !v)}
+						className={`px-4 py-2 rounded-sm font-medium transition-all ${
+							isActive
+								? "bg-emerald-500 text-white hover:bg-emerald-600"
+								: "border border-border bg-background text-foreground hover:bg-muted"
+						}`}
+					>
+						{isActive ? "Deactivate" : "Activate"}
+					</button>
+				</Mark>
+			</div>
+			<p className="text-xs text-muted-foreground pt-2">
+				Try{" "}
+				<SuggestionChip onClick={() => onSuggestion("click increment")}>
+					click increment
+				</SuggestionChip>
+				,{" "}
+				<SuggestionChip onClick={() => onSuggestion("click decrement")}>
+					click decrement
+				</SuggestionChip>{" "}
+				or{" "}
+				<SuggestionChip onClick={() => onSuggestion("toggle status")}>
+					toggle status
+				</SuggestionChip>
+			</p>
+		</div>
+	);
+}

@@ -82,7 +82,7 @@ export function DebugPanel({ isOpen, onOpenChange }: DebugPanelProps) {
 				}`}
 			>
 				{/* Header */}
-				<div className="flex items-center justify-between p-3 border-b border-border">
+				<div className="flex items-center justify-between px-4 py-3 border-b border-border min-h-[57px]">
 					<h2 className="text-sm font-semibold text-foreground">Debug Panel</h2>
 					<button
 						type="button"
