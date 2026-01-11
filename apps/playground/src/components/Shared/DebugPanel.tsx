@@ -177,25 +177,26 @@ export function DebugPanel({ isOpen, onOpenChange }: DebugPanelProps) {
 								</div>
 
 								{/* In-View Markers */}
-								{context.inViewMarkerIds && context.inViewMarkerIds.length > 0 && (
-									<div>
-										<div className="text-muted-foreground mb-1">
-											In-View Markers ({context.inViewMarkerIds.length})
-										</div>
-										<div className="p-2 rounded border border-primary/50 bg-primary/10">
-											<div className="flex flex-wrap gap-1">
-												{context.inViewMarkerIds.map((markerId) => (
-													<span
-														key={markerId}
-														className="inline-block px-2 py-0.5 rounded text-[10px] font-medium bg-primary/20 text-primary border border-primary/30"
-													>
-														{markerId}
-													</span>
-												))}
+								{context.inViewMarkerIds &&
+									context.inViewMarkerIds.length > 0 && (
+										<div>
+											<div className="text-muted-foreground mb-1">
+												In-View Markers ({context.inViewMarkerIds.length})
+											</div>
+											<div className="p-2 rounded border border-primary/50 bg-primary/10">
+												<div className="flex flex-wrap gap-1">
+													{context.inViewMarkerIds.map((markerId) => (
+														<span
+															key={markerId}
+															className="inline-block px-2 py-0.5 rounded text-[10px] font-medium bg-primary/20 text-primary border border-primary/30"
+														>
+															{markerId}
+														</span>
+													))}
+												</div>
 											</div>
 										</div>
-									</div>
-								)}
+									)}
 
 								{/* Markers */}
 								<div>

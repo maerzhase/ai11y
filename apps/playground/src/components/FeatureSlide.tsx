@@ -39,7 +39,7 @@ export function FeatureSlide({
 			{/* Background decoration */}
 			<div className="absolute inset-0 pointer-events-none overflow-hidden">
 				<div
-					className={`absolute top-1/4 w-96 h-96 rounded-full bg-primary/5 blur-3xl ${
+					className={`absolute top-1/4 w-96 h-96 rounded-full bg-primary/10 blur-3xl ${
 						direction === "left" ? "-left-48" : "-right-48"
 					}`}
 				/>

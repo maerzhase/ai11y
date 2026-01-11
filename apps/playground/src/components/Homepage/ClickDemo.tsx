@@ -53,7 +53,7 @@ export function ClickDemoWithSuggestions({
 				<div>
 					<div className="text-xs text-muted-foreground mb-1">Status</div>
 					<div
-						className={`text-sm font-medium ${isActive ? "text-emerald-500" : "text-muted-foreground"}`}
+						className={`text-sm font-medium ${isActive ? "text-primary" : "text-muted-foreground"}`}
 					>
 						{isActive ? "Active" : "Inactive"}
 					</div>
@@ -68,7 +68,7 @@ export function ClickDemoWithSuggestions({
 						onClick={() => setIsActive((v) => !v)}
 						className={`px-4 py-2 rounded-sm font-medium transition-all ${
 							isActive
-								? "bg-emerald-500 text-white hover:bg-emerald-600"
+								? "bg-primary text-primary-foreground hover:bg-primary/90"
 								: "border border-border bg-background text-foreground hover:bg-muted"
 						}`}
 					>

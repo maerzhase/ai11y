@@ -5,7 +5,7 @@ import type * as React from "react";
 import { cn } from "./lib/cn.js";
 
 const chipVariants = cva(
-	"inline-flex items-center justify-center text-sm transition-colors rounded-md",
+	"inline-flex items-center justify-center text-sm rounded-md",
 	{
 		variants: {
 			variant: {

@@ -17,8 +17,11 @@ export function HighlightDemoWithSuggestions({
 					label="Feature Badge"
 					intent="A badge demonstrating the highlight feature"
 				>
-					<div className="flex items-center justify-center px-4 py-6 rounded-xl bg-gradient-to-br from-violet-500/20 to-purple-500/20 border border-violet-500/30">
-						<span className="text-2xl">✨</span>
+					<div className="flex items-center justify-center px-4 py-6 rounded-xl bg-gradient-to-br from-primary/30 via-primary/20 to-primary/15 border border-primary/40 shadow-sm">
+						<div className="relative flex items-center justify-center w-10 h-10">
+							<div className="absolute inset-0 rounded-full bg-background/70" />
+							<span className="text-2xl relative z-10">✨</span>
+						</div>
 					</div>
 				</Mark>
 				<Mark
@@ -26,8 +29,11 @@ export function HighlightDemoWithSuggestions({
 					label="Status Badge"
 					intent="A status badge to highlight"
 				>
-					<div className="flex items-center justify-center px-4 py-6 rounded-xl bg-gradient-to-br from-emerald-500/20 to-teal-500/20 border border-emerald-500/30">
-						<span className="text-2xl">🎯</span>
+					<div className="flex items-center justify-center px-4 py-6 rounded-xl bg-gradient-to-br from-primary/25 via-primary/18 to-primary/12 border border-primary/35 shadow-sm">
+						<div className="relative flex items-center justify-center w-10 h-10">
+							<div className="absolute inset-0 rounded-full bg-background/70" />
+							<span className="text-2xl relative z-10">🎯</span>
+						</div>
 					</div>
 				</Mark>
 				<Mark
@@ -35,8 +41,11 @@ export function HighlightDemoWithSuggestions({
 					label="Action Badge"
 					intent="An action badge to highlight"
 				>
-					<div className="flex items-center justify-center px-4 py-6 rounded-xl bg-gradient-to-br from-amber-500/20 to-orange-500/20 border border-amber-500/30">
-						<span className="text-2xl">⚡</span>
+					<div className="flex items-center justify-center px-4 py-6 rounded-xl bg-gradient-to-br from-primary/20 via-primary/15 to-primary/10 border border-primary/30 shadow-sm">
+						<div className="relative flex items-center justify-center w-10 h-10">
+							<div className="absolute inset-0 rounded-full bg-background/70" />
+							<span className="text-2xl relative z-10">⚡</span>
+						</div>
 					</div>
 				</Mark>
 				<Mark
@@ -44,8 +53,11 @@ export function HighlightDemoWithSuggestions({
 					label="Info Badge"
 					intent="An info badge to highlight"
 				>
-					<div className="flex items-center justify-center px-4 py-6 rounded-xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 border border-blue-500/30">
-						<span className="text-2xl">💡</span>
+					<div className="flex items-center justify-center px-4 py-6 rounded-xl bg-gradient-to-br from-primary/15 via-primary/12 to-primary/8 border border-primary/25 shadow-sm">
+						<div className="relative flex items-center justify-center w-10 h-10">
+							<div className="absolute inset-0 rounded-full bg-background/70" />
+							<span className="text-2xl relative z-10">💡</span>
+						</div>
 					</div>
 				</Mark>
 			</div>

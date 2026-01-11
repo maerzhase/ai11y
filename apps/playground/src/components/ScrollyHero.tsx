@@ -15,6 +15,7 @@ import {
 } from "@ui4ai/react";
 import { useEffect, useRef, useState } from "react";
 import { useDebugDrawer } from "../context/DebugDrawerContext";
+import { SuggestionChip } from "./SuggestionChip";
 import { ThemeToggle } from "./Shared/ThemeToggle";
 
 export function ScrollyHero() {
@@ -47,7 +48,7 @@ export function ScrollyHero() {
 
 	const handleSubmit = async (
 		message: string,
-		messages: Array<{ type: string; content: string }>
+		messages: Array<{ type: string; content: string }>,
 	) => {
 		const context = getContext();
 
@@ -80,7 +81,7 @@ export function ScrollyHero() {
 			message,
 			context,
 			adapterConfig,
-			conversationMessages
+			conversationMessages,
 		);
 
 		track("agent_message", { input: message, response });
@@ -265,14 +266,14 @@ export function ScrollyHero() {
 											className={`text-sm px-3 py-2 rounded-xl ${
 												msg.type === "user"
 													? "bg-primary text-primary-foreground ml-8"
-													: "bg-muted/60 text-foreground mr-8"
+													: "bg-secondary text-secondary-foreground border border-border mr-8"
 											}`}
 										>
 											{msg.content}
 										</div>
 									))}
 									{isProcessing && (
-										<div className="text-sm px-3 py-2 rounded-xl bg-muted/60 text-muted-foreground mr-8">
+										<div className="text-sm px-3 py-2 rounded-xl bg-secondary text-secondary-foreground border border-border mr-8">
 											<span className="inline-flex gap-1">
 												<span className="animate-bounce">·</span>
 												<span className="animate-bounce [animation-delay:0.1s]">
@@ -325,20 +326,20 @@ export function ScrollyHero() {
 							</form>
 
 							{/* Quick suggestions */}
-							<div className="mt-4 flex flex-wrap gap-2 justify-center">
-								{["highlight title", "scroll to features", "go to billing"].map(
-									(suggestion) => (
-										<button
-											key={suggestion}
-											type="button"
-											onClick={() => handleSuggestion(suggestion)}
-											className="text-xs px-3 py-1.5 rounded-full border border-border/50 bg-muted/30 text-muted-foreground hover:bg-muted/50 hover:text-foreground transition-colors"
-										>
-											{suggestion}
-										</button>
-									)
-								)}
-							</div>
+							<p className="text-xs text-muted-foreground pt-2 text-center">
+								Try{" "}
+								<SuggestionChip
+									onClick={() => handleSuggestion("highlight title")}
+								>
+									highlight title
+								</SuggestionChip>{" "}
+								or{" "}
+								<SuggestionChip
+									onClick={() => handleSuggestion("go to next section")}
+								>
+									go to next section
+								</SuggestionChip>
+							</p>
 						</div>
 					</div>
 
@@ -379,14 +380,14 @@ export function ScrollyHero() {
 										className={`text-sm px-3 py-2 rounded-sm ${
 											msg.type === "user"
 												? "bg-primary text-primary-foreground ml-6"
-												: "bg-muted/60 text-foreground mr-6"
+												: "bg-secondary text-secondary-foreground border border-border mr-6"
 										}`}
 									>
 										{msg.content}
 									</div>
 								))}
 								{isProcessing && (
-									<div className="text-sm px-3 py-2 rounded-sm bg-muted/60 text-muted-foreground mr-6">
+									<div className="text-sm px-3 py-2 rounded-sm bg-secondary text-secondary-foreground border border-border mr-6">
 										<span className="inline-flex gap-1">
 											<span className="animate-bounce">·</span>
 											<span className="animate-bounce [animation-delay:0.1s]">
@@ -403,7 +404,10 @@ export function ScrollyHero() {
 					</div>
 
 					{/* Input row */}
-					<form onSubmit={handleChatSubmit} className="flex items-center gap-2 p-2">
+					<form
+						onSubmit={handleChatSubmit}
+						className="flex items-center gap-2 p-2"
+					>
 						{/* Toggle messages button */}
 						<button
 							type="button"

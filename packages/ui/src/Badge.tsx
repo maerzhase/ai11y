@@ -10,10 +10,10 @@ const badgeVariants = cva(
 		variants: {
 			variant: {
 				default: "bg-muted text-muted-foreground",
-				success: "bg-green-500/15 text-green-600 dark:text-green-400",
-				warning: "bg-amber-500/15 text-amber-600 dark:text-amber-400",
+				success: "bg-primary/20 text-primary",
+				warning: "bg-accent/20 text-accent-foreground",
 				error: "bg-destructive/15 text-destructive",
-				primary: "bg-primary/15 text-primary",
+				primary: "bg-primary/20 text-primary",
 				outline: "border border-border bg-transparent text-foreground",
 			},
 		},
@@ -45,19 +45,19 @@ export function Badge({
 		className: cn(badgeVariants({ variant }), className),
 		children: (
 			<>
-				{dot && (
-					<span
-						className={cn(
-							"w-1.5 h-1.5 rounded-full",
-							variant === "success" && "bg-green-500",
-							variant === "warning" && "bg-amber-500",
-							variant === "error" && "bg-destructive",
-							variant === "primary" && "bg-primary",
-							(!variant || variant === "default" || variant === "outline") &&
-								"bg-muted-foreground",
-						)}
-					/>
-				)}
+					{dot && (
+						<span
+							className={cn(
+								"w-1.5 h-1.5 rounded-full",
+								variant === "success" && "bg-primary",
+								variant === "warning" && "bg-accent-foreground",
+								variant === "error" && "bg-destructive",
+								variant === "primary" && "bg-primary",
+								(!variant || variant === "default" || variant === "outline") &&
+									"bg-muted-foreground",
+							)}
+						/>
+					)}
 				{children}
 			</>
 		),
