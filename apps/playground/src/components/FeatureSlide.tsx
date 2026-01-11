@@ -1,5 +1,6 @@
 import { Mark } from "@ui4ai/react";
 import type { ReactNode } from "react";
+import { FlipCard } from "./FlipCard";
 import { useInView } from "../hooks/useInView";
 
 interface FeatureSlideProps {
@@ -8,6 +9,7 @@ interface FeatureSlideProps {
 	description: string;
 	emoji: string;
 	children: ReactNode;
+	code?: string;
 	id?: string;
 	markerId?: string;
 	markerLabel?: string;
@@ -20,6 +22,7 @@ export function FeatureSlide({
 	description,
 	emoji,
 	children,
+	code,
 	id,
 	markerId,
 	markerLabel,
@@ -90,9 +93,17 @@ export function FeatureSlide({
 
 					{/* Demo side */}
 					<div className="flex-1 w-full max-w-md">
-						<div className="rounded-2xl border border-border/50 bg-card/50 backdrop-blur-sm p-6 shadow-lg">
-							{children}
-						</div>
+						{code ? (
+							<FlipCard code={code}>
+								<div className="rounded-2xl border border-border/50 bg-card/50 backdrop-blur-sm p-6 shadow-lg">
+									{children}
+								</div>
+							</FlipCard>
+						) : (
+							<div className="rounded-2xl border border-border/50 bg-card/50 backdrop-blur-sm p-6 shadow-lg">
+								{children}
+							</div>
+						)}
 					</div>
 				</div>
 			</div>

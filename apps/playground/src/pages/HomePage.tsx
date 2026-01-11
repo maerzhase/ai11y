@@ -1,4 +1,5 @@
 import { FeatureSlide } from "../components/FeatureSlide";
+import { demoCodeExamples } from "../components/Homepage/demoCodeExamples";
 import { ClickDemoWithSuggestions } from "../components/Homepage/ClickDemo";
 import { HighlightDemoWithSuggestions } from "../components/Homepage/HighlightDemo";
 import { InputFillDemoWithSuggestions } from "../components/Homepage/InputFillDemo";
@@ -40,6 +41,7 @@ export function HomePage() {
 					emoji="🧭"
 					title="Navigation"
 					description="Navigate between pages using natural language. The agent understands your app's routing structure and can take users anywhere they ask."
+					code={demoCodeExamples.navigation}
 					markerId="slide_navigation"
 					markerLabel="Navigation Section"
 					markerIntent="Navigate to the Navigation feature section"
@@ -53,6 +55,7 @@ export function HomePage() {
 					emoji="✨"
 					title="Visual Highlighting"
 					description="Draw attention to any element with customizable highlight animations. Perfect for tutorials, onboarding flows, and guided experiences."
+					code={demoCodeExamples.highlight}
 					markerId="slide_highlight"
 					markerLabel="Visual Highlighting Section"
 					markerIntent="Navigate to the Visual Highlighting feature section"
@@ -66,6 +69,7 @@ export function HomePage() {
 					emoji="👆"
 					title="Interaction"
 					description="The agent can interact with UI elements like buttons, links, and other clickable components. Users can describe their intent in natural language, and the agent will take the appropriate action."
+					code={demoCodeExamples.click}
 					markerId="slide_click"
 					markerLabel="Interaction Section"
 					markerIntent="Navigate to the Interaction feature section"
@@ -79,6 +83,7 @@ export function HomePage() {
 					emoji="⌨️"
 					title="Form Awareness"
 					description="The agent is aware of the current state of form fields and can fill inputs with values using natural language. Ask about current values or fill text inputs, textareas, and dropdowns. Emits native browser events for compatibility."
+					code={demoCodeExamples.inputFill}
 					markerId="slide_fill_input"
 					markerLabel="Form Awareness Section"
 					markerIntent="Navigate to the Form Awareness feature section"
