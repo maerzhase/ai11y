@@ -41,9 +41,23 @@ function formatContextForPrompt(context: AgentRequest["context"]): string {
 		for (const marker of context.markers) {
 			const isInView = context.inViewMarkerIds?.includes(marker.id) ?? false;
 			const inViewStatus = isInView ? " [IN VIEW]" : "";
-			parts.push(
-				`  - ${marker.label} (ID: ${marker.id}, Type: ${marker.elementType})${inViewStatus}: ${marker.intent}`,
-			);
+			let markerLine = `  - ${marker.label} (ID: ${marker.id}, Type: ${marker.elementType})${inViewStatus}: ${marker.intent}`;
+			
+			// Add value for input/textarea elements
+			if (marker.value !== undefined) {
+				markerLine += `\n    Current value: "${marker.value}"`;
+			}
+			
+			// Add options and selected values for select elements
+			if (marker.options !== undefined) {
+				const optionsList = marker.options.map(opt => `${opt.label} (${opt.value})`).join(", ");
+				markerLine += `\n    Available options: ${optionsList}`;
+			}
+			if (marker.selectedOptions !== undefined && marker.selectedOptions.length > 0) {
+				markerLine += `\n    Selected: ${marker.selectedOptions.join(", ")}`;
+			}
+			
+			parts.push(markerLine);
 		}
 	} else {
 		parts.push("\nNo UI elements are currently available.");

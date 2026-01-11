@@ -212,18 +212,18 @@ export function createDefaultToolRegistry(): ToolRegistry {
 		{
 			name: "fillInput",
 			description:
-				"Fill an input field (input, textarea) with a value by its marker ID. Emits native browser events to trigger React onChange handlers and form validation. Use when the user wants to enter text into a form field.",
+				"Fill a form field (input, textarea, or select) with a value by its marker ID. Emits native browser events to trigger React onChange handlers and form validation. Use when the user wants to enter text into a form field or select an option from a dropdown. For select elements, the value should match one of the available option values.",
 			parameters: {
 				type: "object",
 				properties: {
 					markerId: {
 						type: "string",
 						description:
-							"The ID of the marker for the input element to fill",
+							"The ID of the marker for the input/textarea/select element to fill",
 					},
 					value: {
 						type: "string",
-						description: "The value to fill the input field with",
+						description: "The value to fill the field with. For select elements, this must match one of the available option values.",
 					},
 				},
 				required: ["markerId", "value"],
