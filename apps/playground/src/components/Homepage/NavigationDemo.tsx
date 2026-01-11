@@ -70,20 +70,22 @@ export function NavigationDemoWithSuggestions({
 }: {
 	onSuggestion: (s: string) => void;
 }) {
+	const suggestions = ["go to billing", "navigate to integrations"];
+
 	return (
 		<div className="space-y-4">
 			<NavigationDemo />
 			<p className="text-xs text-muted-foreground pt-2">
 				Try{" "}
-				<SuggestionChip onClick={() => onSuggestion("go to billing")}>
-					go to billing
-				</SuggestionChip>{" "}
-				or{" "}
-				<SuggestionChip
-					onClick={() => onSuggestion("navigate to integrations")}
-				>
-					navigate to integrations
-				</SuggestionChip>
+				{suggestions.map((suggestion, index) => (
+					<span key={suggestion}>
+						{index > 0 && index === suggestions.length - 1 && " or "}
+						{index > 0 && index < suggestions.length - 1 && ", "}
+						<SuggestionChip onClick={() => onSuggestion(suggestion)}>
+							{suggestion}
+						</SuggestionChip>
+					</span>
+				))}
 			</p>
 		</div>
 	);

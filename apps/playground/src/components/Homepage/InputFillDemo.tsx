@@ -11,11 +11,12 @@ export function InputFillDemoWithSuggestions({
 	const [email, setEmail] = useState("");
 	const [name, setName] = useState("");
 	const [message, setMessage] = useState("");
+	const [category, setCategory] = useState("");
 
 	return (
 		<div className="space-y-4">
 			<div className="text-sm text-muted-foreground mb-3">
-				The agent can fill input fields with values:
+				The agent understands forms:
 			</div>
 			<Form>
 				<Mark
@@ -34,11 +35,6 @@ export function InputFillDemoWithSuggestions({
 							data-1p-ignore="true"
 							autoComplete="off"
 						/>
-						{email && (
-							<div className="text-xs text-muted-foreground">
-								Current value: {email}
-							</div>
-						)}
 					</Field>
 				</Mark>
 
@@ -58,11 +54,6 @@ export function InputFillDemoWithSuggestions({
 							data-1p-ignore="true"
 							autoComplete="off"
 						/>
-						{name && (
-							<div className="text-xs text-muted-foreground">
-								Current value: {name}
-							</div>
-						)}
 					</Field>
 				</Mark>
 
@@ -82,34 +73,49 @@ export function InputFillDemoWithSuggestions({
 							data-1p-ignore="true"
 							autoComplete="off"
 						/>
-						{message && (
-							<div className="text-xs text-muted-foreground">
-								Current value: {message.substring(0, 50)}
-								{message.length > 50 ? "..." : ""}
-							</div>
-						)}
+					</Field>
+				</Mark>
+
+				<Mark
+					id="fill_demo_category"
+					label="Category Select"
+					intent="Category selection dropdown"
+				>
+					<Field label="Category" name="category">
+						<select
+							id="fill_demo_category"
+							value={category}
+							onChange={(e) => setCategory(e.target.value)}
+							className="w-full h-10 px-3 py-2 rounded-sm border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-colors"
+							data-1p-ignore="true"
+						>
+							<option value="">Select a category</option>
+							<option value="support">Support</option>
+							<option value="feedback">Feedback</option>
+							<option value="bug">Bug Report</option>
+							<option value="feature">Feature Request</option>
+							<option value="other">Other</option>
+						</select>
 					</Field>
 				</Mark>
 			</Form>
 			<p className="text-xs text-muted-foreground pt-2">
 				Try{" "}
-				<SuggestionChip
-					onClick={() => onSuggestion("fill email with test@example.com")}
-				>
-					fill email with test@example.com
-				</SuggestionChip>
-				,{" "}
-				<SuggestionChip onClick={() => onSuggestion("fill name with John Doe")}>
-					fill name with John Doe
-				</SuggestionChip>{" "}
-				or{" "}
-				<SuggestionChip
-					onClick={() =>
-						onSuggestion("fill message with Hello, this is a test message!")
-					}
-				>
-					fill message with Hello, this is a test message!
-				</SuggestionChip>
+				{[
+					"what is the current value of the email field?",
+					"fill email with test@example.com",
+					"set name to John Doe",
+					"fill message with Hello, this is a test message!",
+					"set category to feedback",
+				].map((suggestion, index, array) => (
+					<span key={suggestion}>
+						{index > 0 && index === array.length - 1 && " or "}
+						{index > 0 && index < array.length - 1 && ", "}
+						<SuggestionChip onClick={() => onSuggestion(suggestion)}>
+							{suggestion}
+						</SuggestionChip>
+					</span>
+				))}
 			</p>
 		</div>
 	);

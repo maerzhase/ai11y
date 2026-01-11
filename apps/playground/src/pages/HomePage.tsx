@@ -64,11 +64,11 @@ export function HomePage() {
 					id="feature-click"
 					direction="left"
 					emoji="👆"
-					title="Clicking"
-					description="Let the agent interact with buttons, links, and any clickable element. Users can describe what they want to do in natural language."
+					title="Interaction"
+					description="The agent can interact with UI elements like buttons, links, and other clickable components. Users can describe their intent in natural language, and the agent will take the appropriate action."
 					markerId="slide_click"
-					markerLabel="Clicking Section"
-					markerIntent="Navigate to the Clicking feature section"
+					markerLabel="Interaction Section"
+					markerIntent="Navigate to the Interaction feature section"
 				>
 					<ClickDemoWithSuggestions onSuggestion={handleSuggestion} />
 				</FeatureSlide>
@@ -77,11 +77,11 @@ export function HomePage() {
 					id="feature-fill-input"
 					direction="right"
 					emoji="⌨️"
-					title="Input Filling"
-					description="The agent can fill form inputs with values using natural language. Works with text inputs, textareas, and emits native browser events for React compatibility."
+					title="Form Awareness"
+					description="The agent is aware of the current state of form fields and can fill inputs with values using natural language. Ask about current values or fill text inputs, textareas, and dropdowns. Emits native browser events for compatibility."
 					markerId="slide_fill_input"
-					markerLabel="Input Filling Section"
-					markerIntent="Navigate to the Input Filling feature section"
+					markerLabel="Form Awareness Section"
+					markerIntent="Navigate to the Form Awareness feature section"
 				>
 					<InputFillDemoWithSuggestions onSuggestion={handleSuggestion} />
 				</FeatureSlide>

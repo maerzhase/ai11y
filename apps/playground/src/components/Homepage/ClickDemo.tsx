@@ -78,17 +78,17 @@ export function ClickDemoWithSuggestions({
 			</div>
 			<p className="text-xs text-muted-foreground pt-2">
 				Try{" "}
-				<SuggestionChip onClick={() => onSuggestion("click increment")}>
-					click increment
-				</SuggestionChip>
-				,{" "}
-				<SuggestionChip onClick={() => onSuggestion("click decrement")}>
-					click decrement
-				</SuggestionChip>{" "}
-				or{" "}
-				<SuggestionChip onClick={() => onSuggestion("toggle status")}>
-					toggle status
-				</SuggestionChip>
+				{["increment counter 10 times", "decrement counter", "toggle status"].map(
+					(suggestion, index, array) => (
+						<span key={suggestion}>
+							{index > 0 && index === array.length - 1 && " or "}
+							{index > 0 && index < array.length - 1 && ", "}
+							<SuggestionChip onClick={() => onSuggestion(suggestion)}>
+								{suggestion}
+							</SuggestionChip>
+						</span>
+					),
+				)}
 			</p>
 		</div>
 	);

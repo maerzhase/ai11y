@@ -63,13 +63,19 @@ export function HighlightDemoWithSuggestions({
 			</div>
 			<p className="text-xs text-muted-foreground pt-2">
 				Try{" "}
-				<SuggestionChip onClick={() => onSuggestion("highlight feature badge")}>
-					highlight feature badge
-				</SuggestionChip>{" "}
-				or{" "}
-				<SuggestionChip onClick={() => onSuggestion("highlight status badge")}>
-					highlight status badge
-				</SuggestionChip>
+				{[
+					"highlight feature badge",
+					"highlight status badge",
+					"highlight all badges",
+				].map((suggestion, index, array) => (
+					<span key={suggestion}>
+						{index > 0 && index === array.length - 1 && " or "}
+						{index > 0 && index < array.length - 1 && ", "}
+						<SuggestionChip onClick={() => onSuggestion(suggestion)}>
+							{suggestion}
+						</SuggestionChip>
+					</span>
+				))}
 			</p>
 		</div>
 	);
