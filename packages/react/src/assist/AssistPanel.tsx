@@ -1,15 +1,15 @@
 import {
+	type AgentAdapterConfig,
 	clickMarker,
 	fillInputMarker,
+	type LLMAgentConfig,
 	runAgentAdapter,
 	scrollToMarker,
-	type AgentAdapterConfig,
-	type LLMAgentConfig,
 } from "@ui4ai/core";
 import { AssistPanelPopover, ChatInput, MessageList } from "@ui4ai/ui";
 import { useEffect } from "react";
 import { useAssist } from "./AssistProvider.js";
-import type { AgentConfig, ToolCall } from "./types.js";
+import type { ToolCall } from "./types.js";
 import { useAssistChat } from "./useAssistChat.js";
 import { useAssistTools } from "./useAssistTools.js";
 

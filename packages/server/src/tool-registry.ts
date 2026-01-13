@@ -223,7 +223,8 @@ export function createDefaultToolRegistry(): ToolRegistry {
 					},
 					value: {
 						type: "string",
-						description: "The value to fill the field with. For select elements, this must match one of the available option values.",
+						description:
+							"The value to fill the field with. For select elements, this must match one of the available option values.",
 					},
 				},
 				required: ["markerId", "value"],

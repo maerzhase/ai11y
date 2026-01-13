@@ -7,9 +7,9 @@
  * - runAgentAdapter: Unified adapter that selects the appropriate agent
  */
 
-export { runRuleBasedAgent } from "./rule-based-agent.js";
-export { runLLMAgent } from "./llm-agent.js";
 export { runAgentAdapter } from "./agent-adapter.js";
+export { runLLMAgent } from "./llm-agent.js";
+export { runRuleBasedAgent } from "./rule-based-agent.js";
 export type {
 	AgentAdapterConfig,
 	AgentConfig,

@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 
-export function ThemeToggle(props: React.ButtonHTMLAttributes<HTMLButtonElement>) {
+export function ThemeToggle(
+	props: React.ButtonHTMLAttributes<HTMLButtonElement>,
+) {
 	const [theme, setTheme] = useState<"light" | "dark">(() => {
 		// Check localStorage first
 		const stored = localStorage.getItem("theme");

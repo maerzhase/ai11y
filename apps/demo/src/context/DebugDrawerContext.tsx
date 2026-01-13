@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import type React from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 interface DebugDrawerContextType {
 	isOpen: boolean;
@@ -34,9 +35,7 @@ export function DebugDrawerProvider({
 export function useDebugDrawer() {
 	const context = useContext(DebugDrawerContext);
 	if (context === undefined) {
-		throw new Error(
-			"useDebugDrawer must be used within a DebugDrawerProvider",
-		);
+		throw new Error("useDebugDrawer must be used within a DebugDrawerProvider");
 	}
 	return context;
 }

@@ -179,7 +179,7 @@ pre[class*="language-"] {
 .flip-card-code code[class*="language-"],
 .flip-card-code span,
 .flip-card-code .token {
-	background: transparent !important;
+	background: transparent;
 }
 
 /* Scrolly-telling animations */

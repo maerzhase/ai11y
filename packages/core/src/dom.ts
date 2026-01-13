@@ -1,8 +1,7 @@
-import { getAllMarkersSelector } from "./util/attributes.js";
-import { getMarkerId } from "./util/attributes.js";
 import { getMarkers } from "./marker.js";
 import { getError, getRoute, getState } from "./store.js";
 import type { UIAIContext } from "./types/index.js";
+import { getAllMarkersSelector, getMarkerId } from "./util/attributes.js";
 
 /**
  * Detects which markers are currently visible in the viewport
@@ -37,12 +36,14 @@ function getInViewMarkerIds(root?: Element): string[] {
 		const isInView =
 			rect.top >= 0 &&
 			rect.left >= 0 &&
-			rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+			rect.bottom <=
+				(window.innerHeight || document.documentElement.clientHeight) &&
 			rect.right <= (window.innerWidth || document.documentElement.clientWidth);
 
 		// Also check if element is partially visible (more lenient check)
 		const isPartiallyVisible =
-			rect.top < (window.innerHeight || document.documentElement.clientHeight) &&
+			rect.top <
+				(window.innerHeight || document.documentElement.clientHeight) &&
 			rect.bottom > 0 &&
 			rect.left < (window.innerWidth || document.documentElement.clientWidth) &&
 			rect.right > 0;

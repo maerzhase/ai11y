@@ -37,10 +37,7 @@ export function AssistPanelPopover({
 
 	return (
 		<Popover.Root open={isOpen} onOpenChange={handleOpenChange} modal={false}>
-			<Popover.Trigger
-				className={triggerClassName}
-				aria-label="Open AI Agent"
-			>
+			<Popover.Trigger className={triggerClassName} aria-label="Open AI Agent">
 				{trigger ?? <AssistTrigger />}
 			</Popover.Trigger>
 

@@ -1,5 +1,5 @@
-import { useRender } from "@base-ui/react/use-render";
 import { mergeProps } from "@base-ui/react/merge-props";
+import { useRender } from "@base-ui/react/use-render";
 import { cva, type VariantProps } from "class-variance-authority";
 import type * as React from "react";
 import { cn } from "./lib/cn.js";
@@ -45,19 +45,19 @@ export function Badge({
 		className: cn(badgeVariants({ variant }), className),
 		children: (
 			<>
-					{dot && (
-						<span
-							className={cn(
-								"w-1.5 h-1.5 rounded-full",
-								variant === "success" && "bg-primary",
-								variant === "warning" && "bg-accent-foreground",
-								variant === "error" && "bg-destructive",
-								variant === "primary" && "bg-primary",
-								(!variant || variant === "default" || variant === "outline") &&
-									"bg-muted-foreground",
-							)}
-						/>
-					)}
+				{dot && (
+					<span
+						className={cn(
+							"w-1.5 h-1.5 rounded-full",
+							variant === "success" && "bg-primary",
+							variant === "warning" && "bg-accent-foreground",
+							variant === "error" && "bg-destructive",
+							variant === "primary" && "bg-primary",
+							(!variant || variant === "default" || variant === "outline") &&
+								"bg-muted-foreground",
+						)}
+					/>
+				)}
 				{children}
 			</>
 		),

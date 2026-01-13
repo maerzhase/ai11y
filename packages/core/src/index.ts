@@ -6,13 +6,13 @@
 
 // Agent module
 export {
-	runAgentAdapter,
-	runLLMAgent,
-	runRuleBasedAgent,
 	type AgentAdapterConfig,
 	type AgentConfig,
 	type AgentMode,
 	type LLMAgentConfig,
+	runAgentAdapter,
+	runLLMAgent,
+	runRuleBasedAgent,
 } from "./agent/index.js";
 
 export { getContext } from "./dom.js";

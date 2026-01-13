@@ -20,7 +20,7 @@ const textareaVariants = cva(
 			size: "md",
 			error: false,
 		},
-	}
+	},
 );
 
 export interface TextareaProps
@@ -38,7 +38,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
 				{...props}
 			/>
 		);
-	}
+	},
 );
 
 Textarea.displayName = "Textarea";

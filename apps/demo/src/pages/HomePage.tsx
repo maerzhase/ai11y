@@ -1,6 +1,6 @@
 import { FeatureSlide } from "../components/FeatureSlide";
-import { demoCodeExamples } from "../components/Homepage/demoCodeExamples";
 import { ClickDemoWithSuggestions } from "../components/Homepage/ClickDemo";
+import { demoCodeExamples } from "../components/Homepage/demoCodeExamples";
 import { HighlightDemoWithSuggestions } from "../components/Homepage/HighlightDemo";
 import { InputFillDemoWithSuggestions } from "../components/Homepage/InputFillDemo";
 import { NavigationDemo } from "../components/Homepage/NavigationDemo";

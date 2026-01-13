@@ -29,7 +29,7 @@ export function useInView<T extends HTMLElement = HTMLElement>({
 					setIsInView(false);
 				}
 			},
-			{ threshold, rootMargin }
+			{ threshold, rootMargin },
 		);
 
 		observer.observe(element);

@@ -21,10 +21,10 @@ import {
 } from "react";
 import type {
 	AgentConfig,
+	UIAIContext,
 	UIAIError,
 	UIAIEvent,
 	UIAIState,
-	UIAIContext,
 } from "./types.js";
 
 interface UIAIProviderContextValue {
@@ -33,7 +33,6 @@ interface UIAIProviderContextValue {
 	currentRoute: string;
 	lastError: UIAIError | null;
 	events: UIAIEvent[];
-
 
 	// Highlight state
 	highlightedMarkers: Set<string>;
@@ -73,7 +72,9 @@ interface UIAIProviderContextValue {
 	agentConfig: AgentConfig | null;
 }
 
-const UIAIProviderContext = createContext<UIAIProviderContextValue | null>(null);
+const UIAIProviderContext = createContext<UIAIProviderContextValue | null>(
+	null,
+);
 
 export function useAssist() {
 	const context = useContext(UIAIProviderContext);
@@ -155,7 +156,6 @@ export function UIAIProvider({
 	// Keep refs in sync with state
 	focusedMarkerIdRef.current = focusedMarkerId;
 	isPanelOpenRef.current = isPanelOpen;
-
 
 	// Subscribe to events from core store for reactivity
 	useEffect(() => {

@@ -24,7 +24,7 @@ export function DebugPanel({ isOpen, onOpenChange }: DebugPanelProps) {
 		const interval = setInterval(updateContext, 1000);
 
 		return () => clearInterval(interval);
-	}, [getContext, currentRoute, assistState]);
+	}, [getContext]);
 
 	const formatTimestamp = (timestamp: number) => {
 		const date = new Date(timestamp);
@@ -48,7 +48,7 @@ export function DebugPanel({ isOpen, onOpenChange }: DebugPanelProps) {
 		}
 	};
 
-	const DebugButton = () => (
+	const _DebugButton = () => (
 		<button
 			type="button"
 			onClick={() => onOpenChange(true)}

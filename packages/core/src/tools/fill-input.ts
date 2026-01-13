@@ -14,7 +14,7 @@ import { findMarkerElement } from "./find-element.js";
  * ```
  */
 export function fillInputMarker(markerId: string, value: string): void {
-	let element = findMarkerElement(markerId);
+	const element = findMarkerElement(markerId);
 	if (!element) {
 		console.warn(`Marker ${markerId} not found`);
 		return;
@@ -24,15 +24,21 @@ export function fillInputMarker(markerId: string, value: string): void {
 	// (in case Mark wraps the input in a container)
 	let inputElement: HTMLInputElement | HTMLTextAreaElement | null = null;
 	let selectElement: HTMLSelectElement | null = null;
-	
-	if (element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement) {
+
+	if (
+		element instanceof HTMLInputElement ||
+		element instanceof HTMLTextAreaElement
+	) {
 		inputElement = element;
 	} else if (element instanceof HTMLSelectElement) {
 		selectElement = element;
 	} else if (element instanceof HTMLElement) {
 		// Search for input, textarea, or select within the marked element
 		const nestedInput = element.querySelector("input, textarea");
-		if (nestedInput instanceof HTMLInputElement || nestedInput instanceof HTMLTextAreaElement) {
+		if (
+			nestedInput instanceof HTMLInputElement ||
+			nestedInput instanceof HTMLTextAreaElement
+		) {
 			inputElement = nestedInput;
 		} else {
 			const nestedSelect = element.querySelector("select");
@@ -56,11 +62,12 @@ export function fillInputMarker(markerId: string, value: string): void {
 	if (inputElement) {
 		// Step 1: Directly set the value
 		// For React-controlled inputs, we must use the native setter to bypass React's value prop
-		const prototype = inputElement instanceof HTMLTextAreaElement
-			? HTMLTextAreaElement.prototype
-			: HTMLInputElement.prototype;
+		const prototype =
+			inputElement instanceof HTMLTextAreaElement
+				? HTMLTextAreaElement.prototype
+				: HTMLInputElement.prototype;
 		const setter = Object.getOwnPropertyDescriptor(prototype, "value")?.set;
-		
+
 		if (setter) {
 			// Use native setter for React-controlled inputs
 			setter.call(inputElement, value);
@@ -73,7 +80,7 @@ export function fillInputMarker(markerId: string, value: string): void {
 		// This is crucial - bubbles: true allows React/Vue/Angular to catch the events
 		// input event → updates live state
 		inputElement.dispatchEvent(new Event("input", { bubbles: true }));
-		
+
 		// change event → commits value (important for forms)
 		inputElement.dispatchEvent(new Event("change", { bubbles: true }));
 
@@ -83,10 +90,10 @@ export function fillInputMarker(markerId: string, value: string): void {
 	} else if (selectElement) {
 		// For select elements, set the value property
 		selectElement.value = value;
-		
+
 		// Dispatch change event to trigger React onChange handlers
 		selectElement.dispatchEvent(new Event("change", { bubbles: true }));
-		
+
 		// Focus the select element
 		selectElement.focus();
 	} else if (isContentEditable) {

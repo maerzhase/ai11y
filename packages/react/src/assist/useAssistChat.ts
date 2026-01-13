@@ -91,7 +91,11 @@ export function useAssistChat({
 					setMessages((prevMsgs) => {
 						// Check if this exact message already exists to prevent duplicates
 						const exists = prevMsgs.some(
-							(msg) => msg.id === assistantMsg.id || (msg.type === "assistant" && msg.content === response.reply && msg.timestamp === assistantMsg.timestamp),
+							(msg) =>
+								msg.id === assistantMsg.id ||
+								(msg.type === "assistant" &&
+									msg.content === response.reply &&
+									msg.timestamp === assistantMsg.timestamp),
 						);
 						if (exists) return prevMsgs;
 						return [...prevMsgs, assistantMsg];
@@ -117,7 +121,11 @@ export function useAssistChat({
 					setMessages((prevMsgs) => {
 						// Check for duplicates
 						const exists = prevMsgs.some(
-							(msg) => msg.id === errorMsg.id || (msg.type === "assistant" && msg.content === errorMsg.content && msg.timestamp === errorMsg.timestamp),
+							(msg) =>
+								msg.id === errorMsg.id ||
+								(msg.type === "assistant" &&
+									msg.content === errorMsg.content &&
+									msg.timestamp === errorMsg.timestamp),
 						);
 						if (exists) return prevMsgs;
 						return [...prevMsgs, errorMsg];

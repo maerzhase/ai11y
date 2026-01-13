@@ -1,6 +1,6 @@
 import type { AgentResponse } from "../types/agent.js";
-import type { ToolCall } from "../types/tool.js";
 import type { UIAIContext } from "../types/context.js";
+import type { ToolCall } from "../types/tool.js";
 
 /**
  * Rule-based agent that uses pattern matching for common commands.

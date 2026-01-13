@@ -1,28 +1,31 @@
-import { useRender } from "@base-ui/react/use-render";
 import { mergeProps } from "@base-ui/react/merge-props";
+import { useRender } from "@base-ui/react/use-render";
 import { cva, type VariantProps } from "class-variance-authority";
 import type * as React from "react";
 import { cn } from "./lib/cn.js";
 
-const cardVariants = cva("rounded-sm border border-border bg-card text-card-foreground", {
-	variants: {
-		variant: {
-			default: "",
-			elevated: "shadow-sm",
-			outline: "bg-transparent",
+const cardVariants = cva(
+	"rounded-sm border border-border bg-card text-card-foreground",
+	{
+		variants: {
+			variant: {
+				default: "",
+				elevated: "shadow-sm",
+				outline: "bg-transparent",
+			},
+			padding: {
+				none: "",
+				sm: "p-3",
+				md: "p-4",
+				lg: "p-6",
+			},
 		},
-		padding: {
-			none: "",
-			sm: "p-3",
-			md: "p-4",
-			lg: "p-6",
+		defaultVariants: {
+			variant: "default",
+			padding: "md",
 		},
 	},
-	defaultVariants: {
-		variant: "default",
-		padding: "md",
-	},
-});
+);
 
 export interface CardProps
 	extends VariantProps<typeof cardVariants>,
@@ -74,7 +77,8 @@ export function CardHeader({ className, children, ...props }: CardHeaderProps) {
 CardHeader.displayName = "CardHeader";
 
 // Card Title
-export interface CardTitleProps extends React.HTMLAttributes<HTMLHeadingElement> {
+export interface CardTitleProps
+	extends React.HTMLAttributes<HTMLHeadingElement> {
 	children?: React.ReactNode;
 }
 
@@ -116,7 +120,11 @@ export interface CardContentProps extends React.HTMLAttributes<HTMLDivElement> {
 	children?: React.ReactNode;
 }
 
-export function CardContent({ className, children, ...props }: CardContentProps) {
+export function CardContent({
+	className,
+	children,
+	...props
+}: CardContentProps) {
 	return (
 		<div className={cn("pt-3", className)} {...props}>
 			{children}
@@ -133,10 +141,7 @@ export interface CardFooterProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export function CardFooter({ className, children, ...props }: CardFooterProps) {
 	return (
-		<div
-			className={cn("flex items-center gap-2 pt-3", className)}
-			{...props}
-		>
+		<div className={cn("flex items-center gap-2 pt-3", className)} {...props}>
 			{children}
 		</div>
 	);

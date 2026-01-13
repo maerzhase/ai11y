@@ -2,15 +2,13 @@ import { Form as FormPrimitive } from "@base-ui/react/form";
 import * as React from "react";
 import { cn } from "./lib/cn.js";
 
-export interface FormProps<FormValues extends Record<string, any> = Record<string, any>>
-	extends React.ComponentProps<typeof FormPrimitive<FormValues>> {
+export interface FormProps<
+	FormValues extends Record<string, any> = Record<string, any>,
+> extends React.ComponentProps<typeof FormPrimitive<FormValues>> {
 	className?: string;
 }
 
-export const Form = React.forwardRef<
-	HTMLFormElement,
-	FormProps<any>
->(
+export const Form = React.forwardRef<HTMLFormElement, FormProps<any>>(
 	({ className, children, ...props }, ref) => {
 		return (
 			<FormPrimitive
@@ -21,7 +19,7 @@ export const Form = React.forwardRef<
 				{children}
 			</FormPrimitive>
 		);
-	}
+	},
 );
 
 Form.displayName = "Form";

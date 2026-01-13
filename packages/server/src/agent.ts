@@ -42,21 +42,26 @@ function formatContextForPrompt(context: AgentRequest["context"]): string {
 			const isInView = context.inViewMarkerIds?.includes(marker.id) ?? false;
 			const inViewStatus = isInView ? " [IN VIEW]" : "";
 			let markerLine = `  - ${marker.label} (ID: ${marker.id}, Type: ${marker.elementType})${inViewStatus}: ${marker.intent}`;
-			
+
 			// Add value for input/textarea elements
 			if (marker.value !== undefined) {
 				markerLine += `\n    Current value: "${marker.value}"`;
 			}
-			
+
 			// Add options and selected values for select elements
 			if (marker.options !== undefined) {
-				const optionsList = marker.options.map(opt => `${opt.label} (${opt.value})`).join(", ");
+				const optionsList = marker.options
+					.map((opt) => `${opt.label} (${opt.value})`)
+					.join(", ");
 				markerLine += `\n    Available options: ${optionsList}`;
 			}
-			if (marker.selectedOptions !== undefined && marker.selectedOptions.length > 0) {
+			if (
+				marker.selectedOptions !== undefined &&
+				marker.selectedOptions.length > 0
+			) {
 				markerLine += `\n    Selected: ${marker.selectedOptions.join(", ")}`;
 			}
-			
+
 			parts.push(markerLine);
 		}
 	} else {
@@ -64,9 +69,7 @@ function formatContextForPrompt(context: AgentRequest["context"]): string {
 	}
 
 	if (context.inViewMarkerIds && context.inViewMarkerIds.length > 0) {
-		parts.push(
-			`\nVisible markers: ${context.inViewMarkerIds.join(", ")}`,
-		);
+		parts.push(`\nVisible markers: ${context.inViewMarkerIds.join(", ")}`);
 	}
 
 	return parts.join("\n");
@@ -87,7 +90,9 @@ function createLangChainTools(
 
 		// Convert parameters to Zod schema
 		const zodSchema: Record<string, z.ZodTypeAny> = {};
-		for (const [key, param] of Object.entries(def.parameters.properties) as Array<[string, { type: string; description: string }]>) {
+		for (const [key, param] of Object.entries(
+			def.parameters.properties,
+		) as Array<[string, { type: string; description: string }]>) {
 			const zodType =
 				param.type === "string"
 					? z.string()
@@ -217,7 +222,7 @@ function hasToolCalls(
 	return (
 		typeof response === "object" &&
 		response !== null &&
-		(("tool_calls" in response) ||
+		("tool_calls" in response ||
 			("additional_kwargs" in response &&
 				typeof (response as LangChainResponseWithTools).additional_kwargs ===
 					"object" &&

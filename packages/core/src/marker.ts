@@ -37,8 +37,13 @@ function getDocumentBody(): Element | null {
  * Finds an input or textarea element within a marked element
  * Handles both direct input elements and nested inputs (when Mark wraps the input)
  */
-function findInputElement(element: Element): HTMLInputElement | HTMLTextAreaElement | null {
-	if (element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement) {
+function findInputElement(
+	element: Element,
+): HTMLInputElement | HTMLTextAreaElement | null {
+	if (
+		element instanceof HTMLInputElement ||
+		element instanceof HTMLTextAreaElement
+	) {
 		return element;
 	}
 	if (element instanceof HTMLElement) {
@@ -84,9 +89,7 @@ function extractInputValue(element: Element): string | undefined {
 /**
  * Extracts options and selected values from a select element
  */
-function extractSelectData(
-	element: Element,
-): {
+function extractSelectData(element: Element): {
 	options?: Array<{ value: string; label: string }>;
 	selectedOptions?: string[];
 } {

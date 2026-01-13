@@ -1,8 +1,8 @@
 import type { AgentResponse, ConversationMessage } from "../types/agent.js";
 import type { UIAIContext } from "../types/context.js";
-import type { AgentAdapterConfig } from "./types.js";
-import { runRuleBasedAgent } from "./rule-based-agent.js";
 import { runLLMAgent } from "./llm-agent.js";
+import { runRuleBasedAgent } from "./rule-based-agent.js";
+import type { AgentAdapterConfig } from "./types.js";
 
 /**
  * Detect if we're likely offline (browser only)

@@ -1,22 +1,22 @@
 import {
+	type AgentAdapterConfig,
 	clickMarker,
 	fillInputMarker,
+	type LLMAgentConfig,
 	runAgentAdapter,
 	scrollToMarker,
-	type AgentAdapterConfig,
-	type LLMAgentConfig,
 } from "@ui4ai/core";
 import {
 	Mark,
+	type ToolCall,
 	useAssist,
 	useAssistChat,
 	useAssistTools,
-	type ToolCall,
 } from "@ui4ai/react";
 import { useEffect, useRef, useState } from "react";
 import { useDebugDrawer } from "../context/DebugDrawerContext";
-import { SuggestionChip } from "./SuggestionChip";
 import { ThemeToggle } from "./Shared/ThemeToggle";
+import { SuggestionChip } from "./SuggestionChip";
 
 export function ScrollyHero() {
 	const { getContext, track, agentConfig } = useAssist();
@@ -141,7 +141,7 @@ export function ScrollyHero() {
 			messagesContainerRef.current.scrollTop =
 				messagesContainerRef.current.scrollHeight;
 		}
-	}, [messages]);
+	}, []);
 
 	// Filter to show only recent messages
 	const recentMessages = messages.slice(-4);

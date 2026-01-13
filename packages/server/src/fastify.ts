@@ -1,11 +1,14 @@
 import type {
 	FastifyInstance,
 	FastifyPluginOptions,
-	FastifyRequest,
 	FastifyReply,
+	FastifyRequest,
 } from "fastify";
 import { runAgent } from "./agent.js";
-import { createDefaultToolRegistry, type ToolRegistry } from "./tool-registry.js";
+import {
+	createDefaultToolRegistry,
+	type ToolRegistry,
+} from "./tool-registry.js";
 import type { AgentRequest, ServerConfig } from "./types.js";
 
 interface FastifyUi4aiOptions extends FastifyPluginOptions {

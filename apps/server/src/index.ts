@@ -1,6 +1,6 @@
 import "dotenv/config";
 import cors from "@fastify/cors";
-import { ui4aiPlugin, type ServerConfig } from "@ui4ai/server/fastify";
+import { type ServerConfig, ui4aiPlugin } from "@ui4ai/server/fastify";
 import Fastify from "fastify";
 
 const apiKey = process.env.OPENAI_API_KEY;

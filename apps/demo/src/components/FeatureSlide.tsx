@@ -1,7 +1,7 @@
 import { Mark } from "@ui4ai/react";
 import type { ReactNode } from "react";
-import { FlipCard } from "./FlipCard";
 import { useInView } from "../hooks/useInView";
+import { FlipCard } from "./FlipCard";
 
 interface FeatureSlideProps {
 	direction: "left" | "right";

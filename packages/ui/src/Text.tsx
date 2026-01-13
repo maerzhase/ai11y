@@ -1,5 +1,5 @@
-import { useRender } from "@base-ui/react/use-render";
 import { mergeProps } from "@base-ui/react/merge-props";
+import { useRender } from "@base-ui/react/use-render";
 import { cva, type VariantProps } from "class-variance-authority";
 import type * as React from "react";
 import { cn } from "./lib/cn.js";
@@ -49,7 +49,10 @@ export interface TextProps
 	extends VariantProps<typeof textVariants>,
 		Omit<useRender.ComponentProps<"span">, "render"> {
 	children?: React.ReactNode;
-	render?: useRender.RenderProp | React.ReactElement | keyof React.JSX.IntrinsicElements;
+	render?:
+		| useRender.RenderProp
+		| React.ReactElement
+		| keyof React.JSX.IntrinsicElements;
 }
 
 export type TextElement = React.ComponentRef<"span">;

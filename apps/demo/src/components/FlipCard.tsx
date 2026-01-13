@@ -1,8 +1,11 @@
 import { Button } from "@ui4ai/ui";
+import type { ReactNode } from "react";
 import { useEffect, useMemo, useState } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { oneDark, oneLight } from "react-syntax-highlighter/dist/esm/styles/prism";
-import type { ReactNode } from "react";
+import {
+	oneDark,
+	oneLight,
+} from "react-syntax-highlighter/dist/esm/styles/prism";
 
 interface FlipCardProps {
 	children: ReactNode;
@@ -48,7 +51,6 @@ export function FlipCard({ children, code, language = "tsx" }: FlipCardProps) {
 	const syntaxStyle = useMemo(() => {
 		return isDark ? oneDark : oneLight;
 	}, [isDark]);
-
 
 	return (
 		<div className="w-full">

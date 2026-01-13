@@ -16,58 +16,49 @@ const fieldRootVariants = cva("space-y-2", {
 	},
 });
 
-const fieldLabelVariants = cva(
-	"text-xs font-medium text-foreground block",
-	{
-		variants: {
-			size: {
-				sm: "text-xs",
-				md: "text-xs",
-				lg: "text-sm",
-			},
-			error: {
-				false: "",
-				true: "text-destructive",
-			},
+const fieldLabelVariants = cva("text-xs font-medium text-foreground block", {
+	variants: {
+		size: {
+			sm: "text-xs",
+			md: "text-xs",
+			lg: "text-sm",
 		},
-		defaultVariants: {
-			size: "md",
-			error: false,
+		error: {
+			false: "",
+			true: "text-destructive",
 		},
-	}
-);
+	},
+	defaultVariants: {
+		size: "md",
+		error: false,
+	},
+});
 
-const fieldDescriptionVariants = cva(
-	"text-xs text-muted-foreground",
-	{
-		variants: {
-			size: {
-				sm: "text-xs",
-				md: "text-xs",
-				lg: "text-sm",
-			},
+const fieldDescriptionVariants = cva("text-xs text-muted-foreground", {
+	variants: {
+		size: {
+			sm: "text-xs",
+			md: "text-xs",
+			lg: "text-sm",
 		},
-		defaultVariants: {
-			size: "md",
-		},
-	}
-);
+	},
+	defaultVariants: {
+		size: "md",
+	},
+});
 
-const fieldErrorVariants = cva(
-	"text-xs text-destructive",
-	{
-		variants: {
-			size: {
-				sm: "text-xs",
-				md: "text-xs",
-				lg: "text-sm",
-			},
+const fieldErrorVariants = cva("text-xs text-destructive", {
+	variants: {
+		size: {
+			sm: "text-xs",
+			md: "text-xs",
+			lg: "text-sm",
 		},
-		defaultVariants: {
-			size: "md",
-		},
-	}
-);
+	},
+	defaultVariants: {
+		size: "md",
+	},
+});
 
 export interface FieldProps
 	extends VariantProps<typeof fieldRootVariants>,
@@ -78,21 +69,14 @@ export interface FieldProps
 }
 
 export const Field = React.forwardRef<HTMLDivElement, FieldProps>(
-	(
-		{
-			className,
-			label,
-			description,
-			error,
-			size,
-			children,
-			...props
-		},
-		ref
-	) => {
+	({ className, label, description, error, size, children, ...props }, ref) => {
 		const hasError = typeof error === "boolean" ? error : !!error;
 		const errorMessage =
-			typeof error === "string" ? error : error && typeof error !== "boolean" ? String(error) : undefined;
+			typeof error === "string"
+				? error
+				: error && typeof error !== "boolean"
+					? String(error)
+					: undefined;
 
 		return (
 			<FieldPrimitive.Field.Root
@@ -120,15 +104,13 @@ export const Field = React.forwardRef<HTMLDivElement, FieldProps>(
 				)}
 				{children}
 				{errorMessage && (
-					<FieldPrimitive.Field.Error
-						className={fieldErrorVariants({ size })}
-					>
+					<FieldPrimitive.Field.Error className={fieldErrorVariants({ size })}>
 						{errorMessage}
 					</FieldPrimitive.Field.Error>
 				)}
 			</FieldPrimitive.Field.Root>
 		);
-	}
+	},
 );
 
 Field.displayName = "Field";

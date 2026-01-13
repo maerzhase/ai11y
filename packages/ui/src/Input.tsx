@@ -26,7 +26,7 @@ const inputVariants = cva(
 			variant: "default",
 			error: false,
 		},
-	}
+	},
 );
 
 const inputContainerVariants = cva(
@@ -52,7 +52,7 @@ const inputContainerVariants = cva(
 			variant: "default",
 			error: false,
 		},
-	}
+	},
 );
 
 export interface InputProps
@@ -63,14 +63,17 @@ export interface InputProps
 }
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
-	({ className, inputClassName, size, variant, error, children, ...props }, ref) => {
+	(
+		{ className, inputClassName, size, variant, error, children, ...props },
+		ref,
+	) => {
 		// Use container when there are children (InputSlot)
 		if (children) {
 			return (
 				<div
 					className={cn(
 						inputContainerVariants({ size, variant, error }),
-						className
+						className,
 					)}
 				>
 					<InputPrimitive
@@ -78,7 +81,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 						className={cn(
 							"h-full w-full bg-transparent text-foreground placeholder:text-muted-foreground focus:outline-none focus-visible:outline-none",
 							error && "text-destructive",
-							inputClassName
+							inputClassName,
 						)}
 						{...props}
 						ref={ref}
@@ -94,13 +97,13 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 				className={cn(
 					inputVariants({ size, variant, error }),
 					className,
-					inputClassName
+					inputClassName,
 				)}
 				{...props}
 				ref={ref}
 			/>
 		);
-	}
+	},
 );
 
 Input.displayName = "Input";
@@ -119,7 +122,7 @@ function InputSlot({
 				{
 					"-order-1": side === "left",
 				},
-				className
+				className,
 			)}
 			{...props}
 		/>

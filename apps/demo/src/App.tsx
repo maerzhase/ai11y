@@ -38,7 +38,7 @@ function AppWithRouter() {
 				navigate(route);
 			}
 		},
-		[navigate]
+		[navigate],
 	);
 
 	return (
