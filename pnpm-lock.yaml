@@ -7,13 +7,14 @@ settings:
 importers:
 
   .:
+    dependencies:
+      turbo:
+        specifier: 2.7.1
+        version: 2.7.1
     devDependencies:
       '@biomejs/biome':
         specifier: 2.3.10
         version: 2.3.10
-      turbo:
-        specifier: 2.7.1
-        version: 2.7.1
 
   apps/demo:
     dependencies:
