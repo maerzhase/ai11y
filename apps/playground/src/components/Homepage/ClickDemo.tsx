@@ -1,6 +1,6 @@
 import { Mark } from "@ui4ai/react";
 import { useState } from "react";
-import { SuggestionChip } from "../SuggestionChip";
+import { SuggestionSection } from "../Shared/SuggestionSection";
 
 export function ClickDemoWithSuggestions({
 	onSuggestion,
@@ -76,20 +76,14 @@ export function ClickDemoWithSuggestions({
 					</button>
 				</Mark>
 			</div>
-			<p className="text-xs text-muted-foreground pt-2">
-				Try{" "}
-				{["increment counter 10 times", "decrement counter", "toggle status"].map(
-					(suggestion, index, array) => (
-						<span key={suggestion}>
-							{index > 0 && index === array.length - 1 && " or "}
-							{index > 0 && index < array.length - 1 && ", "}
-							<SuggestionChip onClick={() => onSuggestion(suggestion)}>
-								{suggestion}
-							</SuggestionChip>
-						</span>
-					),
-				)}
-			</p>
+			<SuggestionSection
+				suggestions={[
+					"increment counter 10 times",
+					"decrement counter",
+					"toggle status",
+				]}
+				onSuggestion={onSuggestion}
+			/>
 		</div>
 	);
 }

@@ -1,10 +1,13 @@
 import { Mark } from "@ui4ai/react";
 import { Badge } from "@ui4ai/ui";
 import { useLocation, useNavigate } from "react-router-dom";
-import { SuggestionChip } from "../SuggestionChip";
+import { SuggestionSection } from "../Shared/SuggestionSection";
 
-// Enhanced Navigation Demo
-function NavigationDemo() {
+export function NavigationDemo({
+	onSuggestion,
+}: {
+	onSuggestion: (s: string) => void;
+}) {
 	const location = useLocation();
 	const navigate = useNavigate();
 
@@ -60,33 +63,10 @@ function NavigationDemo() {
 					);
 				})}
 			</div>
-		</div>
-	);
-}
-
-// Navigation Demo with suggestions
-export function NavigationDemoWithSuggestions({
-	onSuggestion,
-}: {
-	onSuggestion: (s: string) => void;
-}) {
-	const suggestions = ["go to billing", "navigate to integrations"];
-
-	return (
-		<div className="space-y-4">
-			<NavigationDemo />
-			<p className="text-xs text-muted-foreground pt-2">
-				Try{" "}
-				{suggestions.map((suggestion, index) => (
-					<span key={suggestion}>
-						{index > 0 && index === suggestions.length - 1 && " or "}
-						{index > 0 && index < suggestions.length - 1 && ", "}
-						<SuggestionChip onClick={() => onSuggestion(suggestion)}>
-							{suggestion}
-						</SuggestionChip>
-					</span>
-				))}
-			</p>
+			<SuggestionSection
+				suggestions={["go to billing", "navigate to integrations"]}
+				onSuggestion={onSuggestion}
+			/>
 		</div>
 	);
 }

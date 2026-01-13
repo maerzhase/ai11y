@@ -1,5 +1,5 @@
 import { Mark } from "@ui4ai/react";
-import { SuggestionChip } from "../SuggestionChip";
+import { SuggestionSection } from "../Shared/SuggestionSection";
 
 export function HighlightDemoWithSuggestions({
 	onSuggestion,
@@ -61,22 +61,14 @@ export function HighlightDemoWithSuggestions({
 					</div>
 				</Mark>
 			</div>
-			<p className="text-xs text-muted-foreground pt-2">
-				Try{" "}
-				{[
+			<SuggestionSection
+				suggestions={[
 					"highlight feature badge",
 					"highlight status badge",
 					"highlight all badges",
-				].map((suggestion, index, array) => (
-					<span key={suggestion}>
-						{index > 0 && index === array.length - 1 && " or "}
-						{index > 0 && index < array.length - 1 && ", "}
-						<SuggestionChip onClick={() => onSuggestion(suggestion)}>
-							{suggestion}
-						</SuggestionChip>
-					</span>
-				))}
-			</p>
+				]}
+				onSuggestion={onSuggestion}
+			/>
 		</div>
 	);
 }

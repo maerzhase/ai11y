@@ -3,7 +3,7 @@ import { demoCodeExamples } from "../components/Homepage/demoCodeExamples";
 import { ClickDemoWithSuggestions } from "../components/Homepage/ClickDemo";
 import { HighlightDemoWithSuggestions } from "../components/Homepage/HighlightDemo";
 import { InputFillDemoWithSuggestions } from "../components/Homepage/InputFillDemo";
-import { NavigationDemoWithSuggestions } from "../components/Homepage/NavigationDemo";
+import { NavigationDemo } from "../components/Homepage/NavigationDemo";
 import { ScrollyHero } from "../components/ScrollyHero";
 import { Footer } from "../components/sections/Footer";
 
@@ -46,7 +46,7 @@ export function HomePage() {
 					markerLabel="Navigation Section"
 					markerIntent="Navigate to the Navigation feature section"
 				>
-					<NavigationDemoWithSuggestions onSuggestion={handleSuggestion} />
+					<NavigationDemo onSuggestion={handleSuggestion} />
 				</FeatureSlide>
 
 				<FeatureSlide

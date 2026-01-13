@@ -1,7 +1,7 @@
 import { Mark } from "@ui4ai/react";
 import { Field, Form, Input, Textarea } from "@ui4ai/ui";
 import { useState } from "react";
-import { SuggestionChip } from "../SuggestionChip";
+import { SuggestionSection } from "../Shared/SuggestionSection";
 
 export function InputFillDemoWithSuggestions({
 	onSuggestion,
@@ -99,24 +99,16 @@ export function InputFillDemoWithSuggestions({
 					</Field>
 				</Mark>
 			</Form>
-			<p className="text-xs text-muted-foreground pt-2">
-				Try{" "}
-				{[
+			<SuggestionSection
+				suggestions={[
 					"what is the current value of the email field?",
 					"fill email with test@example.com",
 					"set name to John Doe",
 					"fill message with Hello, this is a test message!",
 					"set category to feedback",
-				].map((suggestion, index, array) => (
-					<span key={suggestion}>
-						{index > 0 && index === array.length - 1 && " or "}
-						{index > 0 && index < array.length - 1 && ", "}
-						<SuggestionChip onClick={() => onSuggestion(suggestion)}>
-							{suggestion}
-						</SuggestionChip>
-					</span>
-				))}
-			</p>
+				]}
+				onSuggestion={onSuggestion}
+			/>
 		</div>
 	);
 }
