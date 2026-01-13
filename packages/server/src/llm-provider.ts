@@ -12,7 +12,7 @@ import type { ServerConfig } from "./types.js";
 export async function createLLM(config: ServerConfig): Promise<BaseChatModel> {
 	const { ChatOpenAI } = await import("@langchain/openai");
 	return new ChatOpenAI({
-		modelName: config.model || "gpt-4o-mini",
+		modelName: config.model || "gpt-5-nano",
 		temperature: config.temperature ?? 0.7,
 		openAIApiKey: config.apiKey,
 		configuration: config.baseURL

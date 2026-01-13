@@ -174,15 +174,23 @@ echo "OPENAI_API_KEY=your-api-key-here" > .env
 ```ts
 // server.ts
 import Fastify from 'fastify';
-import { ui4aiPlugin } from '@ui4ai/server/fastify';
+import { ui4aiPlugin, type ServerConfig } from '@ui4ai/server/fastify';
+
+const apiKey = process.env.OPENAI_API_KEY;
+if (!apiKey) {
+  throw new Error('OPENAI_API_KEY is required');
+}
 
 const fastify = Fastify();
 
+const config: ServerConfig = {
+  provider: 'openai',
+  apiKey,
+  model: 'gpt-5-nano', // Optional, defaults to gpt-5-nano
+};
+
 await fastify.register(ui4aiPlugin, {
-  config: {
-    apiKey: process.env.OPENAI_API_KEY!,
-    model: 'gpt-4o-mini', // Optional
-  }
+  config,
 });
 
 await fastify.listen({ port: 3000 });
@@ -311,7 +319,7 @@ This monorepo uses [Turborepo](https://turbo.build/repo) for managing builds and
 pnpm install
 
 # Set up environment variables
-export OPENAI_API_KEY=your-api-key-here  # For server (optional)
+export OPENAI_API_KEY=your-api-key-here  # For server (required for LLM agent)
 
 # Create .env file for playground (optional, for LLM support)
 echo "VITE_UI4AI_API_ENDPOINT=http://localhost:3000/ui4ai/agent" > apps/playground/.env

@@ -42,7 +42,7 @@ export async function ui4aiPlugin(
 
 	// Validate config
 	if (!config.apiKey) {
-		throw new Error(`API key is required for provider: ${config.provider}`);
+		throw new Error("API key is required");
 	}
 
 	/**
