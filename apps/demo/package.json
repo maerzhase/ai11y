@@ -1,10 +1,11 @@
 {
-	"name": "ui4ai-playground",
+	"name": "ui4ai-demo",
 	"author": "maerzhase3000",
 	"private": true,
 	"type": "module",
 	"scripts": {
-		"dev": "vite"
+		"dev": "vite",
+		"build": "vite build"
 	},
 	"dependencies": {
 		"@ui4ai/core": "workspace:*",

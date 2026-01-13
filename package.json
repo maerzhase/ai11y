@@ -5,6 +5,8 @@
 	"scripts": {
 		"dev": "turbo run dev",
 		"build": "turbo run build",
+		"build:demo": "cd apps/demo && pnpm install && pnpm build",
+		"build:server": "cd apps/server && pnpm install && pnpm build",
 		"watch": "turbo run watch",
 		"format": "biome check --write ."
 	},

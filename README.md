@@ -15,7 +15,7 @@ The SDK consists of:
 
 **Apps (applications):**
 
-- **`apps/playground/`** - Demo app that uses the SDK
+- **`apps/demo/`** - Demo app that uses the SDK
 - **`apps/server/`** - Example server application using the server package
 
 ## Core Concepts
@@ -301,7 +301,7 @@ function MyComponent() {
 
 ## Demo App
 
-The playground (`apps/playground/`) demonstrates:
+The demo (`apps/demo/`) demonstrates:
 
 - **Routes**: `/` (Home), `/billing`, `/integrations`
 - **Home Page**: Marked buttons for navigation
@@ -321,8 +321,8 @@ pnpm install
 # Set up environment variables
 export OPENAI_API_KEY=your-api-key-here  # For server (required for LLM agent)
 
-# Create .env file for playground (optional, for LLM support)
-echo "VITE_UI4AI_API_ENDPOINT=http://localhost:3000/ui4ai/agent" > apps/playground/.env
+# Create .env file for demo (optional, for LLM support)
+echo "VITE_UI4AI_API_ENDPOINT=http://localhost:3000/ui4ai/agent" > apps/demo/.env
 
 # Run everything (frontend + backend) in one command
 pnpm dev
@@ -332,7 +332,7 @@ This will:
 
 - Build ui4ai packages
 - Start the server on `http://localhost:3000` (if `OPENAI_API_KEY` is set)
-- Start the playground on `http://localhost:5173`
+- Start the demo on `http://localhost:5173`
 
 **Other Commands:**
 
@@ -347,13 +347,13 @@ pnpm watch
 **To enable LLM in the demo:**
 
 1. Set `OPENAI_API_KEY` environment variable
-2. Create a `.env` file in `apps/playground/` with:
+2. Create a `.env` file in `apps/demo/` with:
 
    ```
    VITE_UI4AI_API_ENDPOINT=http://localhost:3000/ui4ai/agent
    ```
 
-   (The playground will use the rule-based agent if this is not set)
+   (The demo will use the rule-based agent if this is not set)
 
 ## UX Features
 
