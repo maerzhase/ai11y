@@ -1,12 +1,12 @@
 import { useAssist } from "@ui4ai/react";
 import { useEffect, useState } from "react";
 
-interface DebugPanelProps {
+interface ContextPanelProps {
 	isOpen: boolean;
 	onOpenChange: (open: boolean) => void;
 }
 
-export function DebugPanel({ isOpen, onOpenChange }: DebugPanelProps) {
+export function ContextPanel({ isOpen, onOpenChange }: ContextPanelProps) {
 	const { events, getContext, currentRoute, assistState, lastError } =
 		useAssist();
 	const [context, setContext] = useState(() => getContext());
@@ -58,12 +58,12 @@ export function DebugPanel({ isOpen, onOpenChange }: DebugPanelProps) {
 			>
 				{/* Header */}
 				<div className="flex items-center justify-between px-4 py-3 border-b border-border min-h-[57px]">
-					<h2 className="text-sm font-semibold text-foreground">Debug Panel</h2>
+					<h2 className="text-sm font-semibold text-foreground">ui4ai Context</h2>
 					<button
 						type="button"
 						onClick={() => onOpenChange(false)}
 						className="p-1 rounded hover:bg-accent transition-colors"
-						aria-label="Close debug panel"
+						aria-label="Close ui4ai Context"
 					>
 						<svg
 							className="h-4 w-4 text-muted-foreground"

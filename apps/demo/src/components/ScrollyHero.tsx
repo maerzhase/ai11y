@@ -14,14 +14,14 @@ import {
 	useAssistTools,
 } from "@ui4ai/react";
 import { useEffect, useRef, useState } from "react";
-import { useDebugDrawer } from "../context/DebugDrawerContext";
+import { useContextDrawer } from "../context/ContextDrawerContext";
 import { ThemeToggle } from "./Shared/ThemeToggle";
 import { SuggestionChip } from "./SuggestionChip";
 
 export function ScrollyHero() {
 	const { getContext, track, agentConfig } = useAssist();
 	const { navigate, highlight } = useAssistTools();
-	const { isOpen: isDebugOpen, setIsOpen: setDebugOpen } = useDebugDrawer();
+	const { isOpen: isContextOpen, setIsOpen: setContextOpen } = useContextDrawer();
 	const [isCompact, setIsCompact] = useState(() => {
 		// Initialize based on current scroll position
 		const scrollY = window.scrollY;
@@ -157,7 +157,7 @@ export function ScrollyHero() {
 			{/* Fixed buttons - always visible with higher z-index */}
 			<div
 				className={`fixed top-0 left-0 z-[60] transition-all duration-300 ${
-					isDebugOpen ? "right-96" : "right-0"
+					isContextOpen ? "right-96" : "right-0"
 				}`}
 			>
 				<div className="max-w-screen-xl mx-auto px-4 py-3 flex items-center justify-end min-h-[57px]">
@@ -169,17 +169,17 @@ export function ScrollyHero() {
 						>
 							<ThemeToggle />
 						</Mark>
-						{!isDebugOpen && (
+						{!isContextOpen && (
 							<Mark
-								id="debug_panel_toggle"
-								label="Debug Panel Toggle"
-								intent="Open the debug panel to view events, markers, and UI context"
+								id="context_panel_toggle"
+								label="ui4ai Context Toggle"
+								intent="Open the ui4ai Context to view events, markers, and UI context"
 							>
 								<button
 									type="button"
-									onClick={() => setDebugOpen(true)}
+									onClick={() => setContextOpen(true)}
 									className="inline-flex items-center gap-2 px-3 py-2 rounded-md border border-border bg-background hover:bg-accent hover:text-accent-foreground transition-colors text-sm font-medium shadow-sm"
-									aria-label="Open debug panel"
+									aria-label="Open ui4ai Context"
 								>
 									<svg
 										className="h-4 w-4"
@@ -206,7 +206,7 @@ export function ScrollyHero() {
 			{/* Fixed Header - slides in below buttons when scrolled */}
 			<header
 				className={`fixed top-0 left-0 z-50 transition-all duration-300 ${
-					isDebugOpen ? "right-96" : "right-0"
+					isContextOpen ? "right-96" : "right-0"
 				} ${
 					isCompact
 						? "opacity-100 translate-y-0"
@@ -356,7 +356,7 @@ export function ScrollyHero() {
 			{/* Compact Floating Input Bar - Fixed at bottom when scrolled */}
 			<div
 				className={`fixed bottom-6 z-50 max-w-xl px-4 transition-all duration-300 ${
-					isDebugOpen
+					isContextOpen
 						? "left-[calc(50%-12rem)] -translate-x-1/2"
 						: "left-1/2 -translate-x-1/2"
 				} ${
