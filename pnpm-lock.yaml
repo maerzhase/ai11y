@@ -15,7 +15,7 @@ importers:
         specifier: 2.7.1
         version: 2.7.1
 
-  apps/playground:
+  apps/demo:
     dependencies:
       '@tailwindcss/vite':
         specifier: 4.1.18
