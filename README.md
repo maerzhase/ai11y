@@ -7,12 +7,14 @@ A minimal but powerful SDK that provides semantic UI context for AI agents. The 
 The SDK consists of:
 
 **Packages (libraries):**
+
 - **`packages/core/`** - Core SDK (markers, store, agents, tool definitions)
 - **`packages/react/`** - React bindings (provider, hooks, components)
 - **`packages/ui/`** - UI components (chat panel, triggers, message bubbles)
 - **`packages/server/`** - Server-side package for secure LLM API calls with extensible tool support
 
 **Apps (applications):**
+
 - **`apps/playground/`** - Demo app that uses the SDK
 - **`apps/server/`** - Example server application using the server package
 
@@ -50,6 +52,7 @@ The `Mark` component is a semantic wrapper that registers UI elements with the a
 ```
 
 **Behavior:**
+
 - On mount: Registers the marker with the provider (id, label, intent, DOM ref)
 - On unmount: Unregisters the marker
 - The DOM element is discoverable for highlighting and simulated clicks
@@ -78,6 +81,7 @@ The SDK supports **two agent modes**:
 The SDK includes server-side LLM integration with function calling. The agent runs securely on your server (not in the browser) and uses AI models to understand natural language and intelligently interact with your app.
 
 **Features:**
+
 - Natural language understanding
 - Context-aware responses
 - Intelligent tool selection (navigate, click, highlight)
@@ -95,6 +99,7 @@ function runAgent(input: string, context: UIAIContext): AgentResponse
 ```
 
 **Supported Commands:**
+
 - `"go to X"` / `"navigate to X"` / `"open X"` → Navigate to route
 - `"click X"` / `"press X"` → Click a marked element
 - `"highlight X"` / `"show X"` → Highlight a marked element
@@ -127,6 +132,7 @@ assist.reportError(error, {
 ```
 
 When an error is reported:
+
 - It's stored as `lastError` in context
 - The `AssistPanel` auto-opens with a helpful message
 - The agent can suggest retry actions
@@ -204,7 +210,8 @@ function App() {
 }
 ```
 
-**Important:** 
+**Important:**
+
 - The LLM agent automatically falls back to rule-based if the API endpoint is unavailable or misconfigured.
 - API keys are kept secure on the server, never exposed to the browser.
 - See `packages/server/README.md` for more details on extending with custom tools.
@@ -238,6 +245,7 @@ function MyComponent() {
 ```
 
 **Key Points:**
+
 - No `action` prop needed - just use regular `onClick` handlers
 - The agent simulates browser click events, which trigger your existing handlers
 - Works with any clickable element (buttons, links, divs with onClick, etc.)
@@ -313,6 +321,7 @@ pnpm dev
 ```
 
 This will:
+
 - Build ui4ai packages
 - Start the server on `http://localhost:3000` (if `OPENAI_API_KEY` is set)
 - Start the playground on `http://localhost:5173`
@@ -331,9 +340,11 @@ pnpm watch
 
 1. Set `OPENAI_API_KEY` environment variable
 2. Create a `.env` file in `apps/playground/` with:
+
    ```
    VITE_UI4AI_API_ENDPOINT=http://localhost:3000/ui4ai/agent
    ```
+
    (The playground will use the rule-based agent if this is not set)
 
 ## UX Features
@@ -343,47 +354,3 @@ pnpm watch
 - **Navigation**: When the agent navigates, the route actually changes (integrated with your router)
 - **System Messages**: The panel shows system messages like "Navigated to /billing" and "Clicked Connect Stripe"
 - **Error Recovery**: When errors occur, the agent explains them and guides recovery
-
-## Success Criteria
-
-A user can:
-- Open the app
-- Ask the agent "take me to billing" → See navigation happen
-- Ask "click enable billing" → Button is clicked
-- Trigger an error in integrations → Watch the agent explain and guide recovery
-
-This feels like a real product primitive, not a demo chatbot.
-
-## Technical Details
-
-- **TypeScript**: Strict mode enabled
-- **Minimal Dependencies**: Core SDK has zero dependencies
-- **Refs-Based**: Uses React refs for element access (no CSS selectors)
-- **Memory-Only**: No persistence beyond runtime
-- **Dual Agent Mode**: LLM agent (server-side) with rule-based fallback
-- **Function Calling**: Uses LLM function calling API for structured tool execution
-- **Secure**: API keys never exposed to the browser
-- **Extensible**: Server package supports custom tools via `ToolRegistry`
-
-## Server Package
-
-The `@ui4ai/server` package provides:
-
-- **Secure API handling**: LLM API calls happen server-side
-- **Fastify middleware**: Easy integration with Fastify servers
-- **Extensible tool system**: Register custom tools that the LLM can call
-- **Type-safe**: Full TypeScript support
-
-See `packages/server/README.md` for detailed documentation on:
-- Setting up the server
-- Extending with custom tools
-- API reference
-
-## Future Enhancements
-
-- Support for other frameworks (Vue, Svelte, etc.)
-- Add persistence layer for state/events
-- Add analytics dashboard
-- Add authentication
-- Streaming responses for better UX
-- Middleware for other frameworks (Express, Hono, etc.)
