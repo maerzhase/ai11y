@@ -5,8 +5,8 @@
 	"scripts": {
 		"dev": "turbo run dev",
 		"build": "turbo run build",
-		"build:demo": "cd apps/demo && pnpm install && pnpm build",
-		"build:server": "cd apps/server && pnpm install && pnpm build",
+		"build:demo": "pnpm install && turbo run build --filter=ui4ai-demo",
+		"build:server": "pnpm install && turbo run build --filter=ui4ai-server-app",
 		"watch": "turbo run watch",
 		"format": "biome check --write ."
 	},
