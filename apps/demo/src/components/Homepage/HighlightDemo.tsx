@@ -1,4 +1,4 @@
-import { Mark } from "@ui4ai/react";
+import { Marker } from "@ui4ai/react";
 import { SuggestionSection } from "../Shared/SuggestionSection";
 
 export function HighlightDemoWithSuggestions({
@@ -12,7 +12,7 @@ export function HighlightDemoWithSuggestions({
 				Elements can be highlighted on command:
 			</div>
 			<div className="grid grid-cols-2 gap-3">
-				<Mark
+				<Marker
 					id="highlight_demo_badge_1"
 					label="Feature Badge"
 					intent="A badge demonstrating the highlight feature"
@@ -23,8 +23,8 @@ export function HighlightDemoWithSuggestions({
 							<span className="text-2xl relative z-10">✨</span>
 						</div>
 					</div>
-				</Mark>
-				<Mark
+				</Marker>
+				<Marker
 					id="highlight_demo_badge_2"
 					label="Status Badge"
 					intent="A status badge to highlight"
@@ -35,8 +35,8 @@ export function HighlightDemoWithSuggestions({
 							<span className="text-2xl relative z-10">🎯</span>
 						</div>
 					</div>
-				</Mark>
-				<Mark
+				</Marker>
+				<Marker
 					id="highlight_demo_badge_3"
 					label="Action Badge"
 					intent="An action badge to highlight"
@@ -47,8 +47,8 @@ export function HighlightDemoWithSuggestions({
 							<span className="text-2xl relative z-10">⚡</span>
 						</div>
 					</div>
-				</Mark>
-				<Mark
+				</Marker>
+				<Marker
 					id="highlight_demo_badge_4"
 					label="Info Badge"
 					intent="An info badge to highlight"
@@ -59,7 +59,7 @@ export function HighlightDemoWithSuggestions({
 							<span className="text-2xl relative z-10">💡</span>
 						</div>
 					</div>
-				</Mark>
+				</Marker>
 			</div>
 			<SuggestionSection
 				suggestions={[

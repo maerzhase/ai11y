@@ -22,7 +22,7 @@ interface FastifyUi4aiOptions extends FastifyPluginOptions {
  * @example
  * ```ts
  * import Fastify from 'fastify';
- * import { ui4aiPlugin } from '@ui4ai/server/fastify';
+ * import { ui4aiPlugin } from '@ui4ai/agent/fastify';
  *
  * const fastify = Fastify();
  *

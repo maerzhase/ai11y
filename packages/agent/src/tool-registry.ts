@@ -1,5 +1,5 @@
 import type {
-	ToolCall,
+	Instruction,
 	ToolDefinition,
 	ToolExecutor,
 	UIAIContext,
@@ -63,12 +63,12 @@ export class ToolRegistry {
 	}
 
 	/**
-	 * Convert OpenAI tool call to our ToolCall format
+	 * Convert OpenAI tool call to our Instruction format
 	 */
 	convertToolCall(toolCall: {
 		type: "function";
 		function: { name: string; arguments: string };
-	}): ToolCall | null {
+	}): Instruction | null {
 		const tool = this.tools.get(toolCall.function.name);
 		if (!tool) {
 			return null;
@@ -78,21 +78,21 @@ export class ToolRegistry {
 
 		// Built-in tools
 		if (toolCall.function.name === "navigate") {
-			return { type: "navigate", route: args.route };
+			return { action: "navigate", route: args.route };
 		}
 		if (toolCall.function.name === "click") {
-			return { type: "click", markerId: args.markerId };
+			return { action: "click", id: args.markerId };
 		}
 		if (toolCall.function.name === "highlight") {
-			return { type: "highlight", markerId: args.markerId };
+			return { action: "highlight", id: args.markerId };
 		}
 		if (toolCall.function.name === "scroll") {
-			return { type: "scroll", markerId: args.markerId };
+			return { action: "scroll", id: args.markerId };
 		}
 		if (toolCall.function.name === "fillInput") {
 			return {
-				type: "fillInput",
-				markerId: args.markerId,
+				action: "fillInput",
+				id: args.markerId,
 				value: args.value,
 			};
 		}

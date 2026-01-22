@@ -6,4 +6,5 @@
 export * from "./agent.js";
 export * from "./config.js";
 export * from "./context.js";
+export * from "./instruction.js";
 export * from "./tool.js";

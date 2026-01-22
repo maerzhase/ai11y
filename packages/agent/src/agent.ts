@@ -8,8 +8,8 @@ import {
 import type {
 	AgentRequest,
 	AgentResponse,
+	Instruction,
 	ServerConfig,
-	ToolCall,
 } from "./types.js";
 
 /**
@@ -302,6 +302,13 @@ export async function runAgent(
 
 ${contextPrompt}${recentMarkerContext}${markerMatchGuidance}
 
+Reading marker values:
+- You can read current values from markers in the context above
+- For input/textarea elements: The "Current value" field shows what's currently entered
+- For select elements: The "Available options" shows all choices, and "Selected" shows what's currently selected
+- When users ask "what's in [field]" or "what's the value of [marker]", read the value from the context and respond with it
+- You don't need a tool to read values - they're already in the context provided above
+
 Navigation rules:
 - "navigate to [element]" = scroll to that element (use 'scroll' tool)
 - "navigate to [route]" = route navigation (use 'navigate' tool with route path)
@@ -316,7 +323,14 @@ Relative scrolling rules (for "scroll to next" or "scroll to previous"):
 - CRITICAL: Always skip markers that are in inViewMarkerIds - only scroll to markers NOT currently in view
 - For "scroll to next": Find the first marker in the markers array that comes after any currently visible markers and is NOT in inViewMarkerIds
 - For "scroll to previous": Find the first marker in the markers array that comes before any currently visible markers and is NOT in inViewMarkerIds
-- This prevents getting stuck on sections already in view`;
+- This prevents getting stuck on sections already in view
+
+Multiple actions rules:
+- When user says "all" (e.g., "highlight all badges", "click all buttons"), generate MULTIPLE tool calls - one for each matching marker
+- When user specifies a count (e.g., "click 10 times", "increment counter 5 times"), generate MULTIPLE tool calls - repeat the action the specified number of times
+- CRITICAL: You can and should call the same tool multiple times in a single response when the user requests multiple actions
+- For "highlight all [type]" or "click all [type]": Find all markers matching the type and generate one tool call per marker
+- For "[action] [count] times": Generate [count] identical tool calls`;
 
 	// Build conversation messages
 	const conversationMessages: Array<{ role: string; content: string }> = [
@@ -341,8 +355,8 @@ Relative scrolling rules (for "scroll to next" or "scroll to previous"):
 	// Invoke LLM with messages
 	const response = await llmWithTools.invoke(conversationMessages);
 
-	// Extract tool calls and content
-	const toolCalls: ToolCall[] = [];
+	// Extract instructions and content
+	const instructions: Instruction[] = [];
 	let reply = "";
 
 	// Handle response content
@@ -387,7 +401,7 @@ Relative scrolling rules (for "scroll to next" or "scroll to previous"):
 				: {});
 
 		if (toolName) {
-			// Try to convert to our ToolCall format
+			// Try to convert to our Instruction format
 			const converted = toolRegistry.convertToolCall({
 				type: "function",
 				function: {
@@ -397,7 +411,7 @@ Relative scrolling rules (for "scroll to next" or "scroll to previous"):
 			});
 
 			if (converted) {
-				toolCalls.push(converted);
+				instructions.push(converted);
 			} else {
 				// For custom tools, execute them
 				try {
@@ -406,9 +420,9 @@ Relative scrolling rules (for "scroll to next" or "scroll to previous"):
 						toolArgs,
 						request.context,
 					);
-					// If the result is a ToolCall, add it
-					if (result && typeof result === "object" && "type" in result) {
-						toolCalls.push(result as ToolCall);
+					// If the result is an Instruction, add it
+					if (result && typeof result === "object" && "action" in result) {
+						instructions.push(result as Instruction);
 					}
 				} catch (error) {
 					console.error(`Error executing tool ${toolName}:`, error);
@@ -419,6 +433,6 @@ Relative scrolling rules (for "scroll to next" or "scroll to previous"):
 
 	return {
 		reply: reply || "I'm here to help!",
-		toolCalls: toolCalls.length > 0 ? toolCalls : undefined,
+		instructions: instructions.length > 0 ? instructions : undefined,
 	};
 }

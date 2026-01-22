@@ -3,6 +3,7 @@ import { findMarkerElement } from "./find-element.js";
 
 /**
  * Scrolls to a marker element by its ID
+ * Does not apply highlight animation - use highlightMarker() if you want both scroll and highlight
  *
  * @param markerId - The marker ID to scroll to
  *

@@ -1,4 +1,4 @@
-import { Mark } from "@ui4ai/react";
+import { Marker } from "@ui4ai/react";
 import { Badge } from "@ui4ai/ui";
 import { useLocation, useNavigate } from "react-router-dom";
 import { SuggestionSection } from "../Shared/SuggestionSection";
@@ -22,6 +22,9 @@ export function NavigationDemo({
 		path: string,
 	) => {
 		e.preventDefault();
+		// Prevent unnecessary navigation if already on the target route
+		// Note: This handles direct user clicks; agent-initiated navigation
+		// is handled by App.tsx's handleNavigate which also includes this check
 		if (path !== location.pathname) {
 			navigate(path);
 		}
@@ -36,7 +39,7 @@ export function NavigationDemo({
 				{routes.map((route) => {
 					const isCurrent = location.pathname === route.path;
 					return (
-						<Mark
+						<Marker
 							key={route.path}
 							id={`nav_route_${route.path.replace("/", "") || "home"}`}
 							label={`${route.label} Route`}
@@ -59,7 +62,7 @@ export function NavigationDemo({
 									</Badge>
 								)}
 							</a>
-						</Mark>
+						</Marker>
 					);
 				})}
 			</div>

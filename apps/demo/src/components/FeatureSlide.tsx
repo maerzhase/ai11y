@@ -1,4 +1,4 @@
-import { Mark } from "@ui4ai/react";
+import { Marker } from "@ui4ai/react";
 import type { ReactNode } from "react";
 import { useInView } from "../hooks/useInView";
 import { FlipCard } from "./FlipCard";
@@ -112,13 +112,13 @@ export function FeatureSlide({
 
 	if (markerId) {
 		return (
-			<Mark
+			<Marker
 				id={markerId}
 				label={markerLabel || title}
 				intent={markerIntent || `Navigate to the ${title} section`}
 			>
 				{section}
-			</Mark>
+			</Marker>
 		);
 	}
 

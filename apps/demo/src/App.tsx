@@ -16,14 +16,7 @@ function App() {
 function AppWithRouter() {
 	const location = useLocation();
 	const navigate = useNavigate();
-	const locationRef = React.useRef(location.pathname);
 
-	// Keep ref up to date
-	React.useEffect(() => {
-		locationRef.current = location.pathname;
-	}, [location.pathname]);
-
-	// Optional: Configure agent
 	const apiEndpoint =
 		import.meta.env.VITE_UI4AI_API_ENDPOINT ||
 		"http://localhost:3000/ui4ai/agent";
@@ -34,11 +27,11 @@ function AppWithRouter() {
 
 	const handleNavigate = React.useCallback(
 		(route: string) => {
-			if (route !== locationRef.current) {
+			if (route !== location.pathname) {
 				navigate(route);
 			}
 		},
-		[navigate],
+		[navigate, location.pathname],
 	);
 
 	return (

@@ -1,38 +1,33 @@
 import {
 	type AgentAdapterConfig,
-	clickMarker,
-	fillInputMarker,
 	type LLMAgentConfig,
-	runAgentAdapter,
-	scrollToMarker,
+	plan,
 } from "@ui4ai/core";
 import { AssistPanelPopover, ChatInput, MessageList } from "@ui4ai/ui";
 import { useEffect } from "react";
-import { useAssist } from "./AssistProvider.js";
-import type { ToolCall } from "./types.js";
-import { useAssistChat } from "./useAssistChat.js";
-import { useAssistTools } from "./useAssistTools.js";
+import { useUIAIContext } from "../hooks/useUIAIContext.js";
+import { useChat } from "../hooks/useChat.js";
 
-export function AssistPanel() {
+export function Panel() {
 	const {
 		isPanelOpen,
 		setIsPanelOpen,
-		getContext,
+		describe,
+		act,
 		track,
 		agentConfig,
 		pendingMessage,
 		clearPendingMessage,
-	} = useAssist();
-	const { navigate, highlight } = useAssistTools();
+		addHighlight,
+	} = useUIAIContext();
 
 	const handleSubmit = async (
 		message: string,
 		messages: Array<{ type: string; content: string }>,
 	) => {
-		const context = getContext();
+		const ui = describe();
 
 		// Convert messages to conversation format for LLM
-		// Exclude the last message if it's the current user message (to avoid duplication)
 		const conversationMessages = messages
 			.filter((m, index) => {
 				// Include all messages except the last one if it matches the current input
@@ -59,46 +54,26 @@ export function AssistPanel() {
 					? ({ apiEndpoint: agentConfig.apiEndpoint } as LLMAgentConfig)
 					: undefined,
 		};
-		const response = await runAgentAdapter(
-			message,
-			context,
-			adapterConfig,
-			conversationMessages,
-		);
+
+		const response = await plan(ui, message, adapterConfig, conversationMessages);
 
 		// Track the interaction
-		track("agent_message", { input: message, response });
+		track("agent_message", { input: message, instructions: response.instructions });
 
-		return response;
+		// Return response for useChat - use the agent's actual reply
+		return {
+			reply: response.reply,
+			instructions: response.instructions && response.instructions.length > 0 ? response.instructions : undefined,
+		};
 	};
 
-	const handleToolCall = (toolCall: ToolCall) => {
-		switch (toolCall.type) {
-			case "navigate":
-				if (toolCall.route) {
-					navigate(toolCall.route);
-				}
-				break;
-			case "highlight":
-				if (toolCall.markerId) {
-					highlight(toolCall.markerId);
-				}
-				break;
-			case "scroll":
-				if (toolCall.markerId) {
-					scrollToMarker(toolCall.markerId);
-				}
-				break;
-			case "click":
-				if (toolCall.markerId) {
-					clickMarker(toolCall.markerId);
-				}
-				break;
-			case "fillInput":
-				if (toolCall.markerId && toolCall.value !== undefined) {
-					fillInputMarker(toolCall.markerId, toolCall.value);
-				}
-				break;
+	const handleInstruction = (instruction: import("@ui4ai/core").Instruction) => {
+		act(instruction);
+
+		// Add highlight for visual feedback only for highlight actions
+		// Note: highlightMarker already scrolls into view, so we don't need to add highlight for scroll actions
+		if (instruction.action === "highlight") {
+			addHighlight(instruction.id);
 		}
 	};
 
@@ -110,9 +85,9 @@ export function AssistPanel() {
 		messagesEndRef,
 		inputRef,
 		handleSubmit: handleChatSubmit,
-	} = useAssistChat({
+	} = useChat({
 		onSubmit: handleSubmit,
-		onToolCall: handleToolCall,
+		onInstruction: handleInstruction,
 	});
 
 	// Focus input when panel opens

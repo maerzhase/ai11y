@@ -14,6 +14,10 @@ export {
 	runLLMAgent,
 	runRuleBasedAgent,
 } from "./agent/index.js";
+export { plan } from "./agent/plan.js";
+
+// Client API
+export { createClient, type UIAIClient } from "./client-api.js";
 
 export { getContext } from "./dom.js";
 export { getSubscriberCount, notify, subscribe } from "./events.js";

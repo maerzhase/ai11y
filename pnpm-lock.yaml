@@ -70,9 +70,9 @@ importers:
       '@fastify/cors':
         specifier: 11.2.0
         version: 11.2.0
-      '@ui4ai/server':
+      '@ui4ai/agent':
         specifier: workspace:*
-        version: link:../../packages/server
+        version: link:../../packages/agent
       dotenv:
         specifier: 17.2.3
         version: 17.2.3
@@ -83,6 +83,37 @@ importers:
       '@types/node':
         specifier: 25.0.3
         version: 25.0.3
+      tsx:
+        specifier: 4.21.0
+        version: 4.21.0
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+
+  packages/agent:
+    dependencies:
+      '@langchain/core':
+        specifier: 1.1.7
+        version: 1.1.7(openai@6.15.0(zod@4.2.1))
+      '@langchain/openai':
+        specifier: 1.2.0
+        version: 1.2.0(@langchain/core@1.1.7(openai@6.15.0(zod@4.2.1)))
+      '@ui4ai/core':
+        specifier: workspace:*
+        version: link:../core
+      zod:
+        specifier: 4.2.1
+        version: 4.2.1
+    devDependencies:
+      '@types/node':
+        specifier: 25.0.3
+        version: 25.0.3
+      fastify:
+        specifier: 5.6.2
+        version: 5.6.2
+      tsdown:
+        specifier: 0.18.1
+        version: 0.18.1(typescript@5.9.3)
       tsx:
         specifier: 4.21.0
         version: 4.21.0
@@ -126,37 +157,6 @@ importers:
       tsdown:
         specifier: 0.18.1
         version: 0.18.1(typescript@5.9.3)
-      typescript:
-        specifier: 5.9.3
-        version: 5.9.3
-
-  packages/server:
-    dependencies:
-      '@langchain/core':
-        specifier: 1.1.7
-        version: 1.1.7(openai@6.15.0(zod@4.2.1))
-      '@langchain/openai':
-        specifier: 1.2.0
-        version: 1.2.0(@langchain/core@1.1.7(openai@6.15.0(zod@4.2.1)))
-      '@ui4ai/core':
-        specifier: workspace:*
-        version: link:../core
-      zod:
-        specifier: 4.2.1
-        version: 4.2.1
-    devDependencies:
-      '@types/node':
-        specifier: 25.0.3
-        version: 25.0.3
-      fastify:
-        specifier: 5.6.2
-        version: 5.6.2
-      tsdown:
-        specifier: 0.18.1
-        version: 0.18.1(typescript@5.9.3)
-      tsx:
-        specifier: 4.21.0
-        version: 4.21.0
       typescript:
         specifier: 5.9.3
         version: 5.9.3
@@ -1241,9 +1241,6 @@ packages:
     resolution: {integrity: sha512-dVKBjfWisLAicarI2Sf+JuBE/DghV4UzNAVe9yhEJuzeREd3JhOTE9cUaJTeSa77fsbQUK3pcOpJfM59+VKZaA==}
     engines: {node: '>=12'}
 
-  get-tsconfig@4.10.1:
-    resolution: {integrity: sha512-auHyJ4AgMz7vgS8Hp3N6HXSmlMdUyhSUrfBF16w153rxtLIEOE+HGqaBppczZvnHLqQJfiHotCYpNhl0lUROFQ==}
-
   get-tsconfig@4.13.0:
     resolution: {integrity: sha512-1VKTZJCwBrvbd+Wn3AOgQP/2Av+TfTCOlE4AcRJE72W1ksZXbAx8PPBR9RzgTeSPzlPMHrbANMH3LbltH73wxQ==}
 
@@ -1729,11 +1726,6 @@ packages:
 
   semver@6.3.1:
     resolution: {integrity: sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==}
-    hasBin: true
-
-  semver@7.7.2:
-    resolution: {integrity: sha512-RF0Fw+rO5AMf9MAyaRXI4AV0Ulj5lMHqVxxdSgiVbixSCXoEmmX/jk0CuJw4+3SqroYO9VoUh+HcuJivvtJemA==}
-    engines: {node: '>=10'}
     hasBin: true
 
   semver@7.7.3:
@@ -2870,7 +2862,7 @@ snapshots:
       process-warning: 5.0.0
       rfdc: 1.4.1
       secure-json-parse: 4.1.0
-      semver: 7.7.2
+      semver: 7.7.3
       toad-cache: 3.7.0
 
   fastq@1.19.1:
@@ -2911,10 +2903,6 @@ snapshots:
   get-caller-file@2.0.5: {}
 
   get-stdin@9.0.0: {}
-
-  get-tsconfig@4.10.1:
-    dependencies:
-      resolve-pkg-maps: 1.0.0
 
   get-tsconfig@4.13.0:
     dependencies:
@@ -3368,8 +3356,6 @@ snapshots:
 
   semver@6.3.1: {}
 
-  semver@7.7.2: {}
-
   semver@7.7.3: {}
 
   set-cookie-parser@2.7.2: {}
@@ -3464,7 +3450,7 @@ snapshots:
   tsx@4.21.0:
     dependencies:
       esbuild: 0.27.2
-      get-tsconfig: 4.10.1
+      get-tsconfig: 4.13.0
     optionalDependencies:
       fsevents: 2.3.3
 

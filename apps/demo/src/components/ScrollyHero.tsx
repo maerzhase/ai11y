@@ -1,26 +1,25 @@
 import {
 	type AgentAdapterConfig,
-	clickMarker,
-	fillInputMarker,
 	type LLMAgentConfig,
-	runAgentAdapter,
-	scrollToMarker,
+	plan,
 } from "@ui4ai/core";
 import {
-	Mark,
-	type ToolCall,
-	useAssist,
-	useAssistChat,
-	useAssistTools,
+	Marker,
+	type Instruction,
+	useUIAIContext,
+	useChat,
 } from "@ui4ai/react";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useContextDrawer } from "../context/ContextDrawerContext";
 import { ThemeToggle } from "./Shared/ThemeToggle";
 import { SuggestionChip } from "./SuggestionChip";
 
-export function ScrollyHero() {
-	const { getContext, track, agentConfig } = useAssist();
-	const { navigate, highlight } = useAssistTools();
+interface ScrollyHeroProps {
+	onSuggestionReady?: (handler: (suggestion: string) => void) => void;
+}
+
+export function ScrollyHero({ onSuggestionReady }: ScrollyHeroProps = {}) {
+	const { describe, act, track, agentConfig, addHighlight } = useUIAIContext();
 	const { isOpen: isContextOpen, setIsOpen: setContextOpen } = useContextDrawer();
 	const [isCompact, setIsCompact] = useState(() => {
 		// Initialize based on current scroll position
@@ -50,7 +49,7 @@ export function ScrollyHero() {
 		message: string,
 		messages: Array<{ type: string; content: string }>,
 	) => {
-		const context = getContext();
+		const ui = describe();
 
 		const conversationMessages = messages
 			.filter((m, index) => {
@@ -77,45 +76,23 @@ export function ScrollyHero() {
 					: undefined,
 		};
 
-		const response = await runAgentAdapter(
-			message,
-			context,
-			adapterConfig,
-			conversationMessages,
-		);
+		const response = await plan(ui, message, adapterConfig, conversationMessages);
 
-		track("agent_message", { input: message, response });
+		track("agent_message", { input: message, instructions: response.instructions });
 
-		return response;
+		// Return response for useChat - use the agent's actual reply
+		return {
+			reply: response.reply,
+			instructions: response.instructions && response.instructions.length > 0 ? response.instructions : undefined,
+		};
 	};
 
-	const handleToolCall = (toolCall: ToolCall) => {
-		switch (toolCall.type) {
-			case "navigate":
-				if (toolCall.route) {
-					navigate(toolCall.route);
-				}
-				break;
-			case "highlight":
-				if (toolCall.markerId) {
-					highlight(toolCall.markerId);
-				}
-				break;
-			case "scroll":
-				if (toolCall.markerId) {
-					scrollToMarker(toolCall.markerId);
-				}
-				break;
-			case "click":
-				if (toolCall.markerId) {
-					clickMarker(toolCall.markerId);
-				}
-				break;
-			case "fillInput":
-				if (toolCall.markerId && toolCall.value !== undefined) {
-					fillInputMarker(toolCall.markerId, toolCall.value);
-				}
-				break;
+	const handleInstruction = (instruction: Instruction) => {
+		act(instruction);
+		// Add highlight for visual feedback only for highlight actions
+		// Note: highlightMarker already scrolls into view, so we don't need to add highlight for scroll actions
+		if (instruction.action === "highlight") {
+			addHighlight(instruction.id);
 		}
 	};
 
@@ -126,9 +103,9 @@ export function ScrollyHero() {
 		isProcessing,
 		inputRef,
 		handleSubmit: handleChatSubmit,
-	} = useAssistChat({
+	} = useChat({
 		onSubmit: handleSubmit,
-		onToolCall: handleToolCall,
+		onInstruction: handleInstruction,
 		initialMessage:
 			"Welcome! I can help you navigate this page, highlight features, and interact with demos. Try saying 'show me navigation' or scroll down to explore!",
 	});
@@ -147,10 +124,18 @@ export function ScrollyHero() {
 	const recentMessages = messages.slice(-4);
 	const lastMessage = messages[messages.length - 1];
 
-	const handleSuggestion = (suggestion: string) => {
-		setInput(suggestion);
-		inputRef.current?.focus();
-	};
+	const handleSuggestion = useCallback(
+		(suggestion: string) => {
+			setInput(suggestion);
+			inputRef.current?.focus();
+		},
+		[setInput],
+	);
+
+	// Expose handler to parent
+	useEffect(() => {
+		onSuggestionReady?.(handleSuggestion);
+	}, [onSuggestionReady, handleSuggestion]);
 
 	return (
 		<>
@@ -162,15 +147,15 @@ export function ScrollyHero() {
 			>
 				<div className="max-w-screen-xl mx-auto px-4 py-3 flex items-center justify-end min-h-[57px]">
 					<div className="flex items-center gap-2">
-						<Mark
+						<Marker
 							id="theme_toggle"
 							label="Theme Toggle"
 							intent="Toggle between light and dark theme"
 						>
 							<ThemeToggle />
-						</Mark>
+						</Marker>
 						{!isContextOpen && (
-							<Mark
+							<Marker
 								id="context_panel_toggle"
 								label="ui4ai Context Toggle"
 								intent="Open the ui4ai Context to view events, markers, and UI context"
@@ -197,7 +182,7 @@ export function ScrollyHero() {
 									</svg>
 									View Context
 								</button>
-							</Mark>
+							</Marker>
 						)}
 					</div>
 				</div>
@@ -240,7 +225,7 @@ export function ScrollyHero() {
 
 						<div className="relative p-8">
 							{/* Title */}
-							<Mark
+							<Marker
 								id="hero_title"
 								label="ui4ai"
 								intent="The main hero title - A semantic UI context layer for AI agents"
@@ -248,7 +233,7 @@ export function ScrollyHero() {
 								<h1 className="text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent tracking-tight text-center">
 									ui4ai
 								</h1>
-							</Mark>
+							</Marker>
 
 							<p className="text-lg text-muted-foreground mb-6 text-center max-w-md mx-auto">
 								A semantic UI context layer for AI agents

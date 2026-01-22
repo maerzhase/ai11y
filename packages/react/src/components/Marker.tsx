@@ -7,17 +7,17 @@ import {
 import { MorphingBlob } from "@ui4ai/ui";
 import React, { useEffect, useLayoutEffect, useMemo, useRef } from "react";
 import { createPortal } from "react-dom";
-import { useAssist } from "./AssistProvider.js";
+import { useUIAIContext } from "../hooks/useUIAIContext.js";
 
-interface MarkProps {
+interface MarkerProps {
 	id: string;
 	label: string;
 	intent: string;
 	/**
 	 * When true, renders a small speech-bubble button near the marked element.
-	 * Clicking it opens the Assist panel pre-populated with a helpful prompt for this marker.
+	 * Clicking it opens the panel pre-populated with a helpful prompt for this marker.
 	 */
-	showAssistBubble?: boolean;
+	showBubble?: boolean;
 	children: React.ReactElement;
 }
 
@@ -55,19 +55,19 @@ function assignRef<T>(ref: React.Ref<T> | undefined, value: T | null) {
 const useIsomorphicLayoutEffect =
 	typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
-export function Mark({
+export function Marker({
 	id,
 	label,
 	intent,
-	showAssistBubble = false,
+	showBubble = false,
 	children,
-}: MarkProps) {
+}: MarkerProps) {
 	const {
 		highlightedMarkers,
 		highlightWrapper,
 		togglePanelForMarker,
 		focusedMarkerId,
-	} = useAssist();
+	} = useUIAIContext();
 
 	const isFocused = focusedMarkerId === id;
 	const isHighlighted = highlightedMarkers.has(id);
@@ -81,7 +81,7 @@ export function Mark({
 
 	// Update bubble position directly via ref (no state updates during scroll)
 	useIsomorphicLayoutEffect(() => {
-		if (!showAssistBubble) return;
+		if (!showBubble) return;
 
 		const updatePosition = () => {
 			const el = elementRef.current;
@@ -101,7 +101,7 @@ export function Mark({
 			window.removeEventListener("scroll", updatePosition, true);
 			window.removeEventListener("resize", updatePosition);
 		};
-	}, [showAssistBubble, isHighlighted, highlightWrapper]);
+	}, [showBubble, isHighlighted, highlightWrapper]);
 
 	// Clone child and attach ref + data-ai-* attributes (no wrapper needed)
 	const childWithRef = React.cloneElement(children, {
@@ -123,7 +123,7 @@ export function Mark({
 	const isEmphasized = isFocused || isHighlighted;
 
 	const canShowBubble =
-		showAssistBubble &&
+		showBubble &&
 		typeof document !== "undefined" &&
 		typeof document.body !== "undefined";
 

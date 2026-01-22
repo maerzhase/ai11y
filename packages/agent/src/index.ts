@@ -11,8 +11,8 @@ export { createDefaultToolRegistry, ToolRegistry } from "./tool-registry.js";
 export type {
 	AgentRequest,
 	AgentResponse,
+	Instruction,
 	ServerConfig,
-	ToolCall,
 	ToolDefinition,
 	ToolExecutor,
 	UIAIContext,

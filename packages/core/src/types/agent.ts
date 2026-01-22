@@ -1,12 +1,12 @@
 import type { UIAIContext } from "./context.js";
-import type { ToolCall } from "./tool.js";
+import type { Instruction } from "./instruction.js";
 
 /**
- * Response from the agent containing a reply and optional tool calls
+ * Response from the agent containing a reply and optional instructions
  */
 export interface AgentResponse {
 	reply: string;
-	toolCalls?: ToolCall[];
+	instructions?: Instruction[];
 }
 
 /**

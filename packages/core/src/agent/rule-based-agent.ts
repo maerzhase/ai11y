@@ -1,6 +1,6 @@
 import type { AgentResponse } from "../types/agent.js";
 import type { UIAIContext } from "../types/context.js";
-import type { ToolCall } from "../types/tool.js";
+import type { Instruction } from "../types/instruction.js";
 
 /**
  * Rule-based agent that uses pattern matching for common commands.
@@ -42,7 +42,7 @@ export function runRuleBasedAgent(
 			if (isLink && isInView) {
 				return {
 					reply: `Navigating to ${matchingMarker.label}...`,
-					toolCalls: [{ type: "click", markerId: matchingMarker.id }],
+					instructions: [{ action: "click", id: matchingMarker.id }],
 				};
 			}
 
@@ -50,19 +50,19 @@ export function runRuleBasedAgent(
 			if (isLink && !isInView) {
 				return {
 					reply: `Scrolling to ${matchingMarker.label}...`,
-					toolCalls: [{ type: "scroll", markerId: matchingMarker.id }],
+					instructions: [{ action: "scroll", id: matchingMarker.id }],
 				};
 			}
 
 			// For non-link markers (sections, divs), scroll to them
 			return {
 				reply: `Scrolling to ${matchingMarker.label}...`,
-				toolCalls: [{ type: "scroll", markerId: matchingMarker.id }],
+				instructions: [{ action: "scroll", id: matchingMarker.id }],
 			};
 		}
 
 		// No marker found, proceed with route navigation
-		const toolCalls: ToolCall[] = [];
+		const instructions: Instruction[] = [];
 
 		// Extract route from input
 		let route = "/";
@@ -75,10 +75,10 @@ export function runRuleBasedAgent(
 		}
 
 		if (route !== context.route) {
-			toolCalls.push({ type: "navigate", route });
+			instructions.push({ action: "navigate", route });
 			return {
 				reply: `Navigating to ${route === "/" ? "home" : route}...`,
-				toolCalls,
+				instructions,
 			};
 		} else {
 			return {
@@ -102,7 +102,7 @@ export function runRuleBasedAgent(
 		if (matchingMarker) {
 			return {
 				reply: `Clicking ${matchingMarker.label}...`,
-				toolCalls: [{ type: "click", markerId: matchingMarker.id }],
+				instructions: [{ action: "click", id: matchingMarker.id }],
 			};
 		} else {
 			return {
@@ -134,7 +134,7 @@ export function runRuleBasedAgent(
 			if (lowerInput.includes("scroll")) {
 				return {
 					reply: `Scrolling to ${matchingMarker.label}...`,
-					toolCalls: [{ type: "scroll", markerId: matchingMarker.id }],
+					instructions: [{ action: "scroll", id: matchingMarker.id }],
 				};
 			}
 		}
@@ -153,7 +153,7 @@ export function runRuleBasedAgent(
 		if (matchingMarker) {
 			return {
 				reply: `Highlighting ${matchingMarker.label}...`,
-				toolCalls: [{ type: "highlight", markerId: matchingMarker.id }],
+				instructions: [{ action: "highlight", id: matchingMarker.id }],
 			};
 		}
 	}
@@ -214,10 +214,10 @@ export function runRuleBasedAgent(
 		if (matchingMarker && value) {
 			return {
 				reply: `Filling ${matchingMarker.label} with "${value}"...`,
-				toolCalls: [
+				instructions: [
 					{
-						type: "fillInput",
-						markerId: matchingMarker.id,
+						action: "fillInput",
+						id: matchingMarker.id,
 						value: value,
 					},
 				],
@@ -247,7 +247,7 @@ export function runRuleBasedAgent(
 				if (marker) {
 					return {
 						reply: `Retrying ${marker.label}...`,
-						toolCalls: [{ type: "click", markerId: marker.id }],
+						instructions: [{ action: "click", id: marker.id }],
 					};
 				}
 			}

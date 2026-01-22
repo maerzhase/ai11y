@@ -1,4 +1,4 @@
-import { useAssist } from "@ui4ai/react";
+import { useUIAIContext } from "@ui4ai/react";
 import { useEffect, useState } from "react";
 
 interface ContextPanelProps {
@@ -7,14 +7,14 @@ interface ContextPanelProps {
 }
 
 export function ContextPanel({ isOpen, onOpenChange }: ContextPanelProps) {
-	const { events, getContext, currentRoute, assistState, lastError } =
-		useAssist();
-	const [context, setContext] = useState(() => getContext());
+	const { events, describe, currentRoute, state, lastError } =
+		useUIAIContext();
+	const [context, setContext] = useState(() => describe());
 
 	// Update context periodically and when route/state changes
 	useEffect(() => {
 		const updateContext = () => {
-			setContext(getContext());
+			setContext(describe());
 		};
 
 		// Update immediately
@@ -24,7 +24,7 @@ export function ContextPanel({ isOpen, onOpenChange }: ContextPanelProps) {
 		const interval = setInterval(updateContext, 1000);
 
 		return () => clearInterval(interval);
-	}, [getContext]);
+	}, [describe]);
 
 	const formatTimestamp = (timestamp: number) => {
 		const date = new Date(timestamp);
@@ -145,9 +145,9 @@ export function ContextPanel({ isOpen, onOpenChange }: ContextPanelProps) {
 								<div>
 									<div className="text-muted-foreground mb-1">State</div>
 									<pre className="p-2 rounded border border-border/50 bg-muted/30 text-[10px] text-foreground overflow-x-auto">
-										{Object.keys(assistState).length === 0
+										{Object.keys(state).length === 0
 											? "{}"
-											: formatPayload(assistState)}
+											: formatPayload(state)}
 									</pre>
 								</div>
 

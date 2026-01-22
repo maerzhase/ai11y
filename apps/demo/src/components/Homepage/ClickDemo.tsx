@@ -1,4 +1,4 @@
-import { Mark } from "@ui4ai/react";
+import { Marker } from "@ui4ai/react";
 import { useState } from "react";
 import { SuggestionSection } from "../Shared/SuggestionSection";
 
@@ -21,7 +21,7 @@ export function ClickDemoWithSuggestions({
 					<div className="text-2xl font-bold text-foreground">{counter}</div>
 				</div>
 				<div className="flex gap-2">
-					<Mark
+					<Marker
 						id="click_demo_decrement"
 						label="Decrement Button"
 						intent="Decreases the counter by 1"
@@ -33,8 +33,8 @@ export function ClickDemoWithSuggestions({
 						>
 							−
 						</button>
-					</Mark>
-					<Mark
+					</Marker>
+					<Marker
 						id="click_demo_increment"
 						label="Increment Button"
 						intent="Increases the counter by 1"
@@ -46,7 +46,7 @@ export function ClickDemoWithSuggestions({
 						>
 							+
 						</button>
-					</Mark>
+					</Marker>
 				</div>
 			</div>
 			<div className="flex items-center justify-between p-4 rounded-xl bg-muted/30 border border-border/50">
@@ -58,7 +58,7 @@ export function ClickDemoWithSuggestions({
 						{isActive ? "Active" : "Inactive"}
 					</div>
 				</div>
-				<Mark
+				<Marker
 					id="click_demo_toggle"
 					label="Toggle Status"
 					intent="Toggles the active status"
@@ -74,7 +74,7 @@ export function ClickDemoWithSuggestions({
 					>
 						{isActive ? "Deactivate" : "Activate"}
 					</button>
-				</Mark>
+				</Marker>
 			</div>
 			<SuggestionSection
 				suggestions={[

@@ -1,12 +1,12 @@
 export const demoCodeExamples = {
-	navigation: `import { Mark } from "@ui4ai/react";
+	navigation: `import { Marker } from "@ui4ai/react";
 import { useNavigate } from "react-router-dom";
 
 function NavigationDemo() {
   const navigate = useNavigate();
 
   return (
-    <Mark
+    <Marker
       id="nav_route_billing"
       label="Billing Route"
       intent="Navigate to Billing page"
@@ -14,15 +14,15 @@ function NavigationDemo() {
       <a href="/billing" onClick={() => navigate("/billing")}>
         Billing
       </a>
-    </Mark>
+    </Marker>
   );
 }`,
 
-	highlight: `import { Mark } from "@ui4ai/react";
+	highlight: `import { Marker } from "@ui4ai/react";
 
 function HighlightDemo() {
   return (
-    <Mark
+    <Marker
       id="highlight_demo_badge"
       label="Feature Badge"
       intent="A badge to highlight"
@@ -30,18 +30,18 @@ function HighlightDemo() {
       <div className="badge">
         ✨ Feature
       </div>
-    </Mark>
+    </Marker>
   );
 }`,
 
-	click: `import { Mark } from "@ui4ai/react";
+	click: `import { Marker } from "@ui4ai/react";
 import { useState } from "react";
 
 function ClickDemo() {
   const [count, setCount] = useState(0);
 
   return (
-    <Mark
+    <Marker
       id="click_demo_increment"
       label="Increment Button"
       intent="Increases the counter by 1"
@@ -49,18 +49,18 @@ function ClickDemo() {
       <button onClick={() => setCount(c => c + 1)}>
         +
       </button>
-    </Mark>
+    </Marker>
   );
 }`,
 
-	inputFill: `import { Mark } from "@ui4ai/react";
+	inputFill: `import { Marker } from "@ui4ai/react";
 import { useState } from "react";
 
 function InputFillDemo() {
   const [email, setEmail] = useState("");
 
   return (
-    <Mark
+    <Marker
       id="fill_demo_email"
       label="Email Input"
       intent="Email address input field"
@@ -72,7 +72,7 @@ function InputFillDemo() {
         onChange={(e) => setEmail(e.target.value)}
         placeholder="Enter your email"
       />
-    </Mark>
+    </Marker>
   );
 }`,
 };

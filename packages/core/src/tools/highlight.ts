@@ -17,8 +17,26 @@ export interface HighlightOptions {
 }
 
 /**
+ * Checks if an element is currently visible in the viewport
+ */
+function isElementInView(element: Element): boolean {
+	const rect = element.getBoundingClientRect();
+	const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+	const windowWidth = window.innerWidth || document.documentElement.clientWidth;
+
+	// Check if element is partially visible (more lenient check)
+	const isPartiallyVisible =
+		rect.top < windowHeight &&
+		rect.bottom > 0 &&
+		rect.left < windowWidth &&
+		rect.right > 0;
+
+	return isPartiallyVisible;
+}
+
+/**
  * Highlights a marker element by its ID
- * Scrolls the element into view and applies visual highlighting
+ * Scrolls the element into view (only if not already in view) and applies visual highlighting
  *
  * @param markerId - The marker ID to highlight
  * @param options - Optional configuration for highlighting
@@ -43,12 +61,14 @@ export function highlightMarker(
 
 	const { onHighlight, duration = 2000 } = options;
 
-	// Scroll element into view
-	element.scrollIntoView({
-		behavior: "smooth",
-		block: "center",
-		inline: "nearest",
-	});
+	// Scroll element into view only if it's not already in view
+	if (!isElementInView(element)) {
+		element.scrollIntoView({
+			behavior: "smooth",
+			block: "center",
+			inline: "nearest",
+		});
+	}
 
 	// Call optional callback
 	if (onHighlight) {

@@ -1,5 +1,5 @@
+import type { AgentResponse, Instruction } from "@ui4ai/core";
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { AgentResponse, ToolCall } from "./types.js";
 
 export interface Message {
 	id: string;
@@ -8,13 +8,13 @@ export interface Message {
 	timestamp: number;
 }
 
-export interface UseAssistChatOptions {
+export interface UseChatOptions {
 	onSubmit: (message: string, messages: Message[]) => Promise<AgentResponse>;
-	onToolCall?: (toolCall: ToolCall) => void;
+	onInstruction?: (instruction: Instruction) => void;
 	initialMessage?: string;
 }
 
-export interface UseAssistChatReturn {
+export interface UseChatReturn {
 	messages: Message[];
 	input: string;
 	setInput: (value: string) => void;
@@ -24,11 +24,11 @@ export interface UseAssistChatReturn {
 	handleSubmit: (e: React.FormEvent) => Promise<void>;
 }
 
-export function useAssistChat({
+export function useChat({
 	onSubmit,
-	onToolCall,
+	onInstruction,
 	initialMessage = "Hi! I'm your AI agent. I can help you navigate, click buttons, and highlight elements. Try saying 'go to billing' or 'click connect stripe'.",
-}: UseAssistChatOptions): UseAssistChatReturn {
+}: UseChatOptions): UseChatReturn {
 	const [messages, setMessages] = useState<Message[]>([
 		{
 			id: "welcome",
@@ -101,10 +101,10 @@ export function useAssistChat({
 						return [...prevMsgs, assistantMsg];
 					});
 
-					// Execute tool calls
-					if (response.toolCalls && onToolCall) {
-						for (const toolCall of response.toolCalls) {
-							onToolCall(toolCall);
+					// Execute instructions
+					if (response.instructions && onInstruction) {
+						for (const instruction of response.instructions) {
+							onInstruction(instruction);
 						}
 					}
 				}
@@ -136,7 +136,7 @@ export function useAssistChat({
 				processingRef.current = false;
 			}
 		},
-		[input, isProcessing, onSubmit, onToolCall],
+		[input, isProcessing, onSubmit, onInstruction],
 	);
 
 	return {

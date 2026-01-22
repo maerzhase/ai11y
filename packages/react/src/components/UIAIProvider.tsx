@@ -1,35 +1,29 @@
 import {
+	createClient,
 	getError,
 	getEvents,
 	getRoute,
 	getState,
-	getContext as getUIContextFromCore,
-	setError,
 	setState,
 	subscribe,
 	subscribeToStore,
-	track,
+	type AgentConfig,
+	type UIAIError,
+	type UIAIEvent,
+	type UIAIState,
 } from "@ui4ai/core";
 import type React from "react";
 import {
 	createContext,
 	useCallback,
-	useContext,
 	useEffect,
 	useRef,
 	useState,
 } from "react";
-import type {
-	AgentConfig,
-	UIAIContext,
-	UIAIError,
-	UIAIEvent,
-	UIAIState,
-} from "./types.js";
 
-interface UIAIProviderContextValue {
+export interface UIAIProviderContextValue {
 	// State
-	assistState: UIAIState;
+	state: UIAIState;
 	currentRoute: string;
 	lastError: UIAIError | null;
 	events: UIAIEvent[];
@@ -40,22 +34,20 @@ interface UIAIProviderContextValue {
 		children: React.ReactNode;
 		markerId: string;
 	}>;
-	// Internal: used by useAssistTools hook
 	addHighlight: (markerId: string, duration?: number) => void;
 	onNavigate?: (route: string) => void;
 
 	// Focused marker (clicked marker bubble)
 	focusedMarkerId: string | null;
 
-	// Imperative API
+	// Imperative API (from UIAIClient)
 	track: (event: string, payload?: unknown) => void;
 	reportError: (
 		error: Error,
 		meta?: { surface?: string; markerId?: string },
 	) => void;
-	// Note: Tool functions (navigate, highlight, scroll, click) are available via:
-	// - Core functions: import { navigateToRoute, highlightMarker, scrollToMarker, clickMarker } from "@ui4ai/core"
-	// - React-specific wrappers: import { useAssistTools } from "@ui4ai/react"
+	describe: () => import("@ui4ai/core").UIAIContext;
+	act: (instruction: import("@ui4ai/core").Instruction) => void;
 
 	// Panel control
 	isPanelOpen: boolean;
@@ -65,9 +57,6 @@ interface UIAIProviderContextValue {
 	clearPendingMessage: () => void;
 	pendingMessage: string | null;
 
-	// Context for agent
-	getContext: () => UIAIContext;
-
 	// Agent config
 	agentConfig: AgentConfig | null;
 }
@@ -75,14 +64,6 @@ interface UIAIProviderContextValue {
 const UIAIProviderContext = createContext<UIAIProviderContextValue | null>(
 	null,
 );
-
-export function useAssist() {
-	const context = useContext(UIAIProviderContext);
-	if (!context) {
-		throw new Error("useAssist must be used within UIAIProvider");
-	}
-	return context;
-}
 
 interface UIAIProviderProps {
 	children: React.ReactNode;
@@ -107,6 +88,13 @@ export function UIAIProvider({
 	highlightWrapper,
 	agentConfig,
 }: UIAIProviderProps) {
+	// Create client instance
+	const clientRef = useRef(
+		createClient({
+			onNavigate,
+		}),
+	);
+
 	// Initialize core store with initial state if provided
 	useEffect(() => {
 		if (Object.keys(initialState).length > 0) {
@@ -118,7 +106,7 @@ export function UIAIProvider({
 	const [currentRoute, setCurrentRoute] = useState<string>(
 		() => getRoute() || "/",
 	);
-	const [assistState, setAssistState] = useState<UIAIState>(() => {
+	const [uiState, setUIState] = useState<UIAIState>(() => {
 		const coreState = getState();
 		return coreState || {};
 	});
@@ -134,8 +122,8 @@ export function UIAIProvider({
 			(type: "route" | "state" | "error", value: unknown) => {
 				if (type === "route") {
 					setCurrentRoute((value as string) || "/");
-				} else if (type === "state") {
-					setAssistState((value as UIAIState) || {});
+			} else if (type === "state") {
+				setUIState((value as UIAIState) || {});
 				} else if (type === "error") {
 					setLastError((value as UIAIError | null) || null);
 				}
@@ -167,16 +155,8 @@ export function UIAIProvider({
 
 	const reportError = useCallback(
 		(error: Error, meta?: { surface?: string; markerId?: string }) => {
-			const assistError: UIAIError = {
-				error,
-				meta,
-				timestamp: Date.now(),
-			};
-			// Set error in core store (will trigger subscription update)
-			setError(assistError);
+			clientRef.current.reportError(error, meta);
 			setIsPanelOpen(true);
-			// Track event - events will be synced via subscription
-			track("error", { error: error.message, meta });
 		},
 		[],
 	);
@@ -211,7 +191,7 @@ export function UIAIProvider({
 	const openPanelWithMessage = useCallback((message: string) => {
 		setPendingMessage(message);
 		setIsPanelOpen(true);
-		track("panel_opened_with_message", { message });
+		clientRef.current.track("panel_opened_with_message", { message });
 	}, []);
 
 	const togglePanelForMarker = useCallback(
@@ -224,7 +204,7 @@ export function UIAIProvider({
 			if (currentFocusedId === markerId && currentPanelOpen) {
 				setIsPanelOpen(false);
 				setFocusedMarkerId(null);
-				track("panel_closed_by_marker", { markerId });
+				clientRef.current.track("panel_closed_by_marker", { markerId });
 				return;
 			}
 
@@ -232,18 +212,13 @@ export function UIAIProvider({
 			setFocusedMarkerId(markerId);
 			setPendingMessage(message);
 			setIsPanelOpen(true);
-			track("panel_opened_by_marker", { markerId, message });
+			clientRef.current.track("panel_opened_by_marker", { markerId, message });
 		},
 		[],
 	);
 
 	const clearPendingMessage = useCallback(() => {
 		setPendingMessage(null);
-	}, []);
-
-	const getContext = useCallback((): UIAIContext => {
-		// Use getContext from core - it reads from singleton and scans DOM
-		return getUIContextFromCore();
 	}, []);
 
 	// Cleanup highlights on unmount
@@ -265,7 +240,7 @@ export function UIAIProvider({
 	}, []);
 
 	const value: UIAIProviderContextValue = {
-		assistState,
+		state: uiState,
 		currentRoute,
 		lastError,
 		events,
@@ -274,15 +249,16 @@ export function UIAIProvider({
 		addHighlight,
 		onNavigate,
 		focusedMarkerId,
-		track,
+		track: clientRef.current.track.bind(clientRef.current),
 		reportError,
+		describe: clientRef.current.describe.bind(clientRef.current),
+		act: clientRef.current.act.bind(clientRef.current),
 		isPanelOpen,
 		setIsPanelOpen: handleSetIsPanelOpen,
 		openPanelWithMessage,
 		togglePanelForMarker,
 		clearPendingMessage,
 		pendingMessage,
-		getContext,
 		agentConfig: agentConfig ?? null,
 	};
 
@@ -292,3 +268,6 @@ export function UIAIProvider({
 		</UIAIProviderContext.Provider>
 	);
 }
+
+// Export context for useUIAIContext hook
+export { UIAIProviderContext };

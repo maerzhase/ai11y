@@ -1,49 +1,37 @@
 import { useEffect, useState } from "react";
 
+function getInitialTheme(): "light" | "dark" {
+	const stored = localStorage.getItem("theme");
+	if (stored === "dark" || stored === "light") {
+		return stored;
+	}
+	return window.matchMedia("(prefers-color-scheme: dark)").matches
+		? "dark"
+		: "light";
+}
+
+function applyTheme(theme: "light" | "dark") {
+	const root = document.documentElement;
+	if (theme === "dark") {
+		root.classList.add("dark");
+	} else {
+		root.classList.remove("dark");
+	}
+}
+
 export function ThemeToggle(
 	props: React.ButtonHTMLAttributes<HTMLButtonElement>,
 ) {
-	const [theme, setTheme] = useState<"light" | "dark">(() => {
-		// Check localStorage first
-		const stored = localStorage.getItem("theme");
-		if (stored === "dark" || stored === "light") {
-			return stored;
-		}
-		// Check system preference
-		if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-			return "dark";
-		}
-		return "light";
-	});
+	const [theme, setTheme] = useState<"light" | "dark">(getInitialTheme);
 
 	// Initialize theme on mount
 	useEffect(() => {
-		const root = document.documentElement;
-		const stored = localStorage.getItem("theme");
-		const initialTheme =
-			stored === "dark" || stored === "light"
-				? stored
-				: window.matchMedia("(prefers-color-scheme: dark)").matches
-					? "dark"
-					: "light";
-
-		if (initialTheme === "dark") {
-			root.classList.add("dark");
-		} else {
-			root.classList.remove("dark");
-		}
-		setTheme(initialTheme);
+		applyTheme(theme);
 	}, []);
 
 	useEffect(() => {
-		const root = document.documentElement;
-		if (theme === "dark") {
-			root.classList.add("dark");
-		} else {
-			root.classList.remove("dark");
-		}
+		applyTheme(theme);
 		localStorage.setItem("theme", theme);
-		// Dispatch custom event to sync other instances in the same tab
 		window.dispatchEvent(new CustomEvent("themechange", { detail: theme }));
 	}, [theme]);
 

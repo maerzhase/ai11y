@@ -1,4 +1,4 @@
-import { Mark } from "@ui4ai/react";
+import { Marker } from "@ui4ai/react";
 import { Field, Form, Input, Textarea } from "@ui4ai/ui";
 import { useState } from "react";
 import { SuggestionSection } from "../Shared/SuggestionSection";
@@ -19,7 +19,7 @@ export function InputFillDemoWithSuggestions({
 				The agent understands forms:
 			</div>
 			<Form>
-				<Mark
+				<Marker
 					id="fill_demo_email"
 					label="Email Input"
 					intent="Email address input field"
@@ -36,9 +36,9 @@ export function InputFillDemoWithSuggestions({
 							autoComplete="off"
 						/>
 					</Field>
-				</Mark>
+				</Marker>
 
-				<Mark
+				<Marker
 					id="fill_demo_name"
 					label="Name Input"
 					intent="Full name input field"
@@ -55,9 +55,9 @@ export function InputFillDemoWithSuggestions({
 							autoComplete="off"
 						/>
 					</Field>
-				</Mark>
+				</Marker>
 
-				<Mark
+				<Marker
 					id="fill_demo_message"
 					label="Message Textarea"
 					intent="Message textarea field"
@@ -74,9 +74,9 @@ export function InputFillDemoWithSuggestions({
 							autoComplete="off"
 						/>
 					</Field>
-				</Mark>
+				</Marker>
 
-				<Mark
+				<Marker
 					id="fill_demo_category"
 					label="Category Select"
 					intent="Category selection dropdown"
@@ -97,7 +97,7 @@ export function InputFillDemoWithSuggestions({
 							<option value="other">Other</option>
 						</select>
 					</Field>
-				</Mark>
+				</Marker>
 			</Form>
 			<SuggestionSection
 				suggestions={[
