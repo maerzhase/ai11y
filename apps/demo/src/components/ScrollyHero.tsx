@@ -2,13 +2,13 @@ import {
 	type AgentAdapterConfig,
 	type LLMAgentConfig,
 	plan,
-} from "@ui4ai/core";
+} from "@ai11y/core";
 import {
 	Marker,
 	type Instruction,
-	useUIAIContext,
+	useAi11yContext,
 	useChat,
-} from "@ui4ai/react";
+} from "@ai11y/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useContextDrawer } from "../context/ContextDrawerContext";
 import { ThemeToggle } from "./Shared/ThemeToggle";
@@ -19,7 +19,7 @@ interface ScrollyHeroProps {
 }
 
 export function ScrollyHero({ onSuggestionReady }: ScrollyHeroProps = {}) {
-	const { describe, act, track, agentConfig, addHighlight } = useUIAIContext();
+	const { describe, act, track, agentConfig, addHighlight } = useAi11yContext();
 	const { isOpen: isContextOpen, setIsOpen: setContextOpen } = useContextDrawer();
 	const [isCompact, setIsCompact] = useState(() => {
 		// Initialize based on current scroll position
@@ -157,14 +157,14 @@ export function ScrollyHero({ onSuggestionReady }: ScrollyHeroProps = {}) {
 						{!isContextOpen && (
 							<Marker
 								id="context_panel_toggle"
-								label="ui4ai Context Toggle"
-								intent="Open the ui4ai Context to view events, markers, and UI context"
+								label="ai11y Context Toggle"
+								intent="Open the ai11y Context to view events, markers, and UI context"
 							>
 								<button
 									type="button"
 									onClick={() => setContextOpen(true)}
 									className="inline-flex items-center gap-2 px-3 py-2 rounded-md border border-border bg-background hover:bg-accent hover:text-accent-foreground transition-colors text-sm font-medium shadow-sm"
-									aria-label="Open ui4ai Context"
+									aria-label="Open ai11y Context"
 								>
 									<svg
 										className="h-4 w-4"
@@ -202,7 +202,7 @@ export function ScrollyHero({ onSuggestionReady }: ScrollyHeroProps = {}) {
 					<div className="max-w-screen-xl mx-auto px-4 py-3 flex items-center justify-between min-h-[57px]">
 						<div className="flex items-center gap-3">
 							<h1 className="text-lg font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-								ui4ai
+								ai11y
 							</h1>
 							<span className="text-xs text-muted-foreground hidden sm:block">
 								A semantic UI context layer for AI agents
@@ -227,11 +227,11 @@ export function ScrollyHero({ onSuggestionReady }: ScrollyHeroProps = {}) {
 							{/* Title */}
 							<Marker
 								id="hero_title"
-								label="ui4ai"
+								label="ai11y"
 								intent="The main hero title - A semantic UI context layer for AI agents"
 							>
 								<h1 className="text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent tracking-tight text-center">
-									ui4ai
+									ai11y
 								</h1>
 							</Marker>
 

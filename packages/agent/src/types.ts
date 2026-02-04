@@ -7,8 +7,8 @@ export type {
 	Instruction,
 	ToolDefinition,
 	ToolExecutor,
-	UIAIContext,
-} from "@ui4ai/core";
+	Ai11yContext,
+} from "@ai11y/core";
 
 /**
  * Server configuration

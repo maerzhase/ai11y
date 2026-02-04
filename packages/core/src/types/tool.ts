@@ -1,4 +1,4 @@
-import type { UIAIContext } from "./context.js";
+import type { Ai11yContext } from "./context.js";
 
 /**
  * Tool definition for extensibility
@@ -26,5 +26,5 @@ export interface ToolDefinition {
  */
 export type ToolExecutor = (
 	args: Record<string, unknown>,
-	context: UIAIContext,
+	context: Ai11yContext,
 ) => Promise<unknown> | unknown;

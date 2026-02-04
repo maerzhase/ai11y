@@ -8,16 +8,16 @@ import {
 } from "./tools/index.js";
 import { setError, track as trackToStore } from "./store.js";
 import type { Instruction } from "./types/instruction.js";
-import type { UIAIContext, UIAIError } from "./types/context.js";
+import type { Ai11yContext, Ai11yError } from "./types/context.js";
 
 /**
- * Client interface for interacting with the UI AI system
+ * Client interface for interacting with the AI accessibility system
  */
-export interface UIAIClient {
+export interface Ai11yClient {
 	/**
 	 * Describes the current UI context (markers, route, state, errors)
 	 */
-	describe(): UIAIContext;
+	describe(): Ai11yContext;
 
 	/**
 	 * Executes an instruction on the UI
@@ -43,10 +43,10 @@ interface CreateClientOptions {
 }
 
 /**
- * Creates a new UI AI client instance
+ * Creates a new AI accessibility client instance
  *
  * @param options - Optional configuration
- * @returns A UIAIClient instance
+ * @returns An Ai11yClient instance
  *
  * @example
  * ```ts
@@ -55,11 +55,11 @@ interface CreateClientOptions {
  * ctx.act({ action: "click", id: "save_button" })
  * ```
  */
-export function createClient(options?: CreateClientOptions): UIAIClient {
+export function createClient(options?: CreateClientOptions): Ai11yClient {
 	const { onNavigate } = options || {};
 
 	return {
-		describe(): UIAIContext {
+		describe(): Ai11yContext {
 			return getContext();
 		},
 
@@ -95,7 +95,7 @@ export function createClient(options?: CreateClientOptions): UIAIClient {
 			error: Error,
 			meta?: { surface?: string; markerId?: string },
 		): void {
-			const assistError: UIAIError = {
+			const assistError: Ai11yError = {
 				error,
 				meta,
 				timestamp: Date.now(),

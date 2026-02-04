@@ -1,6 +1,6 @@
 import { getMarkers } from "./marker.js";
 import { getError, getRoute, getState } from "./store.js";
-import type { UIAIContext } from "./types/index.js";
+import type { Ai11yContext } from "./types/index.js";
 import { getAllMarkersSelector, getMarkerId } from "./util/attributes.js";
 
 /**
@@ -57,22 +57,22 @@ function getInViewMarkerIds(root?: Element): string[] {
 }
 
 /**
- * Composes a complete UIAIContext from singleton state and DOM markers
+ * Composes a complete Ai11yContext from singleton state and DOM markers
  *
  * @param root - Optional DOM root element to scan for markers (defaults to document.body)
- * @returns A complete UIAIContext object with markers from DOM and state from singleton
+ * @returns A complete Ai11yContext object with markers from DOM and state from singleton
  *
  * @example
  * ```ts
- * import { setRoute, setState, getContext } from '@ui4ai/core';
+ * import { setRoute, setState, getContext } from '@ai11y/core';
  *
  * setRoute('/billing');
  * setState({ userId: '123' });
  * const context = getContext();
  * ```
  */
-export function getContext(root?: Element): UIAIContext {
-	const context: UIAIContext = {
+export function getContext(root?: Element): Ai11yContext {
+	const context: Ai11yContext = {
 		markers: getMarkers(root),
 		inViewMarkerIds: getInViewMarkerIds(root),
 	};

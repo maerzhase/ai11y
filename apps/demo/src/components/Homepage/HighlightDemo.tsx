@@ -1,4 +1,4 @@
-import { Marker } from "@ui4ai/react";
+import { Marker } from "@ai11y/react";
 import { SuggestionSection } from "../Shared/SuggestionSection";
 
 export function HighlightDemoWithSuggestions({

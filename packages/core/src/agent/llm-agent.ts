@@ -1,5 +1,5 @@
 import type { AgentResponse, ConversationMessage } from "../types/agent.js";
-import type { UIAIContext } from "../types/context.js";
+import type { Ai11yContext } from "../types/context.js";
 import type { LLMAgentConfig } from "./types.js";
 
 /**
@@ -8,7 +8,7 @@ import type { LLMAgentConfig } from "./types.js";
  */
 export async function runLLMAgent(
 	input: string,
-	context: UIAIContext,
+	context: Ai11yContext,
 	config: LLMAgentConfig,
 	messages?: ConversationMessage[],
 ): Promise<AgentResponse> {

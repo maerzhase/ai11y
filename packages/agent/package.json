@@ -1,5 +1,5 @@
 {
-	"name": "@ui4ai/agent",
+	"name": "@ai11y/agent",
 	"version": "0.0.0",
 	"type": "module",
 	"main": "./dist/index.mjs",
@@ -19,7 +19,7 @@
 		"watch": "tsdown --watch"
 	},
 	"dependencies": {
-		"@ui4ai/core": "workspace:*",
+		"@ai11y/core": "workspace:*",
 		"@langchain/core": "1.1.7",
 		"@langchain/openai": "1.2.0",
 		"zod": "4.2.1"

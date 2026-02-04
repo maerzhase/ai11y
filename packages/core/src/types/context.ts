@@ -1,16 +1,16 @@
 import type { Marker } from "../marker.js";
 
 /**
- * Application state for UI-to-AI context binding
+ * Application state for AI accessibility context binding
  */
-export interface UIAIState {
+export interface Ai11yState {
 	[key: string]: unknown;
 }
 
 /**
- * Error information for UI-to-AI context binding
+ * Error information for AI accessibility context binding
  */
-export interface UIAIError {
+export interface Ai11yError {
 	error: Error;
 	meta?: {
 		surface?: string;
@@ -20,9 +20,9 @@ export interface UIAIError {
 }
 
 /**
- * Event information for UI-to-AI context binding
+ * Event information for AI accessibility context binding
  */
-export interface UIAIEvent {
+export interface Ai11yEvent {
 	type: string;
 	payload?: unknown;
 	timestamp: number;
@@ -32,10 +32,10 @@ export interface UIAIEvent {
  * Context information available to the agent
  * Contains current application state, route, errors, and available UI markers
  */
-export interface UIAIContext {
+export interface Ai11yContext {
 	markers: Marker[];
 	inViewMarkerIds?: string[];
 	route?: string;
-	state?: UIAIState;
-	error?: UIAIError | null;
+	state?: Ai11yState;
+	error?: Ai11yError | null;
 }

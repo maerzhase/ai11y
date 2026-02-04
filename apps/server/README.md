@@ -1,6 +1,6 @@
-# ui4ai Server App
+# ai11y Server App
 
-Example server application using the `@ui4ai/server` package.
+Example server application using the `@ai11y/agent` package.
 
 A semantic UI context layer for AI agents.
 
@@ -37,12 +37,12 @@ export OPENAI_API_KEY=your-api-key-here
 pnpm dev
 
 # Or from monorepo root
-pnpm --filter ui4ai-server-app dev
+pnpm --filter ai11y-server-app dev
 ```
 
 The server will start on `http://localhost:3000` (or the port specified in `PORT` env var) with the following endpoints:
-- `POST /ui4ai/agent` - Main agent endpoint
-- `GET /ui4ai/health` - Health check endpoint
+- `POST /ai11y/agent` - Main agent endpoint
+- `GET /ai11y/health` - Health check endpoint
 
 **CORS:** The server has CORS enabled to allow requests from localhost origins (for development). In production, you should configure specific allowed origins.
 

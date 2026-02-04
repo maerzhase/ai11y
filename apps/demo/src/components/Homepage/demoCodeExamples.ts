@@ -1,5 +1,5 @@
 export const demoCodeExamples = {
-	navigation: `import { Marker } from "@ui4ai/react";
+	navigation: `import { Marker } from "@ai11y/react";
 import { useNavigate } from "react-router-dom";
 
 function NavigationDemo() {
@@ -18,7 +18,7 @@ function NavigationDemo() {
   );
 }`,
 
-	highlight: `import { Marker } from "@ui4ai/react";
+	highlight: `import { Marker } from "@ai11y/react";
 
 function HighlightDemo() {
   return (
@@ -34,7 +34,7 @@ function HighlightDemo() {
   );
 }`,
 
-	click: `import { Marker } from "@ui4ai/react";
+	click: `import { Marker } from "@ai11y/react";
 import { useState } from "react";
 
 function ClickDemo() {
@@ -53,7 +53,7 @@ function ClickDemo() {
   );
 }`,
 
-	inputFill: `import { Marker } from "@ui4ai/react";
+	inputFill: `import { Marker } from "@ai11y/react";
 import { useState } from "react";
 
 function InputFillDemo() {

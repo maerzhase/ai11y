@@ -1,7 +1,7 @@
 /**
- * ui4ai Server
+ * ai11y Server
  *
- * Server-side agent implementation for ui4ai.
+ * Server-side agent implementation for ai11y.
  * Handles LLM API calls securely on the server using LangChain.
  */
 
@@ -15,5 +15,5 @@ export type {
 	ServerConfig,
 	ToolDefinition,
 	ToolExecutor,
-	UIAIContext,
+	Ai11yContext,
 } from "./types.js";

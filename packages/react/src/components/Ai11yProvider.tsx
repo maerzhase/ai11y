@@ -8,10 +8,10 @@ import {
 	subscribe,
 	subscribeToStore,
 	type AgentConfig,
-	type UIAIError,
-	type UIAIEvent,
-	type UIAIState,
-} from "@ui4ai/core";
+	type Ai11yError,
+	type Ai11yEvent,
+	type Ai11yState,
+} from "@ai11y/core";
 import type React from "react";
 import {
 	createContext,
@@ -21,12 +21,12 @@ import {
 	useState,
 } from "react";
 
-export interface UIAIProviderContextValue {
+export interface Ai11yProviderContextValue {
 	// State
-	state: UIAIState;
+	state: Ai11yState;
 	currentRoute: string;
-	lastError: UIAIError | null;
-	events: UIAIEvent[];
+	lastError: Ai11yError | null;
+	events: Ai11yEvent[];
 
 	// Highlight state
 	highlightedMarkers: Set<string>;
@@ -40,14 +40,14 @@ export interface UIAIProviderContextValue {
 	// Focused marker (clicked marker bubble)
 	focusedMarkerId: string | null;
 
-	// Imperative API (from UIAIClient)
+	// Imperative API (from Ai11yClient)
 	track: (event: string, payload?: unknown) => void;
 	reportError: (
 		error: Error,
 		meta?: { surface?: string; markerId?: string },
 	) => void;
-	describe: () => import("@ui4ai/core").UIAIContext;
-	act: (instruction: import("@ui4ai/core").Instruction) => void;
+	describe: () => import("@ai11y/core").Ai11yContext;
+	act: (instruction: import("@ai11y/core").Instruction) => void;
 
 	// Panel control
 	isPanelOpen: boolean;
@@ -61,18 +61,18 @@ export interface UIAIProviderContextValue {
 	agentConfig: AgentConfig | null;
 }
 
-const UIAIProviderContext = createContext<UIAIProviderContextValue | null>(
+const Ai11yProviderContext = createContext<Ai11yProviderContextValue | null>(
 	null,
 );
 
-interface UIAIProviderProps {
+interface Ai11yProviderProps {
 	children: React.ReactNode;
-	initialState?: UIAIState;
+	initialState?: Ai11yState;
 	onNavigate?: (route: string) => void;
 	/**
 	 * Component used to wrap highlighted elements.
 	 * Receives `{ children, markerId }` as props.
-	 * For side effects (analytics, logging), use the `onHighlight` option in `highlightMarker()` from `@ui4ai/core`.
+	 * For side effects (analytics, logging), use the `onHighlight` option in `highlightMarker()` from `@ai11y/core`.
 	 */
 	highlightWrapper?: React.ComponentType<{
 		children: React.ReactNode;
@@ -81,13 +81,13 @@ interface UIAIProviderProps {
 	agentConfig?: AgentConfig;
 }
 
-export function UIAIProvider({
+export function Ai11yProvider({
 	children,
 	initialState = {},
 	onNavigate,
 	highlightWrapper,
 	agentConfig,
-}: UIAIProviderProps) {
+}: Ai11yProviderProps) {
 	// Create client instance
 	const clientRef = useRef(
 		createClient({
@@ -106,15 +106,15 @@ export function UIAIProvider({
 	const [currentRoute, setCurrentRoute] = useState<string>(
 		() => getRoute() || "/",
 	);
-	const [uiState, setUIState] = useState<UIAIState>(() => {
+	const [uiState, setUIState] = useState<Ai11yState>(() => {
 		const coreState = getState();
 		return coreState || {};
 	});
-	const [lastError, setLastError] = useState<UIAIError | null>(() => {
+	const [lastError, setLastError] = useState<Ai11yError | null>(() => {
 		const coreError = getError();
 		return coreError || null;
 	});
-	const [events, setEvents] = useState<UIAIEvent[]>(() => getEvents());
+	const [events, setEvents] = useState<Ai11yEvent[]>(() => getEvents());
 
 	// Subscribe to store changes for reactivity
 	useEffect(() => {
@@ -123,9 +123,9 @@ export function UIAIProvider({
 				if (type === "route") {
 					setCurrentRoute((value as string) || "/");
 			} else if (type === "state") {
-				setUIState((value as UIAIState) || {});
+				setUIState((value as Ai11yState) || {});
 				} else if (type === "error") {
-					setLastError((value as UIAIError | null) || null);
+					setLastError((value as Ai11yError | null) || null);
 				}
 			},
 		);
@@ -239,7 +239,7 @@ export function UIAIProvider({
 		}
 	}, []);
 
-	const value: UIAIProviderContextValue = {
+	const value: Ai11yProviderContextValue = {
 		state: uiState,
 		currentRoute,
 		lastError,
@@ -263,11 +263,11 @@ export function UIAIProvider({
 	};
 
 	return (
-		<UIAIProviderContext.Provider value={value}>
+		<Ai11yProviderContext.Provider value={value}>
 			{children}
-		</UIAIProviderContext.Provider>
+		</Ai11yProviderContext.Provider>
 	);
 }
 
-// Export context for useUIAIContext hook
-export { UIAIProviderContext };
+// Export context for useAi11yContext hook
+export { Ai11yProviderContext };

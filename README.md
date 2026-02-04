@@ -1,4 +1,4 @@
-# ui4ai - A semantic UI context layer for AI agents
+# ai11y - A semantic UI context layer for AI agents
 
 A minimal but powerful SDK that provides semantic UI context for AI agents. The agent can understand annotated UI elements ("markers"), react to runtime errors, and navigate/interact with your app based on natural language commands.
 
@@ -20,9 +20,9 @@ The SDK consists of:
 
 ## Core Concepts
 
-### 1. UIAIProvider
+### 1. Ai11yProvider
 
-The `UIAIProvider` is the central context provider that maintains:
+The `Ai11yProvider` is the central context provider that maintains:
 
 - **Marker Registry**: A map of `markerId → metadata + DOM ref` for all marked elements
 - **Assist State**: User-defined JSON state that can be accessed by the agent
@@ -30,7 +30,7 @@ The `UIAIProvider` is the central context provider that maintains:
 - **Imperative API**: Methods exposed via context:
   - `track(event, payload?)` - Track custom events
   - `reportError(error, meta?)` - Report errors (auto-opens panel)
-- **Tool Functions**: Available from `@ui4ai/core`:
+- **Tool Functions**: Available from `@ai11y/core`:
   - `navigateToRoute(route)` - Navigate to a route
   - `highlightMarker(markerId, options?)` - Visually highlight an element
   - `scrollToMarker(markerId)` - Scroll to a marker element
@@ -95,7 +95,7 @@ The SDK includes server-side LLM integration with function calling. The agent ru
 If no LLM configuration is provided, the SDK falls back to a **rule-based local agent** that parses commands using pattern matching:
 
 ```typescript
-function runAgent(input: string, context: UIAIContext): AgentResponse
+function runAgent(input: string, context: Ai11yContext): AgentResponse
 ```
 
 **Supported Commands:**
@@ -144,14 +144,14 @@ When an error is reported:
 #### With Rule-Based Agent (Default)
 
 ```tsx
-import { UIAIProvider, AssistPanel, Mark } from "@ui4ai/react";
+import { Ai11yProvider, AssistPanel, Mark } from "@ai11y/react";
 
 function App() {
   return (
-    <UIAIProvider onNavigate={(route) => navigate(route)}>
+    <Ai11yProvider onNavigate={(route) => navigate(route)}>
       <YourApp />
       <AssistPanel />
-    </UIAIProvider>
+    </Ai11yProvider>
   );
 }
 ```
@@ -162,7 +162,7 @@ function App() {
 
 ```bash
 # Install the server package
-pnpm add @ui4ai/server
+pnpm add @ai11y/agent
 
 # Set your API key in a .env file (recommended)
 # Create a .env file in your server directory:
@@ -174,7 +174,7 @@ echo "OPENAI_API_KEY=your-api-key-here" > .env
 ```ts
 // server.ts
 import Fastify from 'fastify';
-import { ui4aiPlugin, type ServerConfig } from '@ui4ai/server/fastify';
+import { ai11yPlugin, type ServerConfig } from '@ai11y/agent/fastify';
 
 const apiKey = process.env.OPENAI_API_KEY;
 if (!apiKey) {
@@ -189,7 +189,7 @@ const config: ServerConfig = {
   model: 'gpt-5-nano', // Optional, defaults to gpt-5-nano
 };
 
-await fastify.register(ui4aiPlugin, {
+await fastify.register(ai11yPlugin, {
   config,
 });
 
@@ -199,21 +199,21 @@ await fastify.listen({ port: 3000 });
 **Step 3: Configure the client**
 
 ```tsx
-import { UIAIProvider, AssistPanel, Mark } from "@ui4ai/react";
+import { Ai11yProvider, AssistPanel, Mark } from "@ai11y/react";
 
 function App() {
   const agentConfig = {
-    apiEndpoint: "http://localhost:3000/ui4ai/agent",
+    apiEndpoint: "http://localhost:3000/ai11y/agent",
   };
 
   return (
-    <UIAIProvider 
+    <Ai11yProvider 
       onNavigate={(route) => navigate(route)}
       agentConfig={agentConfig}
     >
       <YourApp />
       <AssistPanel />
-    </UIAIProvider>
+    </Ai11yProvider>
   );
 }
 ```
@@ -227,7 +227,7 @@ function App() {
 ### Marking Elements
 
 ```tsx
-import { Mark, useAssist } from "@ui4ai/react";
+import { Mark, useAssist } from "@ai11y/react";
 
 function MyComponent() {
   const { reportError } = useAssist();
@@ -264,8 +264,8 @@ function MyComponent() {
 Tool functions are available directly from the core package:
 
 ```tsx
-import { navigateToRoute, highlightMarker, clickMarker } from "@ui4ai/core";
-import { useAssist } from "@ui4ai/react";
+import { navigateToRoute, highlightMarker, clickMarker } from "@ai11y/core";
+import { useAssist } from "@ai11y/react";
 
 function MyComponent() {
   const { track } = useAssist();
@@ -284,7 +284,7 @@ function MyComponent() {
 For React-specific features (like `highlightWrapper` or `onHighlight` callbacks), use the `useAssistTools()` hook:
 
 ```tsx
-import { useAssistTools } from "@ui4ai/react";
+import { useAssistTools } from "@ai11y/react";
 
 function MyComponent() {
   const { navigate, highlight, click } = useAssistTools();
@@ -322,7 +322,7 @@ pnpm install
 export OPENAI_API_KEY=your-api-key-here  # For server (required for LLM agent)
 
 # Create .env file for demo (optional, for LLM support)
-echo "VITE_UI4AI_API_ENDPOINT=http://localhost:3000/ui4ai/agent" > apps/demo/.env
+echo "VITE_AI11Y_API_ENDPOINT=http://localhost:3000/ai11y/agent" > apps/demo/.env
 
 # Run everything (frontend + backend) in one command
 pnpm dev
@@ -330,7 +330,7 @@ pnpm dev
 
 This will:
 
-- Build ui4ai packages
+- Build ai11y packages
 - Start the server on `http://localhost:3000` (if `OPENAI_API_KEY` is set)
 - Start the demo on `http://localhost:5173`
 
@@ -350,7 +350,7 @@ pnpm watch
 2. Create a `.env` file in `apps/demo/` with:
 
    ```
-   VITE_UI4AI_API_ENDPOINT=http://localhost:3000/ui4ai/agent
+   VITE_AI11Y_API_ENDPOINT=http://localhost:3000/ai11y/agent
    ```
 
    (The demo will use the rule-based agent if this is not set)

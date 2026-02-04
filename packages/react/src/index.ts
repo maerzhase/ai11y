@@ -4,16 +4,16 @@ export {
 	plan,
 	getContext,
 	type Instruction,
-	type UIAIClient,
-} from "@ui4ai/core";
+	type Ai11yClient,
+} from "@ai11y/core";
 
 // React components
 export { Marker } from "./components/Marker.js";
-export { UIAIProvider } from "./components/UIAIProvider.js";
+export { Ai11yProvider } from "./components/Ai11yProvider.js";
 export { Panel } from "./components/Panel.js";
 
 // React hooks
-export { useUIAIContext } from "./hooks/useUIAIContext.js";
+export { useAi11yContext } from "./hooks/useAi11yContext.js";
 export { useChat } from "./hooks/useChat.js";
 
 // Re-export types from core
@@ -23,8 +23,8 @@ export type {
 	AgentResponse,
 	LLMAgentConfig,
 	Marker as MarkerType,
-	UIAIContext,
-	UIAIError,
-	UIAIEvent,
-	UIAIState,
-} from "@ui4ai/core";
+	Ai11yContext,
+	Ai11yError,
+	Ai11yEvent,
+	Ai11yState,
+} from "@ai11y/core";

@@ -1,6 +1,6 @@
 import type { AgentResponse, ConversationMessage } from "../types/agent.js";
 import type { Instruction } from "../types/instruction.js";
-import type { UIAIContext } from "../types/context.js";
+import type { Ai11yContext } from "../types/context.js";
 import { runAgentAdapter } from "./agent-adapter.js";
 import type { AgentAdapterConfig } from "./types.js";
 
@@ -23,7 +23,7 @@ import type { AgentAdapterConfig } from "./types.js";
  * ```
  */
 export async function plan(
-	ui: UIAIContext,
+	ui: Ai11yContext,
 	input: string,
 	config?: AgentAdapterConfig,
 	messages?: ConversationMessage[],

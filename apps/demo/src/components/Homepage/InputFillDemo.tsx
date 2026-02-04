@@ -1,5 +1,5 @@
-import { Marker } from "@ui4ai/react";
-import { Field, Form, Input, Textarea } from "@ui4ai/ui";
+import { Marker } from "@ai11y/react";
+import { Field, Form, Input, Textarea } from "@ai11y/ui";
 import { useState } from "react";
 import { SuggestionSection } from "../Shared/SuggestionSection";
 

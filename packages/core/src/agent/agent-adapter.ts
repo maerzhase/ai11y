@@ -1,5 +1,5 @@
 import type { AgentResponse, ConversationMessage } from "../types/agent.js";
-import type { UIAIContext } from "../types/context.js";
+import type { Ai11yContext } from "../types/context.js";
 import { runLLMAgent } from "./llm-agent.js";
 import { runRuleBasedAgent } from "./rule-based-agent.js";
 import type { AgentAdapterConfig } from "./types.js";
@@ -24,7 +24,7 @@ function isLikelyOffline(): boolean {
  */
 export async function runAgentAdapter(
 	input: string,
-	context: UIAIContext,
+	context: Ai11yContext,
 	config: AgentAdapterConfig = {},
 	messages?: ConversationMessage[],
 ): Promise<AgentResponse> {

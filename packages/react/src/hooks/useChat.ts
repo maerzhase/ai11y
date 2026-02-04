@@ -1,4 +1,4 @@
-import type { AgentResponse, Instruction } from "@ui4ai/core";
+import type { AgentResponse, Instruction } from "@ai11y/core";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 export interface Message {

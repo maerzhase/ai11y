@@ -3,11 +3,11 @@ import {
 	ATTRIBUTE_INTENT,
 	ATTRIBUTE_LABEL,
 	formatMarkerId,
-} from "@ui4ai/core";
-import { MorphingBlob } from "@ui4ai/ui";
+} from "@ai11y/core";
+import { MorphingBlob } from "@ai11y/ui";
 import React, { useEffect, useLayoutEffect, useMemo, useRef } from "react";
 import { createPortal } from "react-dom";
-import { useUIAIContext } from "../hooks/useUIAIContext.js";
+import { useAi11yContext } from "../hooks/useAi11yContext.js";
 
 interface MarkerProps {
 	id: string;
@@ -67,7 +67,7 @@ export function Marker({
 		highlightWrapper,
 		togglePanelForMarker,
 		focusedMarkerId,
-	} = useUIAIContext();
+	} = useAi11yContext();
 
 	const isFocused = focusedMarkerId === id;
 	const isHighlighted = highlightedMarkers.has(id);

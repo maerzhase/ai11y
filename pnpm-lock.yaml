@@ -18,18 +18,18 @@ importers:
 
   apps/demo:
     dependencies:
+      '@ai11y/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@ai11y/react':
+        specifier: workspace:*
+        version: link:../../packages/react
+      '@ai11y/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
       '@tailwindcss/vite':
         specifier: 4.1.18
         version: 4.1.18(vite@7.3.0(@types/node@25.0.3)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.8.2))
-      '@ui4ai/core':
-        specifier: workspace:*
-        version: link:../../packages/core
-      '@ui4ai/react':
-        specifier: workspace:*
-        version: link:../../packages/react
-      '@ui4ai/ui':
-        specifier: workspace:*
-        version: link:../../packages/ui
       react:
         specifier: 19.2.3
         version: 19.2.3
@@ -67,12 +67,12 @@ importers:
 
   apps/server:
     dependencies:
+      '@ai11y/agent':
+        specifier: workspace:*
+        version: link:../../packages/agent
       '@fastify/cors':
         specifier: 11.2.0
         version: 11.2.0
-      '@ui4ai/agent':
-        specifier: workspace:*
-        version: link:../../packages/agent
       dotenv:
         specifier: 17.2.3
         version: 17.2.3
@@ -92,15 +92,15 @@ importers:
 
   packages/agent:
     dependencies:
+      '@ai11y/core':
+        specifier: workspace:*
+        version: link:../core
       '@langchain/core':
         specifier: 1.1.7
         version: 1.1.7(openai@6.15.0(zod@4.2.1))
       '@langchain/openai':
         specifier: 1.2.0
         version: 1.2.0(@langchain/core@1.1.7(openai@6.15.0(zod@4.2.1)))
-      '@ui4ai/core':
-        specifier: workspace:*
-        version: link:../core
       zod:
         specifier: 4.2.1
         version: 4.2.1
@@ -132,10 +132,10 @@ importers:
 
   packages/react:
     dependencies:
-      '@ui4ai/core':
+      '@ai11y/core':
         specifier: workspace:*
         version: link:../core
-      '@ui4ai/ui':
+      '@ai11y/ui':
         specifier: workspace:*
         version: link:../ui
     devDependencies:

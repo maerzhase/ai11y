@@ -1,13 +1,13 @@
 import { notify } from "./events.js";
-import type { UIAIError, UIAIEvent, UIAIState } from "./types/index.js";
+import type { Ai11yError, Ai11yEvent, Ai11yState } from "./types/index.js";
 
 /**
  * Module-level singleton state for UI context
  */
 let route: string | undefined;
-let state: UIAIState | undefined;
-let error: UIAIError | null | undefined;
-let events: UIAIEvent[] = [];
+let state: Ai11yState | undefined;
+let error: Ai11yError | null | undefined;
+let events: Ai11yEvent[] = [];
 
 /**
  * Store change listener type
@@ -57,7 +57,7 @@ export function getRoute(): string | undefined {
 /**
  * Set the current application state
  */
-export function setState(newState: UIAIState | undefined): void {
+export function setState(newState: Ai11yState | undefined): void {
 	state = newState;
 	notifyStoreChange("state", newState);
 }
@@ -65,14 +65,14 @@ export function setState(newState: UIAIState | undefined): void {
 /**
  * Get the current application state
  */
-export function getState(): UIAIState | undefined {
+export function getState(): Ai11yState | undefined {
 	return state;
 }
 
 /**
  * Set the current error
  */
-export function setError(newError: UIAIError | null | undefined): void {
+export function setError(newError: Ai11yError | null | undefined): void {
 	error = newError;
 	notifyStoreChange("error", newError);
 }
@@ -80,7 +80,7 @@ export function setError(newError: UIAIError | null | undefined): void {
 /**
  * Get the current error
  */
-export function getError(): UIAIError | null | undefined {
+export function getError(): Ai11yError | null | undefined {
 	return error;
 }
 
@@ -103,7 +103,7 @@ export function track(event: string, payload?: unknown): void {
 /**
  * Get all tracked events
  */
-export function getEvents(): UIAIEvent[] {
+export function getEvents(): Ai11yEvent[] {
 	return events;
 }
 

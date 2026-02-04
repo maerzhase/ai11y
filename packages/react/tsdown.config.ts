@@ -11,7 +11,7 @@ export default defineConfig({
 		"react",
 		"react-dom",
 		"react/jsx-runtime",
-		"@ui4ai/ui",
-		"@ui4ai/core",
+		"@ai11y/ui",
+		"@ai11y/core",
 	],
 });

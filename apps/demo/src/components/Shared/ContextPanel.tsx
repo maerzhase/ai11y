@@ -1,4 +1,4 @@
-import { useUIAIContext } from "@ui4ai/react";
+import { useAi11yContext } from "@ai11y/react";
 import { useEffect, useState } from "react";
 
 interface ContextPanelProps {
@@ -8,7 +8,7 @@ interface ContextPanelProps {
 
 export function ContextPanel({ isOpen, onOpenChange }: ContextPanelProps) {
 	const { events, describe, currentRoute, state, lastError } =
-		useUIAIContext();
+		useAi11yContext();
 	const [context, setContext] = useState(() => describe());
 
 	// Update context periodically and when route/state changes
@@ -58,12 +58,12 @@ export function ContextPanel({ isOpen, onOpenChange }: ContextPanelProps) {
 			>
 				{/* Header */}
 				<div className="flex items-center justify-between px-4 py-3 border-b border-border min-h-[57px]">
-					<h2 className="text-sm font-semibold text-foreground">ui4ai Context</h2>
+					<h2 className="text-sm font-semibold text-foreground">ai11y Context</h2>
 					<button
 						type="button"
 						onClick={() => onOpenChange(false)}
 						className="p-1 rounded hover:bg-accent transition-colors"
-						aria-label="Close ui4ai Context"
+						aria-label="Close ai11y Context"
 					>
 						<svg
 							className="h-4 w-4 text-muted-foreground"

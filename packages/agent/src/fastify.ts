@@ -11,22 +11,22 @@ import {
 } from "./tool-registry.js";
 import type { AgentRequest, ServerConfig } from "./types.js";
 
-interface FastifyUi4aiOptions extends FastifyPluginOptions {
+interface FastifyAi11yOptions extends FastifyPluginOptions {
 	config: ServerConfig;
 	toolRegistry?: ToolRegistry;
 }
 
 /**
- * Fastify plugin for ui4ai server
+ * Fastify plugin for ai11y server
  *
  * @example
  * ```ts
  * import Fastify from 'fastify';
- * import { ui4aiPlugin } from '@ui4ai/agent/fastify';
+ * import { ai11yPlugin } from '@ai11y/agent/fastify';
  *
  * const fastify = Fastify();
  *
- * await fastify.register(ui4aiPlugin, {
+ * await fastify.register(ai11yPlugin, {
  *   config: {
  *     provider: 'openai',
  *     apiKey: process.env.OPENAI_API_KEY!,
@@ -37,9 +37,9 @@ interface FastifyUi4aiOptions extends FastifyPluginOptions {
  * await fastify.listen({ port: 3000 });
  * ```
  */
-export async function ui4aiPlugin(
+export async function ai11yPlugin(
 	fastify: FastifyInstance,
-	options: FastifyUi4aiOptions,
+	options: FastifyAi11yOptions,
 ) {
 	const { config, toolRegistry = createDefaultToolRegistry() } = options;
 
@@ -49,11 +49,11 @@ export async function ui4aiPlugin(
 	}
 
 	/**
-	 * POST /ui4ai/agent
+	 * POST /ai11y/agent
 	 * Main endpoint for agent requests
 	 */
 	fastify.post<{ Body: AgentRequest }>(
-		"/ui4ai/agent",
+		"/ai11y/agent",
 		async (
 			request: FastifyRequest<{ Body: AgentRequest }>,
 			reply: FastifyReply,
@@ -72,10 +72,10 @@ export async function ui4aiPlugin(
 	);
 
 	/**
-	 * GET /ui4ai/health
+	 * GET /ai11y/health
 	 * Health check endpoint
 	 */
-	fastify.get("/ui4ai/health", async (_request, reply) => {
+	fastify.get("/ai11y/health", async (_request, reply) => {
 		return reply.send({ status: "ok" });
 	});
 }

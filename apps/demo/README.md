@@ -1,6 +1,6 @@
-# Demo - ui4ai Demo App
+# Demo - ai11y Demo App
 
-This is a demo application showcasing ui4ai - a semantic UI context layer for AI agents.
+This is a demo application showcasing ai11y - a semantic UI context layer for AI agents.
 
 ## Setup
 
@@ -16,15 +16,15 @@ pnpm install
 # Create apps/server/.env with your OpenAI API key
 echo "OPENAI_API_KEY=your-api-key-here" > apps/server/.env
 
-# Optionally configure demo endpoint (defaults to http://localhost:3000/ui4ai/agent)
-echo "VITE_UI4AI_API_ENDPOINT=http://localhost:3000/ui4ai/agent" > apps/demo/.env
+# Optionally configure demo endpoint (defaults to http://localhost:3000/ai11y/agent)
+echo "VITE_AI11Y_API_ENDPOINT=http://localhost:3000/ai11y/agent" > apps/demo/.env
 
 # Run everything (builds packages, starts server + demo)
 pnpm dev
 ```
 
 This will:
-- Build ui4ai packages
+- Build ai11y packages
 - Start the server on `http://localhost:3000` (if `OPENAI_API_KEY` is set in `apps/server/.env`)
 - Start the demo on `http://localhost:5173`
 - The demo will automatically connect to the server endpoint
@@ -45,18 +45,18 @@ If you want to run things separately:
    ```
    Then run:
    ```bash
-   pnpm --filter ui4ai-server-app dev
+   pnpm --filter ai11y-server-app dev
    ```
 
 3. **Configure demo (optional - for LLM):**
    Create a `.env` file in this directory:
    ```bash
-   VITE_UI4AI_API_ENDPOINT=http://localhost:3000/ui4ai/agent
+   VITE_AI11Y_API_ENDPOINT=http://localhost:3000/ai11y/agent
    ```
 
 4. **Run the demo:**
    ```bash
-   pnpm --filter ui4ai-demo dev
+   pnpm --filter ai11y-demo dev
    ```
 
 **Important:** 

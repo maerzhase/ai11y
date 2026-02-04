@@ -7,7 +7,7 @@
  */
 export interface LLMAgentConfig {
 	/**
-	 * API endpoint URL for the agent server (e.g., "http://localhost:3000/ui4ai/agent")
+	 * API endpoint URL for the agent server (e.g., "http://localhost:3000/ai11y/agent")
 	 */
 	apiEndpoint: string;
 }

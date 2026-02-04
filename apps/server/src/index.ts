@@ -1,6 +1,6 @@
 import "dotenv/config";
 import cors from "@fastify/cors";
-import { type ServerConfig, ui4aiPlugin } from "@ui4ai/agent/fastify";
+import { type ServerConfig, ai11yPlugin } from "@ai11y/agent/fastify";
 import Fastify from "fastify";
 
 const apiKey = process.env.OPENAI_API_KEY;
@@ -41,8 +41,8 @@ async function start() {
 		baseURL: process.env.OPENAI_BASE_URL,
 	};
 
-	// register the ui4ai plugin
-	await fastify.register(ui4aiPlugin, {
+	// register the ai11y plugin
+	await fastify.register(ai11yPlugin, {
 		config,
 	});
 
@@ -50,7 +50,7 @@ async function start() {
 		const port = Number(process.env.PORT) || 3000;
 		await fastify.listen({ port, host: "0.0.0.0" });
 		console.log(`🚀 Server listening on http://localhost:${port}`);
-		console.log(`📡 Agent endpoint: http://localhost:${port}/ui4ai/agent`);
+		console.log(`📡 Agent endpoint: http://localhost:${port}/ai11y/agent`);
 
 		// log CORS configuration
 		const corsInfo = isProduction

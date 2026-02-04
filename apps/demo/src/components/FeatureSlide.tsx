@@ -1,4 +1,4 @@
-import { Marker } from "@ui4ai/react";
+import { Marker } from "@ai11y/react";
 import type { ReactNode } from "react";
 import { useInView } from "../hooks/useInView";
 import { FlipCard } from "./FlipCard";

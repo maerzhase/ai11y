@@ -1,4 +1,4 @@
-import { Chip } from "@ui4ai/ui";
+import { Chip } from "@ai11y/ui";
 
 interface SuggestionChipProps {
 	children: string;

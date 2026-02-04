@@ -1,7 +1,7 @@
 /**
- * @ui4ai/core
+ * @ai11y/core
  *
- * Core types and utilities shared across all ui4ai packages.
+ * Core types and utilities shared across all ai11y packages.
  */
 
 // Agent module
@@ -17,7 +17,7 @@ export {
 export { plan } from "./agent/plan.js";
 
 // Client API
-export { createClient, type UIAIClient } from "./client-api.js";
+export { createClient, type Ai11yClient } from "./client-api.js";
 
 export { getContext } from "./dom.js";
 export { getSubscriberCount, notify, subscribe } from "./events.js";

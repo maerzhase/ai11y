@@ -1,4 +1,4 @@
-import { type AgentConfig, UIAIProvider } from "@ui4ai/react";
+import { type AgentConfig, Ai11yProvider } from "@ai11y/react";
 import React from "react";
 import { BrowserRouter, useLocation, useNavigate } from "react-router-dom";
 import { CustomHighlightWrapper } from "./components/Shared/CustomHighlight";
@@ -18,8 +18,8 @@ function AppWithRouter() {
 	const navigate = useNavigate();
 
 	const apiEndpoint =
-		import.meta.env.VITE_UI4AI_API_ENDPOINT ||
-		"http://localhost:3000/ui4ai/agent";
+		import.meta.env.VITE_AI11Y_API_ENDPOINT ||
+		"http://localhost:3000/ai11y/agent";
 	const agentConfig: AgentConfig = {
 		apiEndpoint,
 		mode: "auto" as const,
@@ -35,7 +35,7 @@ function AppWithRouter() {
 	);
 
 	return (
-		<UIAIProvider
+		<Ai11yProvider
 			onNavigate={handleNavigate}
 			highlightWrapper={CustomHighlightWrapper}
 			agentConfig={agentConfig}
@@ -43,7 +43,7 @@ function AppWithRouter() {
 			<AppLayout>
 				<HomePage />
 			</AppLayout>
-		</UIAIProvider>
+		</Ai11yProvider>
 	);
 }
 

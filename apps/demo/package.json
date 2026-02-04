@@ -1,5 +1,5 @@
 {
-	"name": "ui4ai-demo",
+	"name": "ai11y-demo",
 	"author": "maerzhase3000",
 	"private": true,
 	"type": "module",
@@ -8,9 +8,9 @@
 		"build": "vite build"
 	},
 	"dependencies": {
-		"@ui4ai/core": "workspace:*",
-		"@ui4ai/react": "workspace:*",
-		"@ui4ai/ui": "workspace:*",
+		"@ai11y/core": "workspace:*",
+		"@ai11y/react": "workspace:*",
+		"@ai11y/ui": "workspace:*",
 		"@tailwindcss/vite": "4.1.18",
 		"react": "19.2.3",
 		"react-dom": "19.2.3",

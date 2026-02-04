@@ -1,13 +1,13 @@
-# @ui4ai/server
+# @ai11y/agent
 
-Server-side package for ui4ai that securely handles LLM API calls and provides extensible tool support.
+Server-side package for ai11y that securely handles LLM API calls and provides extensible tool support.
 
 A semantic UI context layer for AI agents.
 
 ## Installation
 
 ```bash
-pnpm add @ui4ai/server
+pnpm add @ai11y/agent
 ```
 
 ## Quick Start
@@ -16,11 +16,11 @@ pnpm add @ui4ai/server
 
 ```ts
 import Fastify from 'fastify';
-import { ui4aiPlugin } from '@ui4ai/server/fastify';
+import { ai11yPlugin } from '@ai11y/agent/fastify';
 
 const fastify = Fastify();
 
-await fastify.register(ui4aiPlugin, {
+await fastify.register(ai11yPlugin, {
   config: {
     apiKey: process.env.OPENAI_API_KEY!,
     model: 'gpt-4o-mini', // Optional, defaults to gpt-4o-mini
@@ -32,8 +32,8 @@ await fastify.listen({ port: 3000 });
 ```
 
 The plugin will register the following routes:
-- `POST /ui4ai/agent` - Main agent endpoint
-- `GET /ui4ai/health` - Health check endpoint
+- `POST /ai11y/agent` - Main agent endpoint
+- `GET /ai11y/health` - Health check endpoint
 
 **Example App:** See `apps/server/` in this monorepo for a complete example server implementation.
 
@@ -42,7 +42,7 @@ The plugin will register the following routes:
 ```ts
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
-import { ui4aiPlugin } from '@ui4ai/server/fastify';
+import { ai11yPlugin } from '@ai11y/agent/fastify';
 
 const fastify = Fastify();
 
@@ -50,7 +50,7 @@ await fastify.register(cors, {
   origin: 'http://localhost:5173', // Your frontend URL
 });
 
-await fastify.register(ui4aiPlugin, {
+await fastify.register(ai11yPlugin, {
   config: {
     apiKey: process.env.OPENAI_API_KEY!,
   }
@@ -60,8 +60,8 @@ await fastify.register(ui4aiPlugin, {
 ### Standalone Usage
 
 ```ts
-import { runAgent, createDefaultToolRegistry } from '@ui4ai/server';
-import type { AgentRequest, ServerConfig } from '@ui4ai/server';
+import { runAgent, createDefaultToolRegistry } from '@ai11y/agent';
+import type { AgentRequest, ServerConfig } from '@ai11y/agent';
 
 const config: ServerConfig = {
   apiKey: process.env.OPENAI_API_KEY!,
@@ -81,8 +81,8 @@ async function handleRequest(request: AgentRequest) {
 You can extend the agent with custom tools using the `ToolRegistry`:
 
 ```ts
-import { ui4aiPlugin, createToolRegistry } from '@ui4ai/server/fastify';
-import type { ToolDefinition, ToolExecutor, UIAIContext } from '@ui4ai/server';
+import { ai11yPlugin, createToolRegistry } from '@ai11y/agent/fastify';
+import type { ToolDefinition, ToolExecutor, Ai11yContext } from '@ai11y/agent';
 
 // Create a custom tool registry
 const registry = createToolRegistry();
@@ -111,7 +111,7 @@ registry.register(
 );
 
 // Use the custom registry with the plugin
-await fastify.register(ui4aiPlugin, {
+await fastify.register(ai11yPlugin, {
   config: {
     apiKey: process.env.OPENAI_API_KEY!,
   },
@@ -147,7 +147,7 @@ A registry for managing tools that can be called by the LLM agent.
 
 Creates a tool registry with built-in tools (navigate, click, highlight).
 
-### `ui4aiPlugin`
+### `ai11yPlugin`
 
 Fastify plugin that registers the agent endpoints.
 
@@ -172,7 +172,7 @@ interface ServerConfig {
 ```ts
 interface AgentRequest {
   input: string;
-  context: UIAIContext;
+  context: Ai11yContext;
 }
 ```
 
@@ -204,6 +204,6 @@ interface ToolDefinition {
 ```ts
 type ToolExecutor = (
   args: Record<string, unknown>,
-  context: UIAIContext,
+  context: Ai11yContext,
 ) => Promise<unknown> | unknown;
 ```

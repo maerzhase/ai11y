@@ -1,6 +1,6 @@
-# @ui4ai/core
+# @ai11y/core
 
-Core types and utilities shared across all ui4ai packages.
+Core types and utilities shared across all ai11y packages.
 
 A semantic UI context layer for AI agents.
 
@@ -38,9 +38,9 @@ src/
 - `AgentResponse` - Response from the agent with reply and tool calls
 
 ### Context Types (`types/context.ts`)
-- `UIAIContext` - Full context available to the agent
-- `UIAIState` - Application state tracking
-- `UIAIError` - Error information
+- `Ai11yContext` - Full context available to the agent
+- `Ai11yState` - Application state tracking
+- `Ai11yError` - Error information
 - `Marker` - UI element marker information
 
 ### Tool Types (`types/tool.ts`)
@@ -54,8 +54,8 @@ src/
 ## Usage
 
 ```typescript
-import type { ToolCall, AgentResponse, UIAIContext } from "@ui4ai/core";
-import { navigateToRoute, highlightMarker, clickMarker } from "@ui4ai/core";
+import type { ToolCall, AgentResponse, Ai11yContext } from "@ai11y/core";
+import { navigateToRoute, highlightMarker, clickMarker } from "@ai11y/core";
 ```
 
-All types are re-exported from the main entry point, so you can import everything from `@ui4ai/core` directly.
+All types are re-exported from the main entry point, so you can import everything from `@ai11y/core` directly.

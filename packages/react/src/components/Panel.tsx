@@ -2,10 +2,10 @@ import {
 	type AgentAdapterConfig,
 	type LLMAgentConfig,
 	plan,
-} from "@ui4ai/core";
-import { AssistPanelPopover, ChatInput, MessageList } from "@ui4ai/ui";
+} from "@ai11y/core";
+import { AssistPanelPopover, ChatInput, MessageList } from "@ai11y/ui";
 import { useEffect } from "react";
-import { useUIAIContext } from "../hooks/useUIAIContext.js";
+import { useAi11yContext } from "../hooks/useAi11yContext.js";
 import { useChat } from "../hooks/useChat.js";
 
 export function Panel() {
@@ -19,7 +19,7 @@ export function Panel() {
 		pendingMessage,
 		clearPendingMessage,
 		addHighlight,
-	} = useUIAIContext();
+	} = useAi11yContext();
 
 	const handleSubmit = async (
 		message: string,
@@ -67,7 +67,7 @@ export function Panel() {
 		};
 	};
 
-	const handleInstruction = (instruction: import("@ui4ai/core").Instruction) => {
+	const handleInstruction = (instruction: import("@ai11y/core").Instruction) => {
 		act(instruction);
 
 		// Add highlight for visual feedback only for highlight actions

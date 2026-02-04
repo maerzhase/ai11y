@@ -1,5 +1,5 @@
 import type { AgentResponse } from "../types/agent.js";
-import type { UIAIContext } from "../types/context.js";
+import type { Ai11yContext } from "../types/context.js";
 import type { Instruction } from "../types/instruction.js";
 
 /**
@@ -8,7 +8,7 @@ import type { Instruction } from "../types/instruction.js";
  */
 export function runRuleBasedAgent(
 	input: string,
-	context: UIAIContext,
+	context: Ai11yContext,
 ): AgentResponse {
 	const lowerInput = input.toLowerCase().trim();
 

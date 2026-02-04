@@ -1,5 +1,5 @@
 {
-	"name": "@ui4ai/react",
+	"name": "@ai11y/react",
 	"author": "maerzhase3000",
 	"version": "0.0.0",
 	"type": "module",
@@ -15,8 +15,8 @@
 	},
 	"sideEffects": false,
 	"dependencies": {
-		"@ui4ai/core": "workspace:*",
-		"@ui4ai/ui": "workspace:*"
+		"@ai11y/core": "workspace:*",
+		"@ai11y/ui": "workspace:*"
 	},
 	"peerDependencies": {
 		"react": "19.2.3",

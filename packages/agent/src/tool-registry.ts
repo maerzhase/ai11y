@@ -2,7 +2,7 @@ import type {
 	Instruction,
 	ToolDefinition,
 	ToolExecutor,
-	UIAIContext,
+	Ai11yContext,
 } from "./types.js";
 
 /**
@@ -53,7 +53,7 @@ export class ToolRegistry {
 	async executeToolCall(
 		toolName: string,
 		args: Record<string, unknown>,
-		context: UIAIContext,
+		context: Ai11yContext,
 	): Promise<unknown> {
 		const tool = this.tools.get(toolName);
 		if (!tool) {

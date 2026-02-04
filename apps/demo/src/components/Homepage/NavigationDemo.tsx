@@ -1,5 +1,5 @@
-import { Marker } from "@ui4ai/react";
-import { Badge } from "@ui4ai/ui";
+import { Marker } from "@ai11y/react";
+import { Badge } from "@ai11y/ui";
 import { useLocation, useNavigate } from "react-router-dom";
 import { SuggestionSection } from "../Shared/SuggestionSection";
 

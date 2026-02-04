@@ -1,4 +1,4 @@
-import type { UIAIContext } from "./context.js";
+import type { Ai11yContext } from "./context.js";
 import type { Instruction } from "./instruction.js";
 
 /**
@@ -22,7 +22,7 @@ export interface ConversationMessage {
  */
 export interface AgentRequest {
 	input: string;
-	context: UIAIContext;
+	context: Ai11yContext;
 	/**
 	 * Optional conversation history for context-aware responses
 	 */

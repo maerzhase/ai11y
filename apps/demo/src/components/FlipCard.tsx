@@ -1,4 +1,4 @@
-import { Button } from "@ui4ai/ui";
+import { Button } from "@ai11y/ui";
 import type { ReactNode } from "react";
 import { useEffect, useMemo, useState } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
