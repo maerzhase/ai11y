@@ -1,5 +1,4 @@
 import type { AgentResponse, ConversationMessage } from "../types/agent.js";
-import type { Instruction } from "../types/instruction.js";
 import type { Ai11yContext } from "../types/context.js";
 import { runAgentAdapter } from "./agent-adapter.js";
 import type { AgentAdapterConfig } from "./types.js";

@@ -27,7 +27,7 @@ export function ThemeToggle(
 	// Initialize theme on mount
 	useEffect(() => {
 		applyTheme(theme);
-	}, []);
+	}, [theme]);
 
 	useEffect(() => {
 		applyTheme(theme);

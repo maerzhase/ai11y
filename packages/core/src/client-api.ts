@@ -1,4 +1,5 @@
 import { getContext } from "./dom.js";
+import { setError, track as trackToStore } from "./store.js";
 import {
 	clickMarker,
 	fillInputMarker,
@@ -6,9 +7,8 @@ import {
 	navigateToRoute,
 	scrollToMarker,
 } from "./tools/index.js";
-import { setError, track as trackToStore } from "./store.js";
-import type { Instruction } from "./types/instruction.js";
 import type { Ai11yContext, Ai11yError } from "./types/context.js";
+import type { Instruction } from "./types/instruction.js";
 
 /**
  * Client interface for interacting with the AI accessibility system

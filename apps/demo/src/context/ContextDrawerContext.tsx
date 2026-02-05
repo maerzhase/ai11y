@@ -6,9 +6,9 @@ interface ContextDrawerContextType {
 	setIsOpen: (open: boolean) => void;
 }
 
-const ContextDrawerContext = createContext<ContextDrawerContextType | undefined>(
-	undefined,
-);
+const ContextDrawerContext = createContext<
+	ContextDrawerContextType | undefined
+>(undefined);
 
 export function ContextDrawerProvider({
 	children,
@@ -35,7 +35,9 @@ export function ContextDrawerProvider({
 export function useContextDrawer() {
 	const context = useContext(ContextDrawerContext);
 	if (context === undefined) {
-		throw new Error("useContextDrawer must be used within a ContextDrawerProvider");
+		throw new Error(
+			"useContextDrawer must be used within a ContextDrawerProvider",
+		);
 	}
 	return context;
 }

@@ -4,8 +4,8 @@ import {
 	plan,
 } from "@ai11y/core";
 import {
-	Marker,
 	type Instruction,
+	Marker,
 	useAi11yContext,
 	useChat,
 } from "@ai11y/react";
@@ -20,7 +20,8 @@ interface ScrollyHeroProps {
 
 export function ScrollyHero({ onSuggestionReady }: ScrollyHeroProps = {}) {
 	const { describe, act, track, agentConfig, addHighlight } = useAi11yContext();
-	const { isOpen: isContextOpen, setIsOpen: setContextOpen } = useContextDrawer();
+	const { isOpen: isContextOpen, setIsOpen: setContextOpen } =
+		useContextDrawer();
 	const [isCompact, setIsCompact] = useState(() => {
 		// Initialize based on current scroll position
 		const scrollY = window.scrollY;
@@ -76,14 +77,25 @@ export function ScrollyHero({ onSuggestionReady }: ScrollyHeroProps = {}) {
 					: undefined,
 		};
 
-		const response = await plan(ui, message, adapterConfig, conversationMessages);
+		const response = await plan(
+			ui,
+			message,
+			adapterConfig,
+			conversationMessages,
+		);
 
-		track("agent_message", { input: message, instructions: response.instructions });
+		track("agent_message", {
+			input: message,
+			instructions: response.instructions,
+		});
 
 		// Return response for useChat - use the agent's actual reply
 		return {
 			reply: response.reply,
-			instructions: response.instructions && response.instructions.length > 0 ? response.instructions : undefined,
+			instructions:
+				response.instructions && response.instructions.length > 0
+					? response.instructions
+					: undefined,
 		};
 	};
 
@@ -129,7 +141,7 @@ export function ScrollyHero({ onSuggestionReady }: ScrollyHeroProps = {}) {
 			setInput(suggestion);
 			inputRef.current?.focus();
 		},
-		[setInput],
+		[setInput, inputRef.current?.focus],
 	);
 
 	// Expose handler to parent

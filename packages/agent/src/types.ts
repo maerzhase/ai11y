@@ -4,10 +4,10 @@
 export type {
 	AgentRequest,
 	AgentResponse,
+	Ai11yContext,
 	Instruction,
 	ToolDefinition,
 	ToolExecutor,
-	Ai11yContext,
 } from "@ai11y/core";
 
 /**

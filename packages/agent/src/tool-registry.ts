@@ -1,8 +1,8 @@
 import type {
+	Ai11yContext,
 	Instruction,
 	ToolDefinition,
 	ToolExecutor,
-	Ai11yContext,
 } from "./types.js";
 
 /**

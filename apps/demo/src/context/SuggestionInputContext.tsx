@@ -4,9 +4,8 @@ interface SuggestionInputContextValue {
 	setSuggestion: (suggestion: string) => void;
 }
 
-const SuggestionInputContext = createContext<SuggestionInputContextValue | null>(
-	null,
-);
+const SuggestionInputContext =
+	createContext<SuggestionInputContextValue | null>(null);
 
 export function SuggestionInputProvider({
 	children,

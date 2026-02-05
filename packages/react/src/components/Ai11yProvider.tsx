@@ -1,4 +1,8 @@
 import {
+	type AgentConfig,
+	type Ai11yError,
+	type Ai11yEvent,
+	type Ai11yState,
 	createClient,
 	getError,
 	getEvents,
@@ -7,19 +11,9 @@ import {
 	setState,
 	subscribe,
 	subscribeToStore,
-	type AgentConfig,
-	type Ai11yError,
-	type Ai11yEvent,
-	type Ai11yState,
 } from "@ai11y/core";
 import type React from "react";
-import {
-	createContext,
-	useCallback,
-	useEffect,
-	useRef,
-	useState,
-} from "react";
+import { createContext, useCallback, useEffect, useRef, useState } from "react";
 
 export interface Ai11yProviderContextValue {
 	// State
@@ -122,8 +116,8 @@ export function Ai11yProvider({
 			(type: "route" | "state" | "error", value: unknown) => {
 				if (type === "route") {
 					setCurrentRoute((value as string) || "/");
-			} else if (type === "state") {
-				setUIState((value as Ai11yState) || {});
+				} else if (type === "state") {
+					setUIState((value as Ai11yState) || {});
 				} else if (type === "error") {
 					setLastError((value as Ai11yError | null) || null);
 				}

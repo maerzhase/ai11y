@@ -17,7 +17,7 @@ export {
 export { plan } from "./agent/plan.js";
 
 // Client API
-export { createClient, type Ai11yClient } from "./client-api.js";
+export { type Ai11yClient, createClient } from "./client-api.js";
 
 export { getContext } from "./dom.js";
 export { getSubscriberCount, notify, subscribe } from "./events.js";

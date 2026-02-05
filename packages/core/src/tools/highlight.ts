@@ -21,7 +21,8 @@ export interface HighlightOptions {
  */
 function isElementInView(element: Element): boolean {
 	const rect = element.getBoundingClientRect();
-	const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+	const windowHeight =
+		window.innerHeight || document.documentElement.clientHeight;
 	const windowWidth = window.innerWidth || document.documentElement.clientWidth;
 
 	// Check if element is partially visible (more lenient check)
