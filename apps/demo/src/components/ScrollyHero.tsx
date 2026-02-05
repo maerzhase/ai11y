@@ -28,20 +28,33 @@ export function ScrollyHero({ onSuggestionReady }: ScrollyHeroProps = {}) {
 	});
 	const [showMessages, setShowMessages] = useState(false);
 	const heroRef = useRef<HTMLElement>(null);
+	const [barBottom, setBarBottom] = useState<number | null>(null);
 
-	// Track scroll to switch between full and compact modes
+	// Track scroll to switch between full and compact modes, and position bar above footer when footer is in view
 	useEffect(() => {
-		const handleScroll = () => {
+		const updateBarPosition = () => {
 			const scrollY = window.scrollY;
 			const threshold = window.innerHeight * 0.6;
 			setIsCompact(scrollY > threshold);
+
+			const footer = document.getElementById("site-footer");
+			if (!footer) return;
+			const rect = footer.getBoundingClientRect();
+			const gap = 24;
+			if (rect.top < window.innerHeight) {
+				setBarBottom(window.innerHeight - rect.top + gap);
+			} else {
+				setBarBottom(null);
+			}
 		};
 
-		// Check initial scroll position
-		handleScroll();
-
-		window.addEventListener("scroll", handleScroll, { passive: true });
-		return () => window.removeEventListener("scroll", handleScroll);
+		updateBarPosition();
+		window.addEventListener("scroll", updateBarPosition, { passive: true });
+		window.addEventListener("resize", updateBarPosition);
+		return () => {
+			window.removeEventListener("scroll", updateBarPosition);
+			window.removeEventListener("resize", updateBarPosition);
+		};
 	}, []);
 
 	const handleSubmit = async (
@@ -356,9 +369,9 @@ export function ScrollyHero({ onSuggestionReady }: ScrollyHeroProps = {}) {
 				</div>
 			</section>
 
-			{/* Compact Floating Input Bar - Fixed at bottom when scrolled */}
+			{/* Compact Floating Input Bar - Fixed at bottom, sticks above footer when footer is in view */}
 			<div
-				className={`fixed bottom-6 z-50 max-w-xl px-4 transition-all duration-300 ${
+				className={`fixed z-50 max-w-xl px-4 transition-all duration-300 ${
 					isContextOpen
 						? "left-[calc(50%-12rem)] -translate-x-1/2"
 						: "left-1/2 -translate-x-1/2"
@@ -367,6 +380,9 @@ export function ScrollyHero({ onSuggestionReady }: ScrollyHeroProps = {}) {
 						? "opacity-100 translate-y-0"
 						: "opacity-0 translate-y-8 pointer-events-none"
 				}`}
+				style={{
+					bottom: barBottom !== null ? `${barBottom}px` : "1.5rem",
+				}}
 			>
 				<div className="relative rounded-2xl bg-background/95 backdrop-blur-xl border border-border/50 shadow-2xl overflow-hidden">
 					{/* Expandable messages panel */}
