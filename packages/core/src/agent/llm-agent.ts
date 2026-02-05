@@ -1,6 +1,5 @@
-import type { AgentResponse, ConversationMessage } from "../types/agent.js";
-import type { Ai11yContext } from "../types/context.js";
-import type { LLMAgentConfig } from "./types.js";
+import type { Ai11yContext } from "../context.js";
+import type { AgentResponse, ConversationMessage, LLMAgentConfig } from "./types.js";
 
 /**
  * LLM-based agent using server-side API endpoint.

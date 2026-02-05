@@ -1,4 +1,5 @@
 import type React from "react";
+import { AssistPanel } from "../components/AssistPanel";
 import { ContextPanel } from "../components/Shared/ContextPanel";
 import {
 	ContextDrawerProvider,
@@ -14,6 +15,7 @@ function AppLayoutContent({ children }: AppLayoutProps) {
 
 	return (
 		<div className="min-h-screen bg-background text-foreground transition-colors overflow-x-hidden">
+			<AssistPanel />
 			<ContextPanel isOpen={isOpen} onOpenChange={setIsOpen} />
 			<div
 				className={`min-h-screen transition-all duration-300 ease-in-out ${

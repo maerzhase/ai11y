@@ -1,6 +1,6 @@
-import type { AgentResponse } from "../types/agent.js";
-import type { Ai11yContext } from "../types/context.js";
-import type { Instruction } from "../types/instruction.js";
+import type { Ai11yContext } from "../context.js";
+import type { Instruction } from "../instruction.js";
+import type { AgentResponse } from "./types.js";
 
 /**
  * Rule-based agent that uses pattern matching for common commands.

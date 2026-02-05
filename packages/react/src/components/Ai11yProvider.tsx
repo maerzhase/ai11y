@@ -13,28 +13,14 @@ import {
 	subscribeToStore,
 } from "@ai11y/core";
 import type React from "react";
-import { createContext, useCallback, useEffect, useRef, useState } from "react";
+import { createContext, useEffect, useRef, useState } from "react";
 
 export interface Ai11yProviderContextValue {
-	// State
 	state: Ai11yState;
 	currentRoute: string;
 	lastError: Ai11yError | null;
 	events: Ai11yEvent[];
-
-	// Highlight state
-	highlightedMarkers: Set<string>;
-	highlightWrapper?: React.ComponentType<{
-		children: React.ReactNode;
-		markerId: string;
-	}>;
-	addHighlight: (markerId: string, duration?: number) => void;
 	onNavigate?: (route: string) => void;
-
-	// Focused marker (clicked marker bubble)
-	focusedMarkerId: string | null;
-
-	// Imperative API (from Ai11yClient)
 	track: (event: string, payload?: unknown) => void;
 	reportError: (
 		error: Error,
@@ -42,16 +28,6 @@ export interface Ai11yProviderContextValue {
 	) => void;
 	describe: () => import("@ai11y/core").Ai11yContext;
 	act: (instruction: import("@ai11y/core").Instruction) => void;
-
-	// Panel control
-	isPanelOpen: boolean;
-	setIsPanelOpen: (open: boolean) => void;
-	openPanelWithMessage: (message: string) => void;
-	togglePanelForMarker: (markerId: string, message: string) => void;
-	clearPendingMessage: () => void;
-	pendingMessage: string | null;
-
-	// Agent config
 	agentConfig: AgentConfig | null;
 }
 
@@ -63,15 +39,6 @@ interface Ai11yProviderProps {
 	children: React.ReactNode;
 	initialState?: Ai11yState;
 	onNavigate?: (route: string) => void;
-	/**
-	 * Component used to wrap highlighted elements.
-	 * Receives `{ children, markerId }` as props.
-	 * For side effects (analytics, logging), use the `onHighlight` option in `highlightMarker()` from `@ai11y/core`.
-	 */
-	highlightWrapper?: React.ComponentType<{
-		children: React.ReactNode;
-		markerId: string;
-	}>;
 	agentConfig?: AgentConfig;
 }
 
@@ -79,24 +46,20 @@ export function Ai11yProvider({
 	children,
 	initialState = {},
 	onNavigate,
-	highlightWrapper,
 	agentConfig,
 }: Ai11yProviderProps) {
-	// Create client instance
 	const clientRef = useRef(
 		createClient({
 			onNavigate,
 		}),
 	);
 
-	// Initialize core store with initial state if provided
 	useEffect(() => {
 		if (Object.keys(initialState).length > 0) {
 			setState(initialState);
 		}
-	}, [initialState]); // Only run on mount
+	}, [initialState]);
 
-	// Read from core store reactively
 	const [currentRoute, setCurrentRoute] = useState<string>(
 		() => getRoute() || "/",
 	);
@@ -110,7 +73,6 @@ export function Ai11yProvider({
 	});
 	const [events, setEvents] = useState<Ai11yEvent[]>(() => getEvents());
 
-	// Subscribe to store changes for reactivity
 	useEffect(() => {
 		const unsubscribe = subscribeToStore(
 			(type: "route" | "state" | "error", value: unknown) => {
@@ -125,21 +87,7 @@ export function Ai11yProvider({
 		);
 		return unsubscribe;
 	}, []);
-	const [isPanelOpen, setIsPanelOpen] = useState(false);
-	const [pendingMessage, setPendingMessage] = useState<string | null>(null);
-	const [highlightedMarkers, setHighlightedMarkers] = useState<Set<string>>(
-		new Set(),
-	);
-	const [focusedMarkerId, setFocusedMarkerId] = useState<string | null>(null);
-	const focusedMarkerIdRef = useRef<string | null>(null);
-	const isPanelOpenRef = useRef(false);
-	const highlightTimeoutRef = useRef<Map<string, number>>(new Map());
 
-	// Keep refs in sync with state
-	focusedMarkerIdRef.current = focusedMarkerId;
-	isPanelOpenRef.current = isPanelOpen;
-
-	// Subscribe to events from core store for reactivity
 	useEffect(() => {
 		const unsubscribe = subscribe(() => {
 			setEvents([...getEvents()]);
@@ -147,112 +95,16 @@ export function Ai11yProvider({
 		return unsubscribe;
 	}, []);
 
-	const reportError = useCallback(
-		(error: Error, meta?: { surface?: string; markerId?: string }) => {
-			clientRef.current.reportError(error, meta);
-			setIsPanelOpen(true);
-		},
-		[],
-	);
-
-	const addHighlight = useCallback((markerId: string, duration = 2000) => {
-		// Mark as highlighted (for bubble emphasis)
-		setHighlightedMarkers((prev) => {
-			const next = new Set(prev);
-			next.add(markerId);
-			return next;
-		});
-
-		// Clear any existing timeout for this marker
-		const existingTimeout = highlightTimeoutRef.current.get(markerId);
-		if (existingTimeout) {
-			clearTimeout(existingTimeout);
-		}
-
-		// Remove highlight after duration
-		const timeout = window.setTimeout(() => {
-			setHighlightedMarkers((prev) => {
-				const next = new Set(prev);
-				next.delete(markerId);
-				return next;
-			});
-			highlightTimeoutRef.current.delete(markerId);
-		}, duration);
-
-		highlightTimeoutRef.current.set(markerId, timeout);
-	}, []);
-
-	const openPanelWithMessage = useCallback((message: string) => {
-		setPendingMessage(message);
-		setIsPanelOpen(true);
-		clientRef.current.track("panel_opened_with_message", { message });
-	}, []);
-
-	const togglePanelForMarker = useCallback(
-		(markerId: string, message: string) => {
-			// Use refs to avoid stale closure issues
-			const currentFocusedId = focusedMarkerIdRef.current;
-			const currentPanelOpen = isPanelOpenRef.current;
-
-			// If this marker is already focused and panel is open, close the panel
-			if (currentFocusedId === markerId && currentPanelOpen) {
-				setIsPanelOpen(false);
-				setFocusedMarkerId(null);
-				clientRef.current.track("panel_closed_by_marker", { markerId });
-				return;
-			}
-
-			// Otherwise, focus this marker and open panel with message
-			setFocusedMarkerId(markerId);
-			setPendingMessage(message);
-			setIsPanelOpen(true);
-			clientRef.current.track("panel_opened_by_marker", { markerId, message });
-		},
-		[],
-	);
-
-	const clearPendingMessage = useCallback(() => {
-		setPendingMessage(null);
-	}, []);
-
-	// Cleanup highlights on unmount
-	useEffect(() => {
-		return () => {
-			highlightTimeoutRef.current.forEach((timeout) => {
-				clearTimeout(timeout);
-			});
-			highlightTimeoutRef.current.clear();
-		};
-	}, []);
-
-	// Handle panel open state changes from external sources (Popover trigger, close button, etc.)
-	const handleSetIsPanelOpen = useCallback((open: boolean) => {
-		setIsPanelOpen(open);
-		if (!open) {
-			setFocusedMarkerId(null);
-		}
-	}, []);
-
 	const value: Ai11yProviderContextValue = {
 		state: uiState,
 		currentRoute,
 		lastError,
 		events,
-		highlightedMarkers,
-		highlightWrapper,
-		addHighlight,
 		onNavigate,
-		focusedMarkerId,
 		track: clientRef.current.track.bind(clientRef.current),
-		reportError,
+		reportError: clientRef.current.reportError.bind(clientRef.current),
 		describe: clientRef.current.describe.bind(clientRef.current),
 		act: clientRef.current.act.bind(clientRef.current),
-		isPanelOpen,
-		setIsPanelOpen: handleSetIsPanelOpen,
-		openPanelWithMessage,
-		togglePanelForMarker,
-		clearPendingMessage,
-		pendingMessage,
 		agentConfig: agentConfig ?? null,
 	};
 
@@ -263,5 +115,4 @@ export function Ai11yProvider({
 	);
 }
 
-// Export context for useAi11yContext hook
 export { Ai11yProviderContext };

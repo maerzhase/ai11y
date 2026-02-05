@@ -3,14 +3,11 @@ import {
 	type LLMAgentConfig,
 	plan,
 } from "@ai11y/core";
-import {
-	type Instruction,
-	Marker,
-	useAi11yContext,
-	useChat,
-} from "@ai11y/react";
+import { type Instruction, useAi11yContext, useChat } from "@ai11y/react";
+import { MarkerWithHighlight as Marker } from "./Shared/MarkerWithHighlight";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useContextDrawer } from "../context/ContextDrawerContext";
+import { useDemoUi } from "../context/DemoUiContext";
 import { ThemeToggle } from "./Shared/ThemeToggle";
 import { SuggestionChip } from "./SuggestionChip";
 
@@ -19,7 +16,8 @@ interface ScrollyHeroProps {
 }
 
 export function ScrollyHero({ onSuggestionReady }: ScrollyHeroProps = {}) {
-	const { describe, act, track, agentConfig, addHighlight } = useAi11yContext();
+	const { describe, act, track, agentConfig } = useAi11yContext();
+	const { addHighlight } = useDemoUi();
 	const { isOpen: isContextOpen, setIsOpen: setContextOpen } =
 		useContextDrawer();
 	const [isCompact, setIsCompact] = useState(() => {
@@ -157,7 +155,15 @@ export function ScrollyHero({ onSuggestionReady }: ScrollyHeroProps = {}) {
 					isContextOpen ? "right-96" : "right-0"
 				}`}
 			>
-				<div className="max-w-screen-xl mx-auto px-4 py-3 flex items-center justify-end min-h-[57px]">
+				<div className="max-w-screen-xl mx-auto px-4 py-3 flex items-center justify-end min-h-[57px] gap-3">
+					<a
+						href="/docs/"
+						target="_blank"
+						rel="noopener noreferrer"
+						className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors whitespace-nowrap"
+					>
+						Docs
+					</a>
 					<div className="flex items-center gap-2">
 						<Marker
 							id="theme_toggle"

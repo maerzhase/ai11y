@@ -1,4 +1,4 @@
-import { Marker } from "@ai11y/react";
+import { MarkerWithHighlight as Marker } from "../Shared/MarkerWithHighlight";
 import { useState } from "react";
 import { SuggestionSection } from "../Shared/SuggestionSection";
 

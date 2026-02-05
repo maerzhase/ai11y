@@ -8,6 +8,9 @@
 export {
 	type AgentAdapterConfig,
 	type AgentConfig,
+	type AgentRequest,
+	type AgentResponse,
+	type ConversationMessage,
 	type AgentMode,
 	type LLMAgentConfig,
 	runAgentAdapter,
@@ -36,6 +39,9 @@ export {
 	subscribeToStore,
 	track,
 } from "./store.js";
+export type { Ai11yContext, Ai11yError, Ai11yEvent, Ai11yState } from "./context.js";
+export type { Instruction } from "./instruction.js";
+export type { ToolDefinition, ToolExecutor } from "./agent/tool-contract.js";
 export {
 	clickMarker,
 	fillInputMarker,
@@ -43,6 +49,5 @@ export {
 	highlightMarker,
 	navigateToRoute,
 	scrollToMarker,
-} from "./tools/index.js";
-export * from "./types/index.js";
+} from "./dom-actions/index.js";
 export * from "./util/index.js";

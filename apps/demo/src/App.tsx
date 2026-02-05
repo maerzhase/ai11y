@@ -2,6 +2,7 @@ import { type AgentConfig, Ai11yProvider } from "@ai11y/react";
 import React from "react";
 import { BrowserRouter, useLocation, useNavigate } from "react-router-dom";
 import { CustomHighlightWrapper } from "./components/Shared/CustomHighlight";
+import { DemoUiProvider } from "./context/DemoUiContext";
 import { AppLayout } from "./layout/AppLayout";
 import { HomePage } from "./pages/HomePage";
 
@@ -35,14 +36,12 @@ function AppWithRouter() {
 	);
 
 	return (
-		<Ai11yProvider
-			onNavigate={handleNavigate}
-			highlightWrapper={CustomHighlightWrapper}
-			agentConfig={agentConfig}
-		>
-			<AppLayout>
-				<HomePage />
-			</AppLayout>
+		<Ai11yProvider onNavigate={handleNavigate} agentConfig={agentConfig}>
+			<DemoUiProvider highlightWrapper={CustomHighlightWrapper}>
+				<AppLayout>
+					<HomePage />
+				</AppLayout>
+			</DemoUiProvider>
 		</Ai11yProvider>
 	);
 }

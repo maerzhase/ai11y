@@ -13,6 +13,9 @@ export { runRuleBasedAgent } from "./rule-based-agent.js";
 export type {
 	AgentAdapterConfig,
 	AgentConfig,
+	AgentRequest,
+	AgentResponse,
+	ConversationMessage,
 	AgentMode,
 	LLMAgentConfig,
 } from "./types.js";

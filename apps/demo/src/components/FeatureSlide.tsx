@@ -1,4 +1,4 @@
-import { Marker } from "@ai11y/react";
+import { MarkerWithHighlight as Marker } from "./Shared/MarkerWithHighlight";
 import type { ReactNode } from "react";
 import { useInView } from "../hooks/useInView";
 import { FlipCard } from "./FlipCard";

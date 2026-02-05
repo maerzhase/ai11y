@@ -1,6 +1,21 @@
-/**
- * Agent-specific types
- */
+import type { Ai11yContext } from "../context.js";
+import type { Instruction } from "../instruction.js";
+
+export interface AgentResponse {
+	reply: string;
+	instructions?: Instruction[];
+}
+
+export interface ConversationMessage {
+	role: "user" | "assistant";
+	content: string;
+}
+
+export interface AgentRequest {
+	input: string;
+	context: Ai11yContext;
+	messages?: ConversationMessage[];
+}
 
 /**
  * Configuration for LLM-based agent

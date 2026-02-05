@@ -1,7 +1,10 @@
-import type { AgentResponse, ConversationMessage } from "../types/agent.js";
-import type { Ai11yContext } from "../types/context.js";
+import type { Ai11yContext } from "../context.js";
 import { runAgentAdapter } from "./agent-adapter.js";
-import type { AgentAdapterConfig } from "./types.js";
+import type {
+	AgentAdapterConfig,
+	AgentResponse,
+	ConversationMessage,
+} from "./types.js";
 
 /**
  * Plans instructions based on UI context and user input

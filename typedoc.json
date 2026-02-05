@@ -1,0 +1,10 @@
+{
+	"$schema": "https://typedoc.org/schema.json",
+	"entryPoints": ["packages/core/src/index.ts"],
+	"out": "apps/demo/public/docs",
+	"name": "ai11y API",
+	"readme": "README.md",
+	"excludePrivate": true,
+	"excludeProtected": true,
+	"tsconfig": "packages/core/tsconfig.json"
+}

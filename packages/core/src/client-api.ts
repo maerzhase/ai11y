@@ -6,9 +6,9 @@ import {
 	highlightMarker,
 	navigateToRoute,
 	scrollToMarker,
-} from "./tools/index.js";
-import type { Ai11yContext, Ai11yError } from "./types/context.js";
-import type { Instruction } from "./types/instruction.js";
+} from "./dom-actions/index.js";
+import type { Ai11yContext, Ai11yError } from "./context.js";
+import type { Instruction } from "./instruction.js";
 
 /**
  * Client interface for interacting with the AI accessibility system

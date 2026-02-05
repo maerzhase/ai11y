@@ -5,7 +5,8 @@
 	"scripts": {
 		"dev": "turbo run dev",
 		"build": "turbo run build",
-		"build:demo": "turbo run build --filter=ai11y-demo",
+		"build:demo": "pnpm run docs:build && turbo run build --filter=ai11y-demo",
+		"docs:build": "typedoc",
 		"build:server": "turbo run build --filter=ai11y-server-app",
 		"watch": "turbo run watch",
 		"format": "biome check --write ."
@@ -14,7 +15,8 @@
 		"turbo": "2.7.1"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "2.3.10"
+		"@biomejs/biome": "2.3.10",
+		"typedoc": "^0.28.16"
 	},
 	"packageManager": "pnpm@9.0.0",
 	"engines": {

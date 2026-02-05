@@ -1,4 +1,4 @@
-import { Marker } from "@ai11y/react";
+import { MarkerWithHighlight as Marker } from "../Shared/MarkerWithHighlight";
 import { Badge } from "@ai11y/ui";
 import { useLocation, useNavigate } from "react-router-dom";
 import { SuggestionSection } from "../Shared/SuggestionSection";

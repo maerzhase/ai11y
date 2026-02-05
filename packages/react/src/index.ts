@@ -20,9 +20,6 @@ export {
 	plan,
 } from "@ai11y/core";
 export { Ai11yProvider } from "./components/Ai11yProvider.js";
-// React components
 export { Marker } from "./components/Marker.js";
-export { Panel } from "./components/Panel.js";
-// React hooks
 export { useAi11yContext } from "./hooks/useAi11yContext.js";
 export { useChat } from "./hooks/useChat.js";
