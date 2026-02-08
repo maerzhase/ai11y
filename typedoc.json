@@ -1,8 +1,16 @@
 {
 	"$schema": "https://typedoc.org/schema.json",
-	"entryPoints": ["packages/core/src/index.ts"],
+	"navigation": {
+		"includeFolders": false,
+		"includeGroups": false,
+		"excludeReferences": true,
+		"compactFolders": true
+	},
 	"out": "apps/demo/public/docs",
-	"name": "ai11y API",
+	"name": "ai11y docs",
+	"entryPointStrategy": "packages",
+	"entryPoints": ["packages/core", "packages/react", "packages/agent"],
+	"sortEntryPoints": false,
 	"readme": "README.md",
 	"excludePrivate": true,
 	"excludeProtected": true,
