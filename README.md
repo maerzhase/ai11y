@@ -1,364 +1,137 @@
-# ai11y - A semantic UI context layer for AI agents
+# ai11y
 
-A minimal but powerful SDK that provides semantic UI context for AI agents. The agent can understand annotated UI elements ("markers"), react to runtime errors, and navigate/interact with your app based on natural language commands.
+A structured UI context layer for AI agents. Makes existing user interfaces
+understandable and actionable for AI agents.
+
+The world runs on UIs and interfaces. That doesn't go away because we have
+natural language. ai11y gives agents the context they need to operate those
+interfaces.
+
+The API is **describe → plan → act**: capture UI context, get instructions from
+an agent, execute them on the page. The core is JavaScript; React is a thin
+wrapper.
 
 ## Architecture
 
-The SDK consists of:
+**Packages:**
 
-**Packages (libraries):**
+- **`packages/core/`** — Framework-agnostic core. Markers, `createClient`,
+  `plan()`, and DOM actions. No React.
+- **`packages/react/`** — Thin wrapper: `Ai11yProvider` (wraps `createClient`),
+  `Marker` (adds data attributes so the DOM can be described).
+- **`packages/ui/`** — UI components (chat panel, triggers, message bubbles).
+- **`packages/agent/`** — Server-side LLM and tools for the plan step.
 
-- **`packages/core/`** - Core SDK (markers, store, agents, tool definitions)
-- **`packages/react/`** - React bindings (provider, hooks, components)
-- **`packages/ui/`** - UI components (chat panel, triggers, message bubbles)
-- **`packages/server/`** - Server-side package for secure LLM API calls with extensible tool support
+**Apps:**
 
-**Apps (applications):**
+- **`apps/demo/`** — Demo app (see [apps/demo/README.md](apps/demo/README.md)).
+- **`apps/server/`** — Example server using `@ai11y/agent`.
 
-- **`apps/demo/`** - Demo app that uses the SDK
-- **`apps/server/`** - Example server application using the server package
+## Describe → Plan → Act
 
-## Core Concepts
+The world runs on user interfaces. Interfaces solve problems by making state,
+constraints, and actions explicit.
 
-### 1. Ai11yProvider
+ai11y exposes this structure so agents can operate existing UIs.
 
-The `Ai11yProvider` is the central context provider that maintains:
+**Describe** — observe the current UI context.  
+**Plan** — get instructions from the agent.  
+**Act** — perform actions on the UI.
 
-- **Marker Registry**: A map of `markerId → metadata + DOM ref` for all marked elements
-- **Assist State**: User-defined JSON state that can be accessed by the agent
-- **Recent Events & Errors**: Tracks application events and errors for context
-- **Imperative API**: Methods exposed via context:
-  - `track(event, payload?)` - Track custom events
-  - `reportError(error, meta?)` - Report errors (auto-opens panel)
-- **Tool Functions**: Available from `@ai11y/core`:
-  - `navigateToRoute(route)` - Navigate to a route
-  - `highlightMarker(markerId, options?)` - Visually highlight an element
-  - `scrollToMarker(markerId)` - Scroll to a marker element
-  - `clickMarker(markerId)` - Click a marker element
-- **React-Specific Tools**: Available via `useAssistTools()` hook (wraps core functions with React features like highlightWrapper, onHighlight callbacks)
+**JavaScript (no React):**
 
-### 2. Mark Component
+```ts
+import { createClient, plan } from "@ai11y/core";
 
-The `Mark` component is a semantic wrapper that registers UI elements with the agent:
-
-```tsx
-<Mark
-  id="connect_stripe"
-  label="Connect Stripe"
-  intent="Connect Stripe to accept payments"
->
-  <button onClick={() => connectStripe()}>Connect Stripe</button>
-</Mark>
-```
-
-**Behavior:**
-
-- On mount: Registers the marker with the provider (id, label, intent, DOM ref)
-- On unmount: Unregisters the marker
-- The DOM element is discoverable for highlighting and simulated clicks
-- Uses React refs (not CSS selectors) for reliable element access
-- **No action prop needed**: The agent simulates browser events (clicks) on the wrapped element, which naturally triggers your existing `onClick` handlers
-
-### 3. AssistPanel
-
-A floating chat panel in the bottom-right corner that provides:
-
-- Chat transcript showing user messages, agent replies, and system messages
-- Input box for user commands
-- Context collection before sending to agent:
-  - Current route
-  - Assist state
-  - Last error (if any)
-  - List of active markers (id + label + intent)
-- Tool call execution (navigate, highlight, click)
-
-### 4. Agent Brain
-
-The SDK supports **two agent modes**:
-
-#### LLM Agent (Recommended)
-
-The SDK includes server-side LLM integration with function calling. The agent runs securely on your server (not in the browser) and uses AI models to understand natural language and intelligently interact with your app.
-
-**Features:**
-
-- Natural language understanding
-- Context-aware responses
-- Intelligent tool selection (navigate, click, highlight)
-- Error explanation and recovery suggestions
-- Conversational interactions
-- **Secure**: API keys stay on the server, never exposed to the browser
-- **Extensible**: Easy to add custom tools via the server package
-
-#### Rule-Based Agent (Fallback)
-
-If no LLM configuration is provided, the SDK falls back to a **rule-based local agent** that parses commands using pattern matching:
-
-```typescript
-function runAgent(input: string, context: Ai11yContext): AgentResponse
-```
-
-**Supported Commands:**
-
-- `"go to X"` / `"navigate to X"` / `"open X"` → Navigate to route
-- `"click X"` / `"press X"` → Click a marked element
-- `"highlight X"` / `"show X"` → Highlight a marked element
-- Error handling: If an error exists, explains it and suggests retry
-
-The rule-based agent is useful for development and testing, or when you don't want to use an external API.
-
-### 5. Tool Calls
-
-A simple tool protocol:
-
-```typescript
-type ToolCall =
-  | { type: "navigate"; route: string }
-  | { type: "highlight"; markerId: string }
-  | { type: "click"; markerId: string };
-```
-
-The `AssistPanel` executes these via provider methods.
-
-### 6. Error Reporting
-
-Errors can be reported programmatically:
-
-```typescript
-assist.reportError(error, {
-  surface?: string;
-  markerId?: string;
+const client = createClient({
+  onNavigate: (route) => window.history.pushState({}, "", route),
 });
+
+const ui = client.describe();
+const { reply, instructions } = await plan(ui, "click the save button");
+for (const instruction of instructions ?? []) {
+  client.act(instruction);
+}
 ```
 
-When an error is reported:
-
-- It's stored as `lastError` in context
-- The `AssistPanel` auto-opens with a helpful message
-- The agent can suggest retry actions
+Optional helpers: `track(event, payload?)` and `reportError(error, meta?)` add
+context for the agent. You can also call DOM helpers from `@ai11y/core` (e.g.
+`clickMarker`, `highlightMarker`) directly if you prefer.
 
 ## Usage
 
-### Basic Setup
+### JavaScript (any framework or none)
 
-#### With Rule-Based Agent (Default)
+Annotate elements with `data-ai-id`, `data-ai-label`, and optionally
+`data-ai-intent`. Create a client and use describe → plan → act as above. The
+core reads the DOM and executes instructions; no React required.
+
+### With React
+
+Wrap your app in `Ai11yProvider` and use the `Marker` component so elements are
+registered for `describe()`. Get `describe` and `act` from `useAi11yContext()`
+and call `plan()` from `@ai11y/core`:
 
 ```tsx
-import { Ai11yProvider, AssistPanel, Mark } from "@ai11y/react";
+import { Ai11yProvider, Marker, useAi11yContext } from "@ai11y/react";
+import { plan } from "@ai11y/core";
 
 function App() {
   return (
     <Ai11yProvider onNavigate={(route) => navigate(route)}>
       <YourApp />
-      <AssistPanel />
     </Ai11yProvider>
   );
 }
+
+function Chat() {
+  const { describe, act } = useAi11yContext();
+  const handleSubmit = async (input: string) => {
+    const ui = describe();
+    const { reply, instructions } = await plan(ui, input);
+    for (const instruction of instructions ?? []) act(instruction);
+    return reply;
+  };
+  // ... render input and messages
+}
 ```
 
-#### With LLM Agent (Server-Side)
+Mark elements so your agent can see them:
 
-**Step 1: Set up the server**
+```tsx
+<Marker id="save_btn" label="Save" intent="Save the document">
+  <button onClick={onSave}>Save</button>
+</Marker>
+```
+
+### LLM agent (server)
+
+For natural-language planning, run the plan step on your server with
+`@ai11y/agent`. See [packages/agent/README.md](packages/agent/README.md). The
+client sends `describe()` output and user input; the server returns
+`{ reply, instructions }`. Without a configured endpoint, the client falls back
+to a built-in rule-based planner.
+
+## Demo
+
+The [demo app](apps/demo/) shows describe → plan → act in action; the core is
+JavaScript, the UI uses the React wrapper. See
+[apps/demo/README.md](apps/demo/README.md) for what it demonstrates and how to
+run it.
+
+**Run the demo:**
 
 ```bash
-# Install the server package
-pnpm add @ai11y/agent
-
-# Set your API key in a .env file (recommended)
-# Create a .env file in your server directory:
-echo "OPENAI_API_KEY=your-api-key-here" > .env
-```
-
-**Step 2: Create a server file**
-
-```ts
-// server.ts
-import Fastify from 'fastify';
-import { ai11yPlugin, type ServerConfig } from '@ai11y/agent/fastify';
-
-const apiKey = process.env.OPENAI_API_KEY;
-if (!apiKey) {
-  throw new Error('OPENAI_API_KEY is required');
-}
-
-const fastify = Fastify();
-
-const config: ServerConfig = {
-  provider: 'openai',
-  apiKey,
-  model: 'gpt-5-nano', // Optional, defaults to gpt-5-nano
-};
-
-await fastify.register(ai11yPlugin, {
-  config,
-});
-
-await fastify.listen({ port: 3000 });
-```
-
-**Step 3: Configure the client**
-
-```tsx
-import { Ai11yProvider, AssistPanel, Mark } from "@ai11y/react";
-
-function App() {
-  const agentConfig = {
-    apiEndpoint: "http://localhost:3000/ai11y/agent",
-  };
-
-  return (
-    <Ai11yProvider 
-      onNavigate={(route) => navigate(route)}
-      agentConfig={agentConfig}
-    >
-      <YourApp />
-      <AssistPanel />
-    </Ai11yProvider>
-  );
-}
-```
-
-**Important:**
-
-- The LLM agent automatically falls back to rule-based if the API endpoint is unavailable or misconfigured.
-- API keys are kept secure on the server, never exposed to the browser.
-- See `packages/server/README.md` for more details on extending with custom tools.
-
-### Marking Elements
-
-```tsx
-import { Mark, useAssist } from "@ai11y/react";
-
-function MyComponent() {
-  const { reportError } = useAssist();
-
-  const handleClick = () => {
-    try {
-      doSomething();
-    } catch (error) {
-      reportError(error, { markerId: "my_button" });
-    }
-  };
-
-  return (
-    <Mark
-      id="my_button"
-      label="My Button"
-      intent="Perform an important action"
-    >
-      <button onClick={handleClick}>Click Me</button>
-    </Mark>
-  );
-}
-```
-
-**Key Points:**
-
-- No `action` prop needed - just use regular `onClick` handlers
-- The agent simulates browser click events, which trigger your existing handlers
-- Works with any clickable element (buttons, links, divs with onClick, etc.)
-- Simplifies integration - no need to wrap existing components with action callbacks
-
-### Using Tool Functions
-
-Tool functions are available directly from the core package:
-
-```tsx
-import { navigateToRoute, highlightMarker, clickMarker } from "@ai11y/core";
-import { useAssist } from "@ai11y/react";
-
-function MyComponent() {
-  const { track } = useAssist();
-
-  const handleSomething = () => {
-    track("custom_event", { data: "value" });
-    navigateToRoute("/billing");
-    highlightMarker("some_marker");
-    clickMarker("another_marker");
-  };
-
-  return <button onClick={handleSomething}>Do Something</button>;
-}
-```
-
-For React-specific features (like `highlightWrapper` or `onHighlight` callbacks), use the `useAssistTools()` hook:
-
-```tsx
-import { useAssistTools } from "@ai11y/react";
-
-function MyComponent() {
-  const { navigate, highlight, click } = useAssistTools();
-
-  const handleSomething = () => {
-    navigate("/billing");  // Calls onNavigate callback if provided
-    highlight("some_marker");  // Uses highlightWrapper if provided
-    click("another_marker");
-  };
-
-  return <button onClick={handleSomething}>Do Something</button>;
-}
-```
-
-## Demo App
-
-The demo (`apps/demo/`) demonstrates:
-
-- **Routes**: `/` (Home), `/billing`, `/integrations`
-- **Home Page**: Marked buttons for navigation
-- **Billing Page**: "Enable Billing" button with local state
-- **Integrations Page**: "Connect Stripe" button that simulates failure on first click, then succeeds on retry
-
-### Running the Demo
-
-This monorepo uses [Turborepo](https://turbo.build/repo) for managing builds and dev scripts.
-
-**Quick Start:**
-
-```bash
-# Install all dependencies
 pnpm install
-
-# Set up environment variables
-export OPENAI_API_KEY=your-api-key-here  # For server (required for LLM agent)
-
-# Create .env file for demo (optional, for LLM support)
-echo "VITE_AI11Y_API_ENDPOINT=http://localhost:3000/ai11y/agent" > apps/demo/.env
-
-# Run everything (frontend + backend) in one command
 pnpm dev
 ```
 
-This will:
-
-- Build ai11y packages
-- Start the server on `http://localhost:3000` (if `OPENAI_API_KEY` is set)
-- Start the demo on `http://localhost:5173`
-
-**Other Commands:**
+- Demo: http://localhost:5173
+- Optional: set `OPENAI_API_KEY` and add
+  `VITE_AI11Y_API_ENDPOINT=http://localhost:3000/ai11y/agent` in
+  `apps/demo/.env` to use the LLM agent; otherwise the rule-based agent is used.
 
 ```bash
-# Build all packages
-pnpm build
-
-# Watch mode (rebuilds on changes)
-pnpm watch
+pnpm build    # build all
+pnpm watch    # watch mode
 ```
-
-**To enable LLM in the demo:**
-
-1. Set `OPENAI_API_KEY` environment variable
-2. Create a `.env` file in `apps/demo/` with:
-
-   ```
-   VITE_AI11Y_API_ENDPOINT=http://localhost:3000/ai11y/agent
-   ```
-
-   (The demo will use the rule-based agent if this is not set)
-
-## UX Features
-
-- **Visual Highlighting**: When `highlight(markerId)` is called, the element is outlined with a blue border for 2 seconds
-- **Click Simulation**: `click(markerId)` either calls the marker's `action` function or triggers a native click on the element
-- **Navigation**: When the agent navigates, the route actually changes (integrated with your router)
-- **System Messages**: The panel shows system messages like "Navigated to /billing" and "Clicked Connect Stripe"
-- **Error Recovery**: When errors occur, the agent explains them and guides recovery

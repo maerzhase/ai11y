@@ -4,10 +4,10 @@ import {
 	plan,
 } from "@ai11y/core";
 import { type Instruction, useAi11yContext, useChat } from "@ai11y/react";
-import { MarkerWithHighlight as Marker } from "./Shared/MarkerWithHighlight";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useContextDrawer } from "../context/ContextDrawerContext";
 import { useDemoUi } from "../context/DemoUiContext";
+import { MarkerWithHighlight as Marker } from "./Shared/MarkerWithHighlight";
 import { ThemeToggle } from "./Shared/ThemeToggle";
 import { SuggestionChip } from "./SuggestionChip";
 
@@ -236,7 +236,7 @@ export function ScrollyHero({ onSuggestionReady }: ScrollyHeroProps = {}) {
 								ai11y
 							</h1>
 							<span className="text-xs text-muted-foreground hidden sm:block">
-								A semantic UI context layer for AI agents
+								A structured UI context layer for AI agents
 							</span>
 						</div>
 					</div>
@@ -259,16 +259,17 @@ export function ScrollyHero({ onSuggestionReady }: ScrollyHeroProps = {}) {
 							<Marker
 								id="hero_title"
 								label="ai11y"
-								intent="The main hero title - A semantic UI context layer for AI agents"
+								intent="The main hero title - A structured UI context layer for AI agents"
 							>
 								<h1 className="text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent tracking-tight text-center">
 									ai11y
 								</h1>
 							</Marker>
 
-							<p className="text-lg text-muted-foreground mb-6 text-center max-w-md mx-auto">
-								A semantic UI context layer for AI agents
-							</p>
+							<div className="text-lg text-muted-foreground mb-6 text-center max-w-md mx-auto space-y-1">
+								<p>A structured UI context layer for AI agents.</p>
+								<p className="text-base">Makes existing user interfaces understandable and actionable for AI agents.</p>
+							</div>
 
 							{/* Messages area */}
 							<div

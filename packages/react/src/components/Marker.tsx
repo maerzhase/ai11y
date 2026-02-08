@@ -1,8 +1,4 @@
-import {
-	ATTRIBUTE_ID,
-	ATTRIBUTE_INTENT,
-	ATTRIBUTE_LABEL,
-} from "@ai11y/core";
+import { ATTRIBUTE_ID, ATTRIBUTE_INTENT, ATTRIBUTE_LABEL } from "@ai11y/core";
 import React from "react";
 
 interface MarkerProps {
@@ -28,12 +24,19 @@ function assignRef<T>(ref: React.Ref<T> | undefined, value: T | null) {
 export function Marker({ id, label, intent, children }: MarkerProps) {
 	const childWithRef = React.cloneElement(children, {
 		ref: (node: HTMLElement | null) => {
-			assignRef((children as React.ReactElement & { ref?: React.Ref<HTMLElement> }).ref, node);
+			assignRef(
+				(children as React.ReactElement & { ref?: React.Ref<HTMLElement> }).ref,
+				node,
+			);
 		},
 		[ATTRIBUTE_ID]: id,
 		...(label && { [ATTRIBUTE_LABEL]: label }),
 		...(intent && { [ATTRIBUTE_INTENT]: intent }),
-	} as React.HTMLAttributes<HTMLElement> & { [ATTRIBUTE_ID]: string; [ATTRIBUTE_LABEL]?: string; [ATTRIBUTE_INTENT]?: string });
+	} as React.HTMLAttributes<HTMLElement> & {
+		[ATTRIBUTE_ID]: string;
+		[ATTRIBUTE_LABEL]?: string;
+		[ATTRIBUTE_INTENT]?: string;
+	});
 
 	return <>{childWithRef}</>;
 }

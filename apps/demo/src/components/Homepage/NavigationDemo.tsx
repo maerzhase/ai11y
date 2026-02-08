@@ -1,6 +1,6 @@
-import { MarkerWithHighlight as Marker } from "../Shared/MarkerWithHighlight";
 import { Badge } from "@ai11y/ui";
 import { useLocation, useNavigate } from "react-router-dom";
+import { MarkerWithHighlight as Marker } from "../Shared/MarkerWithHighlight";
 import { SuggestionSection } from "../Shared/SuggestionSection";
 
 export function NavigationDemo({
@@ -33,7 +33,7 @@ export function NavigationDemo({
 	return (
 		<div className="space-y-4">
 			<div className="text-sm text-muted-foreground mb-3">
-				The agent understands your routes:
+				Give your agent access to your routes:
 			</div>
 			<div className="space-y-2">
 				{routes.map((route) => {

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { FeatureSlide } from "../components/FeatureSlide";
 import { ClickDemoWithSuggestions } from "../components/Homepage/ClickDemo";
+import { ConceptSection } from "../components/Homepage/ConceptSection";
 import { demoCodeExamples } from "../components/Homepage/demoCodeExamples";
 import { HighlightDemoWithSuggestions } from "../components/Homepage/HighlightDemo";
 import { InputFillDemoWithSuggestions } from "../components/Homepage/InputFillDemo";
@@ -17,13 +18,18 @@ function FeatureSlides() {
 
 	return (
 		<div>
+			<ConceptSection />
+
 			<FeatureSlide
 				id="feature-navigation"
 				direction="left"
 				emoji="🧭"
 				title="Navigation"
-				description="Navigate between pages using natural language. The agent understands your app's routing structure and can take users anywhere they ask."
-				code={demoCodeExamples.navigation}
+				description="Give your agent the ability to navigate between pages from natural language. It can use your app's routing structure to take users where they ask."
+				code={demoCodeExamples.navigationJavaScript}
+				reactCode={demoCodeExamples.navigation}
+				codeLanguage="html"
+				reactCodeLanguage="tsx"
 				markerId="slide_navigation"
 				markerLabel="Navigation Section"
 				markerIntent="Navigate to the Navigation feature section"
@@ -37,7 +43,10 @@ function FeatureSlides() {
 				emoji="✨"
 				title="Visual Highlighting"
 				description="Draw attention to any element with customizable highlight animations. Perfect for tutorials, onboarding flows, and guided experiences."
-				code={demoCodeExamples.highlight}
+				code={demoCodeExamples.highlightJavaScript}
+				reactCode={demoCodeExamples.highlight}
+				codeLanguage="html"
+				reactCodeLanguage="tsx"
 				markerId="slide_highlight"
 				markerLabel="Visual Highlighting Section"
 				markerIntent="Navigate to the Visual Highlighting feature section"
@@ -50,8 +59,11 @@ function FeatureSlides() {
 				direction="left"
 				emoji="👆"
 				title="Interaction"
-				description="The agent can interact with UI elements like buttons, links, and other clickable components. Users can describe their intent in natural language, and the agent will take the appropriate action."
-				code={demoCodeExamples.click}
+				description="Give your agent the ability to interact with buttons, links, and other UI elements. Users describe their intent in natural language; your agent takes the right action."
+				code={demoCodeExamples.clickJavaScript}
+				reactCode={demoCodeExamples.click}
+				codeLanguage="html"
+				reactCodeLanguage="tsx"
 				markerId="slide_click"
 				markerLabel="Interaction Section"
 				markerIntent="Navigate to the Interaction feature section"
@@ -64,8 +76,11 @@ function FeatureSlides() {
 				direction="right"
 				emoji="⌨️"
 				title="Form Awareness"
-				description="The agent is aware of the current state of form fields and can fill inputs with values using natural language. Ask about current values or fill text inputs, textareas, and dropdowns. Emits native browser events for compatibility."
-				code={demoCodeExamples.inputFill}
+				description="Give your agent the ability to read and fill form fields from natural language. It can read current values and fill inputs, textareas, and dropdowns. Emits native browser events for compatibility."
+				code={demoCodeExamples.inputFillJavaScript}
+				reactCode={demoCodeExamples.inputFill}
+				codeLanguage="html"
+				reactCodeLanguage="tsx"
 				markerId="slide_fill_input"
 				markerLabel="Form Awareness Section"
 				markerIntent="Navigate to the Form Awareness feature section"

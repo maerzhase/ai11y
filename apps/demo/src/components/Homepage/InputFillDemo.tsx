@@ -1,6 +1,6 @@
-import { MarkerWithHighlight as Marker } from "../Shared/MarkerWithHighlight";
 import { Field, Form, Input, Textarea } from "@ai11y/ui";
 import { useState } from "react";
+import { MarkerWithHighlight as Marker } from "../Shared/MarkerWithHighlight";
 import { SuggestionSection } from "../Shared/SuggestionSection";
 
 export function InputFillDemoWithSuggestions({
@@ -16,7 +16,7 @@ export function InputFillDemoWithSuggestions({
 	return (
 		<div className="space-y-4">
 			<div className="text-sm text-muted-foreground mb-3">
-				The agent understands forms:
+				Give your agent the ability to read and fill forms:
 			</div>
 			<Form>
 				<Marker

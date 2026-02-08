@@ -1,61 +1,51 @@
 # @ai11y/core
 
-Core types and utilities shared across all ai11y packages.
+Framework-agnostic core. Your app exposes UI via markers (elements with
+`data-ai-id`, `data-ai-label`, optional `data-ai-intent`). The API is **describe
+→ plan → act**.
 
-A semantic UI context layer for AI agents.
+## API
+
+- **`createClient(options?)`** — Returns
+  `{ describe, act, track, reportError }`. Options:
+  `onNavigate?: (route: string) => void`.
+- **`describe()`** — Returns `Ai11yContext`: markers, route, state, optional
+  error. Scans the DOM for marked elements and which are in view.
+- **`act(instruction)`** — Executes one instruction: click, navigate, highlight,
+  scroll, or fillInput.
+- **`plan(ui, input, config?, messages?)`** — Runs the agent (LLM or rule-based)
+  and returns `Promise<{ reply, instructions }>`.
+
+**JavaScript example:**
+
+```ts
+import { createClient, plan } from "@ai11y/core";
+
+const client = createClient({
+  onNavigate: (route) => window.history.pushState({}, "", route),
+});
+
+const ui = client.describe();
+const { reply, instructions } = await plan(ui, "click the save button");
+for (const instruction of instructions ?? []) {
+  client.act(instruction);
+}
+```
+
+Types (`Ai11yContext`, `Instruction`, `AgentResponse`, etc.) and DOM helpers
+(`clickMarker`, `highlightMarker`, `navigateToRoute`, etc.) are exported from
+the main entry. See generated docs for full reference.
 
 ## Structure
 
 ```
 src/
-├── agent/
-│   ├── agent-adapter.ts  # Unified agent adapter
-│   ├── llm-agent.ts      # LLM-based agent
-│   ├── rule-based-agent.ts # Rule-based fallback
-│   └── types.ts          # Agent configuration types
-├── tools/
-│   ├── click.ts          # Click marker tool
-│   ├── highlight.ts      # Highlight marker tool
-│   ├── navigate.ts       # Navigate to route tool
-│   └── scroll.ts         # Scroll to marker tool
-├── types/
-│   ├── agent.ts          # Agent request/response types
-│   ├── config.ts         # Server configuration types
-│   ├── context.ts        # Assist context and state types
-│   ├── tool.ts           # Tool call and tool definition types
-│   └── index.ts          # Barrel export for all types
-├── dom.ts                # DOM utilities
-├── events.ts             # Event system
-├── marker.ts             # Marker registry
-├── store.ts              # State store
-└── index.ts              # Main entry point
+├── agent/         # plan(), adapter, LLM + rule-based agents
+├── dom-actions/  # click, highlight, navigate, scroll, fillInput
+├── client-api.ts # createClient, Ai11yClient
+├── context.ts    # Ai11yContext, Ai11yState, Ai11yError
+├── dom.ts        # getContext(), viewport visibility
+├── marker.ts    # marker extraction from DOM
+├── store.ts     # route, state, error, events
+└── index.ts
 ```
-
-## Types
-
-### Agent Types (`types/agent.ts`)
-- `AgentRequest` - Request to the agent with input and context
-- `AgentResponse` - Response from the agent with reply and tool calls
-
-### Context Types (`types/context.ts`)
-- `Ai11yContext` - Full context available to the agent
-- `Ai11yState` - Application state tracking
-- `Ai11yError` - Error information
-- `Marker` - UI element marker information
-
-### Tool Types (`types/tool.ts`)
-- `ToolCall` - Tool call actions (navigate, highlight, click)
-- `ToolDefinition` - Tool definition for extensibility
-- `ToolExecutor` - Tool executor function type
-
-### Config Types (`types/config.ts`)
-- `ServerConfig` - LLM provider server configuration
-
-## Usage
-
-```typescript
-import type { ToolCall, AgentResponse, Ai11yContext } from "@ai11y/core";
-import { navigateToRoute, highlightMarker, clickMarker } from "@ai11y/core";
-```
-
-All types are re-exported from the main entry point, so you can import everything from `@ai11y/core` directly.

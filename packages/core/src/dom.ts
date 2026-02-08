@@ -1,6 +1,6 @@
+import type { Ai11yContext } from "./context.js";
 import { getMarkers } from "./marker.js";
 import { getError, getRoute, getState } from "./store.js";
-import type { Ai11yContext } from "./context.js";
 import { getAllMarkersSelector, getMarkerId } from "./util/attributes.js";
 
 /**

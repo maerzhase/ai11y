@@ -9,13 +9,15 @@
 		"docs:build": "typedoc",
 		"build:server": "turbo run build --filter=ai11y-server-app",
 		"watch": "turbo run watch",
-		"format": "biome check --write ."
+		"format": "biome check --write . && pnpm run format:md",
+		"format:md": "pnpm exec prettier --write \"**/*.md\""
 	},
 	"dependencies": {
 		"turbo": "2.7.1"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.3.10",
+		"prettier": "^3.4.2",
 		"typedoc": "^0.28.16"
 	},
 	"packageManager": "pnpm@9.0.0",

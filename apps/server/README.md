@@ -2,7 +2,8 @@
 
 Example server application using the `@ai11y/agent` package.
 
-A semantic UI context layer for AI agents.
+A structured UI context layer for AI agents. Makes existing user interfaces
+understandable and actionable for AI agents.
 
 ## Setup
 
@@ -16,6 +17,7 @@ pnpm install
 ### Option 1: Using .env file (Recommended)
 
 1. Create a `.env` file in this directory:
+
 ```bash
 OPENAI_API_KEY=your-api-key-here
 LLM_MODEL=gpt-5-nano
@@ -23,6 +25,7 @@ PORT=3000
 ```
 
 2. Run the server:
+
 ```bash
 pnpm dev
 ```
@@ -40,15 +43,19 @@ pnpm dev
 pnpm --filter ai11y-server-app dev
 ```
 
-The server will start on `http://localhost:3000` (or the port specified in `PORT` env var) with the following endpoints:
+The server will start on `http://localhost:3000` (or the port specified in
+`PORT` env var) with the following endpoints:
+
 - `POST /ai11y/agent` - Main agent endpoint
 - `GET /ai11y/health` - Health check endpoint
 
-**CORS:** The server has CORS enabled to allow requests from localhost origins (for development). In production, you should configure specific allowed origins.
+**CORS:** The server has CORS enabled to allow requests from localhost origins
+(for development). In production, you should configure specific allowed origins.
 
 ## Environment Variables
 
-The server automatically loads environment variables from a `.env` file in this directory.
+The server automatically loads environment variables from a `.env` file in this
+directory.
 
 ### Required
 

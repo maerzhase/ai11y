@@ -1,5 +1,5 @@
-import { MarkerWithHighlight as Marker } from "../Shared/MarkerWithHighlight";
 import { useState } from "react";
+import { MarkerWithHighlight as Marker } from "../Shared/MarkerWithHighlight";
 import { SuggestionSection } from "../Shared/SuggestionSection";
 
 export function ClickDemoWithSuggestions({
@@ -13,7 +13,7 @@ export function ClickDemoWithSuggestions({
 	return (
 		<div className="space-y-4">
 			<div className="text-sm text-muted-foreground mb-3">
-				The agent can interact with buttons:
+				Give your agent the ability to interact with buttons:
 			</div>
 			<div className="flex items-center justify-between p-4 rounded-xl bg-muted/30 border border-border/50">
 				<div>

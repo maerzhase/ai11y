@@ -1,8 +1,7 @@
 # @ai11y/ui
 
-Primitive UI components built with Tailwind CSS and Base UI.
-
-A semantic UI context layer for AI agents.
+Primitive UI components built with Tailwind CSS and Base UI. Works with the
+describe → plan → act flow (e.g. assist panels, triggers, message bubbles).
 
 ## Installation
 
@@ -38,7 +37,7 @@ import { AssistPanel } from "@ai11y/ui";
   onToolCall={(toolCall) => {
     // Handle tool calls
   }}
-/>
+/>;
 ```
 
 ## Styling
@@ -49,4 +48,5 @@ This package uses Tailwind CSS. Make sure to import the CSS file:
 import "@ai11y/ui/styles.css";
 ```
 
-The CSS is processed and minified during build, containing only the Tailwind utilities used by the components.
+The CSS is processed and minified during build, containing only the Tailwind
+utilities used by the components.

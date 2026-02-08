@@ -70,7 +70,9 @@ export function AssistPanel() {
 		};
 	};
 
-	const handleInstruction = (instruction: import("@ai11y/core").Instruction) => {
+	const handleInstruction = (
+		instruction: import("@ai11y/core").Instruction,
+	) => {
 		act(instruction);
 		if (instruction.action === "highlight") {
 			addHighlight(instruction.id);

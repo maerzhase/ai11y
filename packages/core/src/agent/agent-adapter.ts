@@ -1,8 +1,11 @@
 import type { Ai11yContext } from "../context.js";
-import type { AgentResponse, ConversationMessage } from "./types.js";
 import { runLLMAgent } from "./llm-agent.js";
 import { runRuleBasedAgent } from "./rule-based-agent.js";
-import type { AgentAdapterConfig } from "./types.js";
+import type {
+	AgentAdapterConfig,
+	AgentResponse,
+	ConversationMessage,
+} from "./types.js";
 
 /**
  * Detect if we're likely offline (browser only)

@@ -1,7 +1,7 @@
-import { MarkerWithHighlight as Marker } from "./Shared/MarkerWithHighlight";
 import type { ReactNode } from "react";
 import { useInView } from "../hooks/useInView";
 import { FlipCard } from "./FlipCard";
+import { MarkerWithHighlight as Marker } from "./Shared/MarkerWithHighlight";
 
 interface FeatureSlideProps {
 	direction: "left" | "right";
@@ -10,6 +10,9 @@ interface FeatureSlideProps {
 	emoji: string;
 	children: ReactNode;
 	code?: string;
+	codeLanguage?: string;
+	reactCode?: string;
+	reactCodeLanguage?: string;
 	id?: string;
 	markerId?: string;
 	markerLabel?: string;
@@ -23,6 +26,9 @@ export function FeatureSlide({
 	emoji,
 	children,
 	code,
+	codeLanguage,
+	reactCode,
+	reactCodeLanguage,
 	id,
 	markerId,
 	markerLabel,
@@ -94,7 +100,23 @@ export function FeatureSlide({
 					{/* Demo side */}
 					<div className="flex-1 w-full max-w-md">
 						{code ? (
-							<FlipCard code={code}>
+							<FlipCard
+								code={code}
+								{...(codeLanguage
+									? { language: codeLanguage }
+									: {})}
+								{...(reactCode
+									? {
+											reactCode,
+											...(reactCodeLanguage
+												? {
+														reactLanguage:
+															reactCodeLanguage,
+													}
+												: {}),
+										}
+									: {})}
+							>
 								<div className="rounded-2xl border border-border/50 bg-card/50 backdrop-blur-sm p-6 shadow-lg">
 									{children}
 								</div>

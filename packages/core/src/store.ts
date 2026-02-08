@@ -1,5 +1,5 @@
-import { notify } from "./events.js";
 import type { Ai11yError, Ai11yEvent, Ai11yState } from "./context.js";
+import { notify } from "./events.js";
 
 let route: string | undefined;
 let state: Ai11yState | undefined;

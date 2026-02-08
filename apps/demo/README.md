@@ -1,83 +1,40 @@
 # Demo - ai11y Demo App
 
-This is a demo application showcasing ai11y - a semantic UI context layer for AI agents.
+This demo shows **describe → plan → act** in action. The core is JavaScript;
+the UI uses the React wrapper (Provider + Marker).
 
-## Setup
+## Quick Start
 
-This monorepo uses [Turborepo](https://turbo.build/repo) for managing builds and dev scripts.
-
-### Quick Start
+From the monorepo root:
 
 ```bash
-# From the monorepo root
 pnpm install
-
-# Set up server with API key (optional, for LLM support)
-# Create apps/server/.env with your OpenAI API key
-echo "OPENAI_API_KEY=your-api-key-here" > apps/server/.env
-
-# Optionally configure demo endpoint (defaults to http://localhost:3000/ai11y/agent)
-echo "VITE_AI11Y_API_ENDPOINT=http://localhost:3000/ai11y/agent" > apps/demo/.env
-
-# Run everything (builds packages, starts server + demo)
 pnpm dev
 ```
 
-This will:
-- Build ai11y packages
-- Start the server on `http://localhost:3000` (if `OPENAI_API_KEY` is set in `apps/server/.env`)
-- Start the demo on `http://localhost:5173`
-- The demo will automatically connect to the server endpoint
+- Demo: http://localhost:5173
+- Server: http://localhost:3000 (only if you set up LLM)
 
-### Manual Setup (if needed)
+**Optional (LLM agent):** Create `apps/server/.env` with `OPENAI_API_KEY=...`
+and `apps/demo/.env` with
+`VITE_AI11Y_API_ENDPOINT=http://localhost:3000/ai11y/agent`. Without these, the
+rule-based agent is used (no server needed).
 
-If you want to run things separately:
+To run separately: `pnpm --filter ai11y-server-app dev` then
+`pnpm --filter ai11y-demo dev`.
 
-1. **Install dependencies:**
-   ```bash
-   pnpm install
-   ```
+## What You'll See
 
-2. **Set up the server (optional - for LLM):**
-   Create a `.env` file in `apps/server/`:
-   ```bash
-   OPENAI_API_KEY=your-api-key-here
-   ```
-   Then run:
-   ```bash
-   pnpm --filter ai11y-server-app dev
-   ```
+- **Describe → plan → act:** The hero uses the same core API: `describe()`,
+  `plan(ui, input)`, and `act(instruction)`. React only provides context and
+  markers.
+- **Navigation:** Ask to go to billing or integrations.
+- **Clicks and highlighting:** Buttons and sections are marked so your agent can
+  click or highlight them.
+- **Form awareness:** Give your agent the ability to read and fill inputs (see
+  the form demo section).
+- **LLM or rule-based:** With an API endpoint configured, the plan step uses an
+  LLM; otherwise a local rule-based planner is used.
 
-3. **Configure demo (optional - for LLM):**
-   Create a `.env` file in this directory:
-   ```bash
-   VITE_AI11Y_API_ENDPOINT=http://localhost:3000/ai11y/agent
-   ```
-
-4. **Run the demo:**
-   ```bash
-   pnpm --filter ai11y-demo dev
-   ```
-
-**Important:** 
-- Never commit your `.env` file to version control
-- The `.env` file is already in `.gitignore`
-- In Vite, environment variables must be prefixed with `VITE_` to be accessible in the browser
-- If the API endpoint is not set, the app will use the rule-based agent (no server needed)
-
-## Features Demonstrated
-
-- **Navigation**: Ask the agent to navigate between pages
-- **Button Clicks**: Ask the agent to click buttons
-- **Error Handling**: Trigger an error in the Integrations page and see the agent help recover
-- **LLM Agent**: If configured, uses LLM for natural language understanding
-- **Rule-Based Fallback**: Works without LLM using pattern matching
-
-## Try It Out
-
-1. Open the agent panel (bottom-right button)
-2. Try commands like:
-   - "Take me to billing"
-   - "Click enable billing"
-   - "Go to integrations"
-   - "Connect stripe" (will fail first time, then ask to retry)
+Try commands like: "Take me to billing", "Highlight the title", "Click enable
+billing", "Go to integrations", "Connect stripe" (fails once, then retry).
