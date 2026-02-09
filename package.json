@@ -5,7 +5,7 @@
 	"scripts": {
 		"dev": "turbo run dev",
 		"build": "turbo run build",
-		"build:demo": "pnpm run docs:build && turbo run build --filter=ai11y-demo",
+		"build:demo": "turbo run build --filter=./packages/* && pnpm run docs:build && turbo run build --filter=ai11y-demo",
 		"docs:build": "typedoc",
 		"build:server": "turbo run build --filter=ai11y-server-app",
 		"watch": "turbo run watch",
