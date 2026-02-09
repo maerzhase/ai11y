@@ -19,7 +19,6 @@ wrapper.
   `plan()`, and DOM actions. No React.
 - **`packages/react/`** — Thin wrapper: `Ai11yProvider` (wraps `createClient`),
   `Marker` (adds data attributes so the DOM can be described).
-- **`packages/ui/`** — UI components (chat panel, triggers, message bubbles).
 - **`packages/agent/`** — Server-side LLM and tools for the plan step.
 
 **Apps:**
@@ -126,7 +125,7 @@ pnpm install
 pnpm dev
 ```
 
-- Demo: http://localhost:5173
+- Demo: <http://localhost:5173>
 - Optional: set `OPENAI_API_KEY` and add
   `VITE_AI11Y_API_ENDPOINT=http://localhost:3000/ai11y/agent` in
   `apps/demo/.env` to use the LLM agent; otherwise the rule-based agent is used.
