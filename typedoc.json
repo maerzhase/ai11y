@@ -14,5 +14,8 @@
 	"readme": "README.md",
 	"excludePrivate": true,
 	"excludeProtected": true,
-	"tsconfig": "packages/core/tsconfig.json"
+	"tsconfig": "packages/core/tsconfig.json",
+	"packageOptions": {
+		"entryPoints": ["src/index.ts"]
+	}
 }
