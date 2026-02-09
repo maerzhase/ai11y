@@ -3,6 +3,7 @@
 	"author": "maerzhase3000",
 	"version": "0.0.0",
 	"type": "module",
+	"private": true,
 	"main": "./dist/index.mjs",
 	"types": "./dist/index.d.mts",
 	"exports": {
