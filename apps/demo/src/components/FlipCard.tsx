@@ -143,9 +143,7 @@ export function FlipCard({
 									<div className="p-6">
 										<SyntaxHighlighter
 											language={
-												codeTab === "javascript"
-													? language
-													: reactLanguage
+												codeTab === "javascript" ? language : reactLanguage
 											}
 											style={syntaxStyle}
 											customStyle={{
@@ -162,9 +160,7 @@ export function FlipCard({
 												},
 											}}
 										>
-											{codeTab === "javascript"
-												? code
-												: reactCode}
+											{codeTab === "javascript" ? code : reactCode}
 										</SyntaxHighlighter>
 									</div>
 								</>

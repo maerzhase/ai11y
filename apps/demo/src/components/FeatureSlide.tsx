@@ -102,16 +102,13 @@ export function FeatureSlide({
 						{code ? (
 							<FlipCard
 								code={code}
-								{...(codeLanguage
-									? { language: codeLanguage }
-									: {})}
+								{...(codeLanguage ? { language: codeLanguage } : {})}
 								{...(reactCode
 									? {
 											reactCode,
 											...(reactCodeLanguage
 												? {
-														reactLanguage:
-															reactCodeLanguage,
+														reactLanguage: reactCodeLanguage,
 													}
 												: {}),
 										}

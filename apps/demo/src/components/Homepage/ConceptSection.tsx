@@ -1,11 +1,11 @@
-import { useInView } from "../../hooks/useInView";
-import { MarkerWithHighlight as Marker } from "../Shared/MarkerWithHighlight";
 import { useEffect, useMemo, useState } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import {
 	oneDark,
 	oneLight,
 } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { useInView } from "../../hooks/useInView";
+import { MarkerWithHighlight as Marker } from "../Shared/MarkerWithHighlight";
 import { demoCodeExamples } from "./demoCodeExamples";
 
 type Tab = "javascript" | "react";
@@ -46,10 +46,7 @@ export function ConceptSection() {
 		};
 	}, []);
 
-	const syntaxStyle = useMemo(
-		() => (isDark ? oneDark : oneLight),
-		[isDark],
-	);
+	const syntaxStyle = useMemo(() => (isDark ? oneDark : oneLight), [isDark]);
 	const { code, language } = codeByTab[tab];
 
 	return (
@@ -65,32 +62,31 @@ export function ConceptSection() {
 			>
 				<div
 					className={`relative w-full max-w-2xl mx-auto text-left transition-all duration-700 ease-out ${
-						isInView
-							? "opacity-100 translate-y-0"
-							: "opacity-0 translate-y-8"
+						isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
 					}`}
 				>
 					<h2 className="text-3xl md:text-4xl font-bold mb-6 text-foreground tracking-tight">
 						Describe → Plan → Act
 					</h2>
 					<p className="text-lg text-muted-foreground leading-relaxed mb-2">
-						The world runs on user interfaces. Interfaces solve
-						problems by making state, constraints, and actions
-						explicit.
+						The world runs on user interfaces. Interfaces solve problems by
+						making state, constraints, and actions explicit.
 					</p>
 					<p className="text-lg text-muted-foreground leading-relaxed mb-6">
-						ai11y exposes this structure so agents can operate
-						existing UIs.
+						ai11y exposes this structure so agents can operate existing UIs.
 					</p>
 					<ul className="text-lg text-muted-foreground leading-relaxed mb-10 list-none space-y-2 pl-0">
 						<li>
-							<strong className="text-foreground">Describe</strong> — observe the current UI context.
+							<strong className="text-foreground">Describe</strong> — observe
+							the current UI context.
 						</li>
 						<li>
-							<strong className="text-foreground">Plan</strong> — get instructions from the agent.
+							<strong className="text-foreground">Plan</strong> — get
+							instructions from the agent.
 						</li>
 						<li>
-							<strong className="text-foreground">Act</strong> — perform actions on the UI.
+							<strong className="text-foreground">Act</strong> — perform actions
+							on the UI.
 						</li>
 					</ul>
 
