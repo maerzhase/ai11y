@@ -37,7 +37,7 @@ ai11y exposes this structure so agents can operate existing UIs.
 **Plan** — get instructions from the agent.  
 **Act** — perform actions on the UI.
 
-**JavaScript (no React):**
+**Plain JavaScript:**
 
 ```ts
 import { createClient, plan } from "@ai11y/core";
@@ -111,26 +111,10 @@ client sends `describe()` output and user input; the server returns
 `{ reply, instructions }`. Without a configured endpoint, the client falls back
 to a built-in rule-based planner.
 
-## Demo
-
-The [demo app](apps/demo/) shows describe → plan → act in action; the core is
-JavaScript, the UI uses the React wrapper. See
-[apps/demo/README.md](apps/demo/README.md) for what it demonstrates and how to
-run it.
-
-**Run the demo:**
+## Commands
 
 ```bash
 pnpm install
-pnpm dev
-```
-
-- Demo: <http://localhost:5173>
-- Optional: set `OPENAI_API_KEY` and add
-  `VITE_AI11Y_API_ENDPOINT=http://localhost:3000/ai11y/agent` in
-  `apps/demo/.env` to use the LLM agent; otherwise the rule-based agent is used.
-
-```bash
 pnpm build    # build all
 pnpm watch    # watch mode
 ```

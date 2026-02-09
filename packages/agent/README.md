@@ -11,55 +11,10 @@ pnpm add @ai11y/agent
 
 ## Quick Start
 
-### With Fastify
+### Standalone
 
-```ts
-import Fastify from "fastify";
-import { ai11yPlugin } from "@ai11y/agent/fastify";
-
-const fastify = Fastify();
-
-await fastify.register(ai11yPlugin, {
-  config: {
-    apiKey: process.env.OPENAI_API_KEY!,
-    model: "gpt-4o-mini", // Optional, defaults to gpt-4o-mini
-    baseURL: "https://api.openai.com/v1", // Optional, for custom endpoints
-  },
-});
-
-await fastify.listen({ port: 3000 });
-```
-
-The plugin will register the following routes:
-
-- `POST /ai11y/agent` - Main agent endpoint
-- `GET /ai11y/health` - Health check endpoint
-
-**Example App:** See `apps/server/` in this monorepo for a complete example
-server implementation.
-
-**Note:** If you're running the server on a different origin than your frontend,
-you'll need to configure CORS:
-
-```ts
-import Fastify from "fastify";
-import cors from "@fastify/cors";
-import { ai11yPlugin } from "@ai11y/agent/fastify";
-
-const fastify = Fastify();
-
-await fastify.register(cors, {
-  origin: "http://localhost:5173", // Your frontend URL
-});
-
-await fastify.register(ai11yPlugin, {
-  config: {
-    apiKey: process.env.OPENAI_API_KEY!,
-  },
-});
-```
-
-### Standalone Usage
+Use `runAgent` with a config and tool registry; wire it to your own HTTP (or
+other) transport:
 
 ```ts
 import type { AgentRequest } from "@ai11y/core";
@@ -79,6 +34,30 @@ async function handleRequest(request: AgentRequest) {
 }
 ```
 
+### With Fastify
+
+Register the plugin to expose the agent endpoint:
+
+```ts
+import Fastify from "fastify";
+import { ai11yPlugin } from "@ai11y/agent/fastify";
+
+const fastify = Fastify();
+
+await fastify.register(ai11yPlugin, {
+  config: {
+    apiKey: process.env.OPENAI_API_KEY!,
+    model: "gpt-4o-mini",
+    baseURL: "https://api.openai.com/v1",
+  },
+});
+
+await fastify.listen({ port: 3000 });
+```
+
+The plugin registers `POST /ai11y/agent` and `GET /ai11y/health`. See
+`apps/server/` for a full example.
+
 ## Extending with Custom Tools
 
 You can extend the agent with custom tools using the `ToolRegistry`:
@@ -87,10 +66,8 @@ You can extend the agent with custom tools using the `ToolRegistry`:
 import type { Ai11yContext, ToolDefinition, ToolExecutor } from "@ai11y/core";
 import { ai11yPlugin, createToolRegistry } from "@ai11y/agent/fastify";
 
-// Create a custom tool registry
 const registry = createToolRegistry();
 
-// Register a custom tool
 registry.register(
   {
     name: "send_email",
@@ -106,14 +83,11 @@ registry.register(
     },
   },
   async (args, context) => {
-    // Execute your custom logic here
     console.log("Sending email:", args);
-    // You can access the context for additional information
     return { success: true, messageId: "123" };
   },
 );
 
-// Use the custom registry with the plugin
 await fastify.register(ai11yPlugin, {
   config: {
     apiKey: process.env.OPENAI_API_KEY!,
@@ -122,96 +96,4 @@ await fastify.register(ai11yPlugin, {
 });
 ```
 
-## API Reference
-
-### `runAgent(request, config, toolRegistry?)`
-
-Runs the LLM agent with the given request and configuration.
-
-**Parameters:**
-
-- `request: AgentRequest` - The agent request containing input and context
-- `config: ServerConfig` - Server configuration with API key
-- `toolRegistry?: ToolRegistry` - Optional tool registry (defaults to built-in
-  tools)
-
-**Returns:** `Promise<AgentResponse>`
-
-### `ToolRegistry`
-
-A registry for managing tools that can be called by the LLM agent.
-
-**Methods:**
-
-- `register(definition: ToolDefinition, executor: ToolExecutor)` - Register a
-  new tool
-- `unregister(name: string)` - Unregister a tool
-- `getToolDefinitions()` - Get all tool definitions for LLM
-- `executeToolCall(name, args, context)` - Execute a tool call
-- `hasTool(name)` - Check if a tool is registered
-
-### `createDefaultToolRegistry()`
-
-Creates a tool registry with built-in tools (navigate, click, highlight).
-
-### `ai11yPlugin`
-
-Fastify plugin that registers the agent endpoints.
-
-**Options:**
-
-- `config: ServerConfig` - Required. Server configuration
-- `toolRegistry?: ToolRegistry` - Optional. Custom tool registry
-
-## Types
-
-### `ServerConfig`
-
-```ts
-interface ServerConfig {
-  apiKey: string;
-  model?: string;
-  baseURL?: string;
-}
-```
-
-### `AgentRequest`
-
-```ts
-interface AgentRequest {
-  input: string;
-  context: Ai11yContext;
-}
-```
-
-### `AgentResponse`
-
-```ts
-interface AgentResponse {
-  reply: string;
-  toolCalls?: ToolCall[];
-}
-```
-
-### `ToolDefinition`
-
-```ts
-interface ToolDefinition {
-  name: string;
-  description: string;
-  parameters: {
-    type: "object";
-    properties: Record<string, { type: string; description: string }>;
-    required?: string[];
-  };
-}
-```
-
-### `ToolExecutor`
-
-```ts
-type ToolExecutor = (
-  args: Record<string, unknown>,
-  context: Ai11yContext,
-) => Promise<unknown> | unknown;
-```
+For API details and types, see the generated docs.

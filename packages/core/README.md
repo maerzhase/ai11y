@@ -35,17 +35,3 @@ for (const instruction of instructions ?? []) {
 Types (`Ai11yContext`, `Instruction`, `AgentResponse`, etc.) and DOM helpers
 (`clickMarker`, `highlightMarker`, `navigateToRoute`, etc.) are exported from
 the main entry. See generated docs for full reference.
-
-## Structure
-
-```
-src/
-├── agent/         # plan(), adapter, LLM + rule-based agents
-├── dom-actions/  # click, highlight, navigate, scroll, fillInput
-├── client-api.ts # createClient, Ai11yClient
-├── context.ts    # Ai11yContext, Ai11yState, Ai11yError
-├── dom.ts        # getContext(), viewport visibility
-├── marker.ts    # marker extraction from DOM
-├── store.ts     # route, state, error, events
-└── index.ts
-```
