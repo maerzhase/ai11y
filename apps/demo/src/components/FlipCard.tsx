@@ -29,28 +29,19 @@ export function FlipCard({
 	const [codeTab, setCodeTab] = useState<Tab>("javascript");
 	const [isDark, setIsDark] = useState(false);
 
-	// Detect theme changes
 	useEffect(() => {
 		const checkTheme = () => {
 			setIsDark(document.documentElement.classList.contains("dark"));
 		};
-
-		// Initial check
 		checkTheme();
-
-		// Listen for theme changes
 		const handleThemeChange = () => {
 			checkTheme();
 		};
-
-		// Use MutationObserver to watch for class changes on documentElement
 		const observer = new MutationObserver(checkTheme);
 		observer.observe(document.documentElement, {
 			attributes: true,
 			attributeFilter: ["class"],
 		});
-
-		// Also listen for custom themechange event
 		window.addEventListener("themechange", handleThemeChange);
 
 		return () => {
@@ -59,14 +50,12 @@ export function FlipCard({
 		};
 	}, []);
 
-	// Select style based on theme
 	const syntaxStyle = useMemo(() => {
 		return isDark ? oneDark : oneLight;
 	}, [isDark]);
 
 	return (
 		<div className="w-full">
-			{/* Toggle Button */}
 			<div className="flex justify-center mb-4">
 				<Button
 					type="button"
@@ -78,7 +67,6 @@ export function FlipCard({
 				</Button>
 			</div>
 
-			{/* 3D Flip Card Container */}
 			<div
 				className="relative w-full"
 				style={{
@@ -93,7 +81,6 @@ export function FlipCard({
 						transition: "transform 0.7s ease-in-out",
 					}}
 				>
-					{/* Front Side - Demo Content */}
 					<div
 						className="w-full"
 						style={{
@@ -104,7 +91,6 @@ export function FlipCard({
 						{children}
 					</div>
 
-					{/* Back Side - Code */}
 					<div
 						className="absolute inset-0 w-full"
 						style={{

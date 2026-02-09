@@ -76,7 +76,6 @@ export class ToolRegistry {
 
 		const args = JSON.parse(toolCall.function.arguments);
 
-		// Built-in tools
 		if (toolCall.function.name === "navigate") {
 			return { action: "navigate", route: args.route };
 		}
@@ -97,8 +96,6 @@ export class ToolRegistry {
 			};
 		}
 
-		// For custom tools, we return null and let the executor handle it
-		// The executor result can be used for follow-up messages
 		return null;
 	}
 
@@ -116,7 +113,6 @@ export class ToolRegistry {
 export function createDefaultToolRegistry(): ToolRegistry {
 	const registry = new ToolRegistry();
 
-	// Register built-in tools in order of preference
 	registry.register(
 		{
 			name: "click",
@@ -135,7 +131,6 @@ export function createDefaultToolRegistry(): ToolRegistry {
 			},
 		},
 		async (args) => {
-			// Click is handled client-side, just return success
 			return { success: true, markerId: args.markerId };
 		},
 	);
@@ -158,7 +153,6 @@ export function createDefaultToolRegistry(): ToolRegistry {
 			},
 		},
 		async (args) => {
-			// Scroll is handled client-side, just return success
 			return { success: true, markerId: args.markerId };
 		},
 	);
@@ -180,7 +174,6 @@ export function createDefaultToolRegistry(): ToolRegistry {
 			},
 		},
 		async (args) => {
-			// Highlight is handled client-side, just return success
 			return { success: true, markerId: args.markerId };
 		},
 	);
@@ -203,7 +196,6 @@ export function createDefaultToolRegistry(): ToolRegistry {
 			},
 		},
 		async (args) => {
-			// Navigation is handled client-side, just return success
 			return { success: true, route: args.route };
 		},
 	);
@@ -231,7 +223,6 @@ export function createDefaultToolRegistry(): ToolRegistry {
 			},
 		},
 		async (args) => {
-			// FillInput is handled client-side, just return success
 			return {
 				success: true,
 				markerId: args.markerId,

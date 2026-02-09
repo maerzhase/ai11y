@@ -109,12 +109,10 @@ function extractSelectData(element: Element): {
 
 	const selectedOptions: string[] = [];
 	if (selectElement.multiple) {
-		// Multi-select: collect all selected options
 		for (let i = 0; i < selectElement.selectedOptions.length; i++) {
 			selectedOptions.push(selectElement.selectedOptions[i].value);
 		}
 	} else {
-		// Single select: use the value property
 		if (selectElement.value) {
 			selectedOptions.push(selectElement.value);
 		}
@@ -139,23 +137,18 @@ function extractSelectData(element: Element): {
  * ```
  */
 export function getMarkers(root?: Element): Marker[] {
-	// Determine the root element to scan
 	const scanRoot = root ?? getDocumentBody();
 
-	// If no document/body available, return empty array
 	if (!scanRoot) {
 		return [];
 	}
 
-	// Find all elements with data-ai-id attribute
 	const elements = scanRoot.querySelectorAll(getAllMarkersSelector());
-
-	// Extract markers from elements
 	const markers: Marker[] = [];
 	for (let i = 0; i < elements.length; i++) {
 		const element = elements[i];
 		const id = getMarkerId(element);
-		if (!id) continue; // Skip if id is missing
+		if (!id) continue;
 
 		const label = getMarkerLabel(element) || formatMarkerId(id);
 		const intent = getMarkerIntent(element) || "";
@@ -168,13 +161,11 @@ export function getMarkers(root?: Element): Marker[] {
 			elementType,
 		};
 
-		// Extract input/textarea value
 		const inputValue = extractInputValue(element);
 		if (inputValue !== undefined) {
 			marker.value = inputValue;
 		}
 
-		// Extract select options and selected values
 		const selectData = extractSelectData(element);
 		if (selectData.options !== undefined) {
 			marker.options = selectData.options;

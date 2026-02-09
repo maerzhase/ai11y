@@ -10,7 +10,6 @@ import { getAllMarkersSelector, getMarkerId } from "./util/attributes.js";
  * @returns Array of marker IDs that are currently in view
  */
 function getInViewMarkerIds(root?: Element): string[] {
-	// Check if we're in a browser environment
 	if (typeof document === "undefined" || typeof window === "undefined") {
 		return [];
 	}
@@ -20,18 +19,14 @@ function getInViewMarkerIds(root?: Element): string[] {
 		return [];
 	}
 
-	// Find all elements with data-ai-id attribute
 	const elements = scanRoot.querySelectorAll(getAllMarkersSelector());
 	const inViewIds: string[] = [];
 
-	// Use IntersectionObserver to check visibility
-	// For synchronous checking, we'll use getBoundingClientRect
 	for (let i = 0; i < elements.length; i++) {
 		const element = elements[i];
 		const id = getMarkerId(element);
 		if (!id) continue;
 
-		// Check if element is in viewport
 		const rect = element.getBoundingClientRect();
 		const isInView =
 			rect.top >= 0 &&
@@ -40,7 +35,6 @@ function getInViewMarkerIds(root?: Element): string[] {
 				(window.innerHeight || document.documentElement.clientHeight) &&
 			rect.right <= (window.innerWidth || document.documentElement.clientWidth);
 
-		// Also check if element is partially visible (more lenient check)
 		const isPartiallyVisible =
 			rect.top <
 				(window.innerHeight || document.documentElement.clientHeight) &&
@@ -77,12 +71,10 @@ export function getContext(root?: Element): Ai11yContext {
 		inViewMarkerIds: getInViewMarkerIds(root),
 	};
 
-	// Get state from singleton
 	const route = getRoute();
 	const state = getState();
 	const error = getError();
 
-	// Only include optional fields if they are defined
 	if (route !== undefined) {
 		context.route = route;
 	}

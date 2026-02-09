@@ -20,7 +20,6 @@ export function ContextDrawerProvider({
 		return stored === "true";
 	});
 
-	// Persist open state
 	useEffect(() => {
 		localStorage.setItem("context-panel-open", String(isOpen));
 	}, [isOpen]);

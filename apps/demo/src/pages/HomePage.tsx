@@ -100,23 +100,18 @@ export function HomePage() {
 		setSuggestionHandler(() => handler);
 	};
 
-	// Provide default no-op handler until ScrollyHero is ready
 	const currentHandler = suggestionHandler || (() => {});
 
 	return (
 		<SuggestionInputProvider value={{ setSuggestion: currentHandler }}>
 			<div className="scrolly-container">
-				{/* Background pattern */}
 				<div className="fixed inset-0 -z-10 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:32px_32px]" />
 				<div className="fixed inset-0 -z-10 bg-gradient-to-br from-primary/3 via-transparent to-primary/3" />
 
-				{/* Hero Section */}
 				<ScrollyHero onSuggestionReady={handleSuggestionReady} />
 
-				{/* Feature Slides */}
 				<FeatureSlides />
 
-				{/* Footer */}
 				<Footer />
 			</div>
 		</SuggestionInputProvider>

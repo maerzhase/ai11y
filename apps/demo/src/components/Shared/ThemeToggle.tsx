@@ -24,7 +24,6 @@ export function ThemeToggle(
 ) {
 	const [theme, setTheme] = useState<"light" | "dark">(getInitialTheme);
 
-	// Initialize theme on mount
 	useEffect(() => {
 		applyTheme(theme);
 	}, [theme]);

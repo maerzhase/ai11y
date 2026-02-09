@@ -121,7 +121,6 @@ export function AssistPanel() {
 			onOpenChange={setIsPanelOpen}
 			onClose={() => setIsPanelOpen(false)}
 		>
-			{/* Demo-owned message list with scroll sentinel so we can auto-scroll without refs from useChat */}
 			<div className="flex-1 overflow-y-auto px-3 py-3 flex flex-col gap-2">
 				{messages.map((msg, index) => (
 					<MessageBubble

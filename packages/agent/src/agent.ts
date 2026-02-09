@@ -43,12 +43,10 @@ function formatContextForPrompt(context: AgentRequest["context"]): string {
 			const inViewStatus = isInView ? " [IN VIEW]" : "";
 			let markerLine = `  - ${marker.label} (ID: ${marker.id}, Type: ${marker.elementType})${inViewStatus}: ${marker.intent}`;
 
-			// Add value for input/textarea elements
 			if (marker.value !== undefined) {
 				markerLine += `\n    Current value: "${marker.value}"`;
 			}
 
-			// Add options and selected values for select elements
 			if (marker.options !== undefined) {
 				const optionsList = marker.options
 					.map((opt) => `${opt.label} (${opt.value})`)
@@ -88,7 +86,6 @@ function createLangChainTools(
 	for (const toolDef of toolDefinitions) {
 		const def = toolDef.function;
 
-		// Convert parameters to Zod schema
 		const zodSchema: Record<string, z.ZodTypeAny> = {};
 		for (const [key, param] of Object.entries(
 			def.parameters.properties,
@@ -106,13 +103,11 @@ function createLangChainTools(
 
 		const schema = z.object(zodSchema);
 
-		// Create LangChain tool
 		const tool = new DynamicStructuredTool({
 			name: def.name,
 			description: def.description,
 			schema,
 			func: async (args: Record<string, unknown>) => {
-				// Execute the tool via registry
 				const result = await toolRegistry.executeToolCall(
 					def.name,
 					args,
@@ -142,7 +137,6 @@ function findMatchingMarker(
 } | null {
 	const lowerInput = input.toLowerCase().trim();
 
-	// Check if input contains navigation language
 	const hasNavigationLanguage =
 		lowerInput.includes("go to") ||
 		lowerInput.includes("navigate to") ||
@@ -153,7 +147,6 @@ function findMatchingMarker(
 		return null;
 	}
 
-	// Check if user is referring to a UI element (button, link, nav button, etc.)
 	const elementKeywords = [
 		"button",
 		"link",
@@ -169,12 +162,10 @@ function findMatchingMarker(
 		lowerInput.includes(keyword),
 	);
 
-	// Extract search text by removing navigation keywords
 	const searchText = lowerInput
 		.replace(/go to|navigate to|open|take me to/g, "")
 		.trim();
 
-	// Find matching marker
 	const matchingMarker = markers.find((m) => {
 		const markerText = `${m.label} ${m.intent}`.toLowerCase();
 		return (
@@ -240,33 +231,25 @@ export async function runAgent(
 	config: ServerConfig,
 	toolRegistry: ToolRegistry = createDefaultToolRegistry(),
 ): Promise<AgentResponse> {
-	// Create LLM instance
 	const llm = await createLLM(config);
 
-	// Check if user input matches a marker (for scroll vs navigate decision)
 	const markerMatch = findMatchingMarker(
 		request.input,
 		request.context.markers,
 	);
 
-	// Format context for the prompt
 	const contextPrompt = formatContextForPrompt(request.context);
-
-	// Convert tool registry to LangChain tools
 	const langchainTools = createLangChainTools(toolRegistry, request.context);
 
-	// Bind tools to LLM
 	const llmWithTools =
 		langchainTools.length > 0 && typeof llm.bindTools === "function"
 			? llm.bindTools(langchainTools)
 			: llm;
 
-	// Extract marker info from recent conversation if available
 	let recentMarkerContext = "";
 	if (request.messages && request.messages.length > 0) {
 		const lastFewMessages = request.messages.slice(-4);
 		for (const msg of lastFewMessages) {
-			// Look for marker mentions in the conversation
 			for (const marker of request.context.markers) {
 				if (
 					msg.content.toLowerCase().includes(marker.label.toLowerCase()) ||
@@ -279,7 +262,6 @@ export async function runAgent(
 		}
 	}
 
-	// Add marker match guidance if found
 	let markerMatchGuidance = "";
 	if (markerMatch) {
 		const marker = markerMatch.marker;
@@ -332,14 +314,11 @@ Multiple actions rules:
 - For "highlight all [type]" or "click all [type]": Find all markers matching the type and generate one tool call per marker
 - For "[action] [count] times": Generate [count] identical tool calls`;
 
-	// Build conversation messages
 	const conversationMessages: Array<{ role: string; content: string }> = [
 		{ role: "system", content: systemPrompt },
 	];
 
-	// Add conversation history if available (excluding the current input)
 	if (request.messages && request.messages.length > 0) {
-		// Add previous messages (last 10 to avoid token limits)
 		const recentMessages = request.messages.slice(-10);
 		for (const msg of recentMessages) {
 			conversationMessages.push({
@@ -349,22 +328,17 @@ Multiple actions rules:
 		}
 	}
 
-	// Add current user input
 	conversationMessages.push({ role: "user", content: request.input });
 
-	// Invoke LLM with messages
 	const response = await llmWithTools.invoke(conversationMessages);
 
-	// Extract instructions and content
 	const instructions: Instruction[] = [];
 	let reply = "";
 
-	// Handle response content
 	if (response.content) {
 		if (typeof response.content === "string") {
 			reply = response.content;
 		} else if (Array.isArray(response.content)) {
-			// Handle array of content blocks
 			reply = response.content
 				.map((c) => {
 					if (typeof c === "string") return c;
@@ -377,7 +351,6 @@ Multiple actions rules:
 		}
 	}
 
-	// Extract tool calls from LangChain response
 	// LangChain stores tool calls in response.tool_calls or response.additional_kwargs.tool_calls
 	const toolCallObjects: Array<{
 		name?: string;
@@ -401,7 +374,6 @@ Multiple actions rules:
 				: {});
 
 		if (toolName) {
-			// Try to convert to our Instruction format
 			const converted = toolRegistry.convertToolCall({
 				type: "function",
 				function: {
@@ -413,14 +385,12 @@ Multiple actions rules:
 			if (converted) {
 				instructions.push(converted);
 			} else {
-				// For custom tools, execute them
 				try {
 					const result = await toolRegistry.executeToolCall(
 						toolName,
 						toolArgs,
 						request.context,
 					);
-					// If the result is an Instruction, add it
 					if (result && typeof result === "object" && "action" in result) {
 						instructions.push(result as Instruction);
 					}

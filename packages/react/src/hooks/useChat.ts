@@ -62,7 +62,6 @@ export function useChat({
 			processingRef.current = true;
 			queueMicrotask(() => onMessage?.());
 
-			// Add user message
 			messageIdCounterRef.current += 1;
 			const userMsg: Message = {
 				id: `user-${Date.now()}-${messageIdCounterRef.current}`,
@@ -71,7 +70,6 @@ export function useChat({
 				timestamp: Date.now(),
 			};
 
-			// Build updated messages array for conversation history
 			let updatedMessages: Message[] = [];
 			setMessages((prev) => {
 				updatedMessages = [...prev, userMsg];
@@ -93,7 +91,6 @@ export function useChat({
 						timestamp: Date.now(),
 					};
 					setMessages((prevMsgs) => {
-						// Check if this exact message already exists to prevent duplicates
 						const exists = prevMsgs.some(
 							(msg) =>
 								msg.id === assistantMsg.id ||
@@ -106,7 +103,6 @@ export function useChat({
 					});
 					queueMicrotask(() => onMessage?.());
 
-					// Execute instructions
 					if (response.instructions && onInstruction) {
 						for (const instruction of response.instructions) {
 							onInstruction(instruction);
@@ -114,7 +110,6 @@ export function useChat({
 					}
 				}
 			} catch (error) {
-				// Handle errors gracefully
 				if (processingRef.current) {
 					messageIdCounterRef.current += 1;
 					const errorMsg: Message = {
@@ -124,7 +119,6 @@ export function useChat({
 						timestamp: Date.now(),
 					};
 					setMessages((prevMsgs) => {
-						// Check for duplicates
 						const exists = prevMsgs.some(
 							(msg) =>
 								msg.id === errorMsg.id ||

@@ -4,7 +4,6 @@
  * Core types and utilities shared across all ai11y packages.
  */
 
-// Agent module
 export {
 	type AgentAdapterConfig,
 	type AgentConfig,
@@ -19,7 +18,6 @@ export {
 } from "./agent/index.js";
 export { plan } from "./agent/plan.js";
 export type { ToolDefinition, ToolExecutor } from "./agent/tool-contract.js";
-// Client API
 export { type Ai11yClient, createClient } from "./client-api.js";
 export type {
 	Ai11yContext,

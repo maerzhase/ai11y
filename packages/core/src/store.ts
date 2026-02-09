@@ -63,7 +63,6 @@ export function track(event: string, payload?: unknown): void {
 			timestamp: Date.now(),
 		},
 	];
-	// Notify subscribers that an event was tracked
 	notify();
 }
 
@@ -103,7 +102,6 @@ export function clearContext(): void {
 	state = undefined;
 	error = undefined;
 	events = [];
-	// Notify listeners of the clear
 	notifyStoreChange("route", undefined);
 	notifyStoreChange("state", undefined);
 	notifyStoreChange("error", undefined);

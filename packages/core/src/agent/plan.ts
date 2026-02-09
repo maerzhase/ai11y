@@ -37,6 +37,5 @@ export async function plan(
 		messages,
 	);
 
-	// Return the full response with both reply and instructions
 	return response;
 }

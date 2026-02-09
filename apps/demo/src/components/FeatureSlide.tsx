@@ -45,7 +45,6 @@ export function FeatureSlide({
 			ref={ref}
 			className="min-h-screen flex items-center justify-center py-24 px-6 relative"
 		>
-			{/* Background decoration */}
 			<div className="absolute inset-0 pointer-events-none overflow-hidden">
 				<div
 					className={`absolute top-1/4 w-96 h-96 rounded-full bg-primary/10 blur-3xl ${
@@ -68,7 +67,6 @@ export function FeatureSlide({
 						direction === "right" ? "lg:flex-row-reverse" : ""
 					}`}
 				>
-					{/* Content side */}
 					<div
 						className={`flex-1 text-center lg:text-left ${
 							direction === "right" ? "lg:flex lg:flex-col" : ""
@@ -97,7 +95,6 @@ export function FeatureSlide({
 						</p>
 					</div>
 
-					{/* Demo side */}
 					<div className="flex-1 w-full max-w-md">
 						{code ? (
 							<FlipCard

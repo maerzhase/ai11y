@@ -21,7 +21,6 @@ export function ScrollyHero({ onSuggestionReady }: ScrollyHeroProps = {}) {
 	const { isOpen: isContextOpen, setIsOpen: setContextOpen } =
 		useContextDrawer();
 	const [isCompact, setIsCompact] = useState(() => {
-		// Initialize based on current scroll position
 		const scrollY = window.scrollY;
 		const threshold = window.innerHeight * 0.6;
 		return scrollY > threshold;
@@ -100,7 +99,6 @@ export function ScrollyHero({ onSuggestionReady }: ScrollyHeroProps = {}) {
 			instructions: response.instructions,
 		});
 
-		// Return response for useChat - use the agent's actual reply
 		return {
 			reply: response.reply,
 			instructions:
@@ -112,8 +110,6 @@ export function ScrollyHero({ onSuggestionReady }: ScrollyHeroProps = {}) {
 
 	const handleInstruction = (instruction: Instruction) => {
 		act(instruction);
-		// Add highlight for visual feedback only for highlight actions
-		// Note: highlightMarker already scrolls into view, so we don't need to add highlight for scroll actions
 		if (instruction.action === "highlight") {
 			addHighlight(instruction.id);
 		}
@@ -145,12 +141,10 @@ export function ScrollyHero({ onSuggestionReady }: ScrollyHeroProps = {}) {
 			"Welcome! I can help you navigate this page, highlight features, and interact with demos. Try saying 'show me navigation' or scroll down to explore!",
 	});
 
-	// When user opens the compact messages panel, scroll to bottom
 	useEffect(() => {
 		if (showMessages) scrollMessagesToBottom();
 	}, [showMessages, scrollMessagesToBottom]);
 
-	// Filter to show only recent messages
 	const recentMessages = messages.slice(-4);
 	const lastMessage = messages[messages.length - 1];
 
@@ -162,14 +156,12 @@ export function ScrollyHero({ onSuggestionReady }: ScrollyHeroProps = {}) {
 		[setInput],
 	);
 
-	// Expose handler to parent
 	useEffect(() => {
 		onSuggestionReady?.(handleSuggestion);
 	}, [onSuggestionReady, handleSuggestion]);
 
 	return (
 		<>
-			{/* Fixed buttons - always visible with higher z-index */}
 			<div
 				className={`fixed top-0 left-0 z-[60] transition-all duration-300 ${
 					isContextOpen ? "right-96" : "right-0"
@@ -226,7 +218,6 @@ export function ScrollyHero({ onSuggestionReady }: ScrollyHeroProps = {}) {
 				</div>
 			</div>
 
-			{/* Fixed Header - slides in below buttons when scrolled */}
 			<header
 				className={`fixed top-0 left-0 z-50 transition-all duration-300 ${
 					isContextOpen ? "right-96" : "right-0"
@@ -250,19 +241,15 @@ export function ScrollyHero({ onSuggestionReady }: ScrollyHeroProps = {}) {
 				</div>
 			</header>
 
-			{/* Full Hero Section - Static, not sticky */}
 			<section
 				ref={heroRef}
 				className="min-h-screen flex items-center justify-center relative"
 			>
 				<div className="relative max-w-2xl w-full mx-auto px-6">
-					{/* Glassmorphism container */}
 					<div className="relative rounded-3xl bg-background/80 backdrop-blur-xl border border-border/50 shadow-2xl overflow-hidden">
-						{/* Gradient accent */}
 						<div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/5 pointer-events-none" />
 
 						<div className="relative p-8">
-							{/* Title */}
 							<Marker
 								id="hero_title"
 								label="ai11y"
@@ -281,7 +268,6 @@ export function ScrollyHero({ onSuggestionReady }: ScrollyHeroProps = {}) {
 								</p>
 							</div>
 
-							{/* Messages area */}
 							<div
 								ref={messagesContainerRef}
 								className="mb-4 max-h-40 overflow-y-auto scrollbar-thin"
@@ -315,7 +301,6 @@ export function ScrollyHero({ onSuggestionReady }: ScrollyHeroProps = {}) {
 								</div>
 							</div>
 
-							{/* Chat input */}
 							<form onSubmit={handleChatSubmit} className="relative">
 								<input
 									ref={isCompact ? undefined : inputRef}
@@ -352,7 +337,6 @@ export function ScrollyHero({ onSuggestionReady }: ScrollyHeroProps = {}) {
 								</button>
 							</form>
 
-							{/* Quick suggestions */}
 							<p className="text-xs text-muted-foreground pt-2 text-center">
 								Try{" "}
 								<SuggestionChip
@@ -370,7 +354,6 @@ export function ScrollyHero({ onSuggestionReady }: ScrollyHeroProps = {}) {
 						</div>
 					</div>
 
-					{/* Scroll indicator */}
 					<div className="absolute -bottom-16 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-muted-foreground/60">
 						<span className="text-xs">Scroll to explore</span>
 						<div className="w-5 h-8 rounded-full border-2 border-current flex items-start justify-center p-1">
@@ -380,7 +363,6 @@ export function ScrollyHero({ onSuggestionReady }: ScrollyHeroProps = {}) {
 				</div>
 			</section>
 
-			{/* Compact Floating Input Bar - Fixed at bottom, sticks above footer when footer is in view */}
 			<div
 				className={`fixed z-50 max-w-xl px-4 transition-all duration-300 ${
 					isContextOpen
@@ -396,7 +378,6 @@ export function ScrollyHero({ onSuggestionReady }: ScrollyHeroProps = {}) {
 				}}
 			>
 				<div className="relative rounded-2xl bg-background/95 backdrop-blur-xl border border-border/50 shadow-2xl overflow-hidden">
-					{/* Expandable messages panel */}
 					<div
 						className={`overflow-hidden transition-all duration-300 ${
 							showMessages ? "max-h-48" : "max-h-0"
@@ -436,12 +417,10 @@ export function ScrollyHero({ onSuggestionReady }: ScrollyHeroProps = {}) {
 						</div>
 					</div>
 
-					{/* Input row */}
 					<form
 						onSubmit={handleChatSubmit}
 						className="flex items-center gap-2 p-2"
 					>
-						{/* Toggle messages button */}
 						<button
 							type="button"
 							onClick={() => setShowMessages((v) => !v)}
@@ -467,7 +446,6 @@ export function ScrollyHero({ onSuggestionReady }: ScrollyHeroProps = {}) {
 							</svg>
 						</button>
 
-						{/* Last message preview (when collapsed) */}
 						{!showMessages && lastMessage && (
 							<div className="hidden sm:block text-xs text-muted-foreground truncate max-w-32 px-2">
 								{lastMessage.content.slice(0, 40)}
@@ -475,7 +453,6 @@ export function ScrollyHero({ onSuggestionReady }: ScrollyHeroProps = {}) {
 							</div>
 						)}
 
-						{/* Input */}
 						<input
 							ref={isCompact ? inputRef : undefined}
 							type="text"
@@ -486,7 +463,6 @@ export function ScrollyHero({ onSuggestionReady }: ScrollyHeroProps = {}) {
 							className="flex-1 px-4 py-2.5 text-sm rounded-xl border border-border/50 bg-muted/30 text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/50 disabled:opacity-50 transition-all"
 						/>
 
-						{/* Submit */}
 						<button
 							type="submit"
 							disabled={!input.trim() || isProcessing}

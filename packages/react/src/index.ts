@@ -1,6 +1,3 @@
-// Re-export core API
-
-// Re-export types from core
 export type {
 	AgentConfig,
 	AgentMode,

@@ -61,7 +61,6 @@ export function Card({
 
 Card.displayName = "Card";
 
-// Card Header
 export interface CardHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
 	children?: React.ReactNode;
 }
@@ -76,7 +75,6 @@ export function CardHeader({ className, children, ...props }: CardHeaderProps) {
 
 CardHeader.displayName = "CardHeader";
 
-// Card Title
 export interface CardTitleProps
 	extends React.HTMLAttributes<HTMLHeadingElement> {
 	children?: React.ReactNode;
@@ -95,7 +93,6 @@ export function CardTitle({ className, children, ...props }: CardTitleProps) {
 
 CardTitle.displayName = "CardTitle";
 
-// Card Description
 export interface CardDescriptionProps
 	extends React.HTMLAttributes<HTMLParagraphElement> {
 	children?: React.ReactNode;
@@ -115,7 +112,6 @@ export function CardDescription({
 
 CardDescription.displayName = "CardDescription";
 
-// Card Content
 export interface CardContentProps extends React.HTMLAttributes<HTMLDivElement> {
 	children?: React.ReactNode;
 }
@@ -134,7 +130,6 @@ export function CardContent({
 
 CardContent.displayName = "CardContent";
 
-// Card Footer
 export interface CardFooterProps extends React.HTMLAttributes<HTMLDivElement> {
 	children?: React.ReactNode;
 }

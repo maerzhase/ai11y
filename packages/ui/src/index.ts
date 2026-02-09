@@ -1,6 +1,3 @@
-// Utilities
-
-// Assist Components
 export type { AssistPanelHeaderProps } from "./AssistPanelHeader.js";
 export { AssistPanelHeader } from "./AssistPanelHeader.js";
 export type { AssistPanelPopoverProps } from "./AssistPanelPopover.js";
@@ -45,7 +42,6 @@ export type { Message, MessageListProps } from "./MessageList.js";
 export { MessageList } from "./MessageList.js";
 export type { MorphingBlobProps } from "./MorphingBlob.js";
 export { MorphingBlob } from "./MorphingBlob.js";
-// Primitives
 export type { TextProps } from "./Text.js";
 export { Text, textVariants } from "./Text.js";
 export type { TextareaProps } from "./Textarea.js";

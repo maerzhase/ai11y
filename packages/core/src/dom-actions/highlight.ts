@@ -25,7 +25,6 @@ function isElementInView(element: Element): boolean {
 		window.innerHeight || document.documentElement.clientHeight;
 	const windowWidth = window.innerWidth || document.documentElement.clientWidth;
 
-	// Check if element is partially visible (more lenient check)
 	const isPartiallyVisible =
 		rect.top < windowHeight &&
 		rect.bottom > 0 &&
@@ -62,7 +61,6 @@ export function highlightMarker(
 
 	const { onHighlight, duration = 2000 } = options;
 
-	// Scroll element into view only if it's not already in view
 	if (!isElementInView(element)) {
 		element.scrollIntoView({
 			behavior: "smooth",
@@ -71,23 +69,19 @@ export function highlightMarker(
 		});
 	}
 
-	// Call optional callback
 	if (onHighlight) {
 		onHighlight(markerId, element);
 	}
 
-	// Apply visual highlight (outline styles) only if duration > 0
 	if (duration > 0) {
 		const originalOutline = (element as HTMLElement).style.outline;
 		const originalOutlineOffset = (element as HTMLElement).style.outlineOffset;
 		const originalTransition = (element as HTMLElement).style.transition;
 
-		// Apply highlight
 		(element as HTMLElement).style.outline = "3px solid #3b82f6";
 		(element as HTMLElement).style.outlineOffset = "2px";
 		(element as HTMLElement).style.transition = "outline 0.2s ease";
 
-		// Remove highlight after duration
 		window.setTimeout(() => {
 			(element as HTMLElement).style.outline = originalOutline;
 			(element as HTMLElement).style.outlineOffset = originalOutlineOffset;
