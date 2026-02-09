@@ -3,7 +3,7 @@ import type {
 	Instruction,
 	ToolDefinition,
 	ToolExecutor,
-} from "./types.js";
+} from "@ai11y/core";
 
 /**
  * Registry for managing tools that can be called by the LLM agent.

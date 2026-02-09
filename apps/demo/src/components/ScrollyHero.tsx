@@ -3,7 +3,8 @@ import {
 	type LLMAgentConfig,
 	plan,
 } from "@ai11y/core";
-import { type Instruction, useAi11yContext, useChat } from "@ai11y/react";
+import type { Instruction } from "@ai11y/core";
+import { useAi11yContext, useChat } from "@ai11y/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useContextDrawer } from "../context/ContextDrawerContext";
 import { useDemoUi } from "../context/DemoUiContext";

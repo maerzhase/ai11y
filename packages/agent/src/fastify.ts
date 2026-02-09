@@ -9,7 +9,8 @@ import {
 	createDefaultToolRegistry,
 	type ToolRegistry,
 } from "./tool-registry.js";
-import type { AgentRequest, ServerConfig } from "./types.js";
+import type { AgentRequest } from "@ai11y/core";
+import type { ServerConfig } from "./types.js";
 
 interface FastifyAi11yOptions extends FastifyPluginOptions {
 	config: ServerConfig;
@@ -107,5 +108,4 @@ export function createToolRegistry(): ToolRegistry {
 	return createDefaultToolRegistry();
 }
 
-// Re-export types for convenience
-export type { ServerConfig, ToolDefinition, ToolExecutor } from "./types.js";
+export type { ServerConfig } from "./types.js";

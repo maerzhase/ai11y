@@ -62,8 +62,9 @@ await fastify.register(ai11yPlugin, {
 ### Standalone Usage
 
 ```ts
+import type { AgentRequest } from "@ai11y/core";
 import { runAgent, createDefaultToolRegistry } from "@ai11y/agent";
-import type { AgentRequest, ServerConfig } from "@ai11y/agent";
+import type { ServerConfig } from "@ai11y/agent";
 
 const config: ServerConfig = {
   apiKey: process.env.OPENAI_API_KEY!,
@@ -83,8 +84,8 @@ async function handleRequest(request: AgentRequest) {
 You can extend the agent with custom tools using the `ToolRegistry`:
 
 ```ts
+import type { Ai11yContext, ToolDefinition, ToolExecutor } from "@ai11y/core";
 import { ai11yPlugin, createToolRegistry } from "@ai11y/agent/fastify";
-import type { ToolDefinition, ToolExecutor, Ai11yContext } from "@ai11y/agent";
 
 // Create a custom tool registry
 const registry = createToolRegistry();

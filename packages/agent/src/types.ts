@@ -1,16 +1,4 @@
 /**
- * Re-export shared types from core
- */
-export type {
-	AgentRequest,
-	AgentResponse,
-	Ai11yContext,
-	Instruction,
-	ToolDefinition,
-	ToolExecutor,
-} from "@ai11y/core";
-
-/**
  * Server configuration
  */
 export interface ServerConfig {

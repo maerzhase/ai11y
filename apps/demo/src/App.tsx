@@ -1,4 +1,5 @@
-import { type AgentConfig, Ai11yProvider } from "@ai11y/react";
+import type { AgentConfig } from "@ai11y/core";
+import { Ai11yProvider } from "@ai11y/react";
 import React from "react";
 import { BrowserRouter, useLocation, useNavigate } from "react-router-dom";
 import { CustomHighlightWrapper } from "./components/Shared/CustomHighlight";

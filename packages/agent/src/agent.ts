@@ -5,12 +5,8 @@ import {
 	createDefaultToolRegistry,
 	type ToolRegistry,
 } from "./tool-registry.js";
-import type {
-	AgentRequest,
-	AgentResponse,
-	Instruction,
-	ServerConfig,
-} from "./types.js";
+import type { AgentRequest, AgentResponse, Instruction } from "@ai11y/core";
+import type { ServerConfig } from "./types.js";
 
 /**
  * Format context for the LLM prompt

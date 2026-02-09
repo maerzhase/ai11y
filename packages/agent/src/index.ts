@@ -8,12 +8,4 @@
 export { runAgent } from "./agent.js";
 export { createLLM } from "./llm-provider.js";
 export { createDefaultToolRegistry, ToolRegistry } from "./tool-registry.js";
-export type {
-	AgentRequest,
-	AgentResponse,
-	Ai11yContext,
-	Instruction,
-	ServerConfig,
-	ToolDefinition,
-	ToolExecutor,
-} from "./types.js";
+export type { ServerConfig } from "./types.js";
