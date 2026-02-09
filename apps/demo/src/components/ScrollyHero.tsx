@@ -119,29 +119,36 @@ export function ScrollyHero({ onSuggestionReady }: ScrollyHeroProps = {}) {
 		}
 	};
 
+	const inputRef = useRef<HTMLInputElement>(null);
+	const messagesContainerRef = useRef<HTMLDivElement>(null);
+	const compactMessagesContainerRef = useRef<HTMLDivElement>(null);
+
+	const scrollMessagesToBottom = useCallback(() => {
+		const scrollToBottom = (el: HTMLDivElement | null) => {
+			if (el) el.scrollTop = el.scrollHeight;
+		};
+		scrollToBottom(messagesContainerRef.current);
+		scrollToBottom(compactMessagesContainerRef.current);
+	}, []);
+
 	const {
 		messages,
 		input,
 		setInput,
 		isProcessing,
-		inputRef,
 		handleSubmit: handleChatSubmit,
 	} = useChat({
 		onSubmit: handleSubmit,
 		onInstruction: handleInstruction,
+		onMessage: scrollMessagesToBottom,
 		initialMessage:
 			"Welcome! I can help you navigate this page, highlight features, and interact with demos. Try saying 'show me navigation' or scroll down to explore!",
 	});
 
-	const messagesContainerRef = useRef<HTMLDivElement>(null);
-
-	// Auto-scroll messages
+	// When user opens the compact messages panel, scroll to bottom
 	useEffect(() => {
-		if (messagesContainerRef.current) {
-			messagesContainerRef.current.scrollTop =
-				messagesContainerRef.current.scrollHeight;
-		}
-	}, []);
+		if (showMessages) scrollMessagesToBottom();
+	}, [showMessages, scrollMessagesToBottom]);
 
 	// Filter to show only recent messages
 	const recentMessages = messages.slice(-4);
@@ -152,7 +159,7 @@ export function ScrollyHero({ onSuggestionReady }: ScrollyHeroProps = {}) {
 			setInput(suggestion);
 			inputRef.current?.focus();
 		},
-		[setInput, inputRef.current?.focus],
+		[setInput],
 	);
 
 	// Expose handler to parent
@@ -268,7 +275,10 @@ export function ScrollyHero({ onSuggestionReady }: ScrollyHeroProps = {}) {
 
 							<div className="text-lg text-muted-foreground mb-6 text-center max-w-md mx-auto space-y-1">
 								<p>A structured UI context layer for AI agents.</p>
-								<p className="text-base">Makes existing user interfaces understandable and actionable for AI agents.</p>
+								<p className="text-base">
+									Makes existing user interfaces understandable and actionable
+									for AI agents.
+								</p>
 							</div>
 
 							{/* Messages area */}
@@ -392,7 +402,10 @@ export function ScrollyHero({ onSuggestionReady }: ScrollyHeroProps = {}) {
 							showMessages ? "max-h-48" : "max-h-0"
 						}`}
 					>
-						<div className="p-3 border-b border-border/30 max-h-48 overflow-y-auto scrollbar-thin">
+						<div
+							ref={compactMessagesContainerRef}
+							className="p-3 border-b border-border/30 max-h-48 overflow-y-auto scrollbar-thin"
+						>
 							<div className="space-y-2">
 								{recentMessages.map((msg) => (
 									<div

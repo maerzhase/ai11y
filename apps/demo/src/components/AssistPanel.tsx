@@ -4,8 +4,8 @@ import {
 	plan,
 } from "@ai11y/core";
 import { useAi11yContext, useChat } from "@ai11y/react";
-import { AssistPanelPopover, ChatInput, MessageList } from "@ai11y/ui";
-import { useEffect } from "react";
+import { AssistPanelPopover, ChatInput, MessageBubble } from "@ai11y/ui";
+import { useEffect, useRef } from "react";
 import { useDemoUi } from "../context/DemoUiContext";
 
 export function AssistPanel() {
@@ -79,24 +79,28 @@ export function AssistPanel() {
 		}
 	};
 
+	const messagesEndRef = useRef<HTMLDivElement>(null);
+	const inputRef = useRef<HTMLInputElement>(null);
+
 	const {
 		messages,
 		input,
 		setInput,
 		isProcessing,
-		messagesEndRef,
-		inputRef,
 		handleSubmit: handleChatSubmit,
 	} = useChat({
 		onSubmit: handleSubmit,
 		onInstruction: handleInstruction,
+		onMessage: () => {
+			messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+		},
 	});
 
 	useEffect(() => {
 		if (isPanelOpen && inputRef.current) {
 			inputRef.current.focus();
 		}
-	}, [isPanelOpen, inputRef]);
+	}, [isPanelOpen]);
 
 	useEffect(() => {
 		if (!pendingMessage || !isPanelOpen) return;
@@ -109,7 +113,7 @@ export function AssistPanel() {
 		}, 0);
 
 		return () => window.clearTimeout(timeout);
-	}, [pendingMessage, isPanelOpen, setInput, clearPendingMessage, inputRef]);
+	}, [pendingMessage, isPanelOpen, setInput, clearPendingMessage]);
 
 	return (
 		<AssistPanelPopover
@@ -117,11 +121,29 @@ export function AssistPanel() {
 			onOpenChange={setIsPanelOpen}
 			onClose={() => setIsPanelOpen(false)}
 		>
-			<MessageList
-				messages={messages}
-				isProcessing={isProcessing}
-				messagesEndRef={messagesEndRef}
-			/>
+			{/* Demo-owned message list with scroll sentinel so we can auto-scroll without refs from useChat */}
+			<div className="flex-1 overflow-y-auto px-3 py-3 flex flex-col gap-2">
+				{messages.map((msg, index) => (
+					<MessageBubble
+						key={msg.id ?? `msg-${index}`}
+						message={{
+							type: msg.type,
+							content: msg.content,
+							id: msg.id,
+						}}
+					/>
+				))}
+				{isProcessing && (
+					<div className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs text-muted-foreground">
+						<span className="inline-flex gap-0.5">
+							<span className="w-1 h-1 bg-muted-foreground/60 rounded-full animate-pulse" />
+							<span className="w-1 h-1 bg-muted-foreground/60 rounded-full animate-pulse [animation-delay:150ms]" />
+							<span className="w-1 h-1 bg-muted-foreground/60 rounded-full animate-pulse [animation-delay:300ms]" />
+						</span>
+					</div>
+				)}
+				<div ref={messagesEndRef} />
+			</div>
 			<ChatInput
 				value={input}
 				onChange={setInput}

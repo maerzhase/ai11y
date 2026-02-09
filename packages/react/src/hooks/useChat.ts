@@ -1,5 +1,5 @@
 import type { AgentResponse, Instruction } from "@ai11y/core";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 
 export interface Message {
 	id: string;
@@ -11,6 +11,7 @@ export interface Message {
 export interface UseChatOptions {
 	onSubmit: (message: string, messages: Message[]) => Promise<AgentResponse>;
 	onInstruction?: (instruction: Instruction) => void;
+	onMessage?: () => void;
 	initialMessage?: string;
 }
 
@@ -19,14 +20,13 @@ export interface UseChatReturn {
 	input: string;
 	setInput: (value: string) => void;
 	isProcessing: boolean;
-	messagesEndRef: React.RefObject<HTMLDivElement>;
-	inputRef: React.RefObject<HTMLInputElement>;
 	handleSubmit: (e: React.FormEvent) => Promise<void>;
 }
 
 export function useChat({
 	onSubmit,
 	onInstruction,
+	onMessage,
 	initialMessage = "Hi! I'm your AI agent. I can help you navigate, click buttons, and highlight elements. Try saying 'go to billing' or 'click connect stripe'.",
 }: UseChatOptions): UseChatReturn {
 	const [messages, setMessages] = useState<Message[]>([
@@ -39,25 +39,28 @@ export function useChat({
 	]);
 	const [input, setInput] = useState("");
 	const [isProcessing, setIsProcessing] = useState(false);
-	const messagesEndRef = useRef<HTMLDivElement>(null);
-	const inputRef = useRef<HTMLInputElement>(null);
 	const processingRef = useRef(false);
 	const messageIdCounterRef = useRef(0);
-
-	// Auto-scroll to bottom when messages change
-	useEffect(() => {
-		messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-	}, []);
+	const inputRef = useRef(input);
+	const isProcessingRef = useRef(isProcessing);
+	inputRef.current = input;
+	isProcessingRef.current = isProcessing;
 
 	const handleSubmit = useCallback(
 		async (e: React.FormEvent) => {
 			e.preventDefault();
-			if (!input.trim() || isProcessing || processingRef.current) return;
+			if (
+				!inputRef.current.trim() ||
+				isProcessingRef.current ||
+				processingRef.current
+			)
+				return;
 
-			const userMessage = input.trim();
+			const userMessage = inputRef.current.trim();
 			setInput("");
 			setIsProcessing(true);
 			processingRef.current = true;
+			queueMicrotask(() => onMessage?.());
 
 			// Add user message
 			messageIdCounterRef.current += 1;
@@ -74,6 +77,7 @@ export function useChat({
 				updatedMessages = [...prev, userMsg];
 				return updatedMessages;
 			});
+			queueMicrotask(() => onMessage?.());
 
 			try {
 				// Call onSubmit with the updated messages (outside of state setter)
@@ -100,6 +104,7 @@ export function useChat({
 						if (exists) return prevMsgs;
 						return [...prevMsgs, assistantMsg];
 					});
+					queueMicrotask(() => onMessage?.());
 
 					// Execute instructions
 					if (response.instructions && onInstruction) {
@@ -130,13 +135,14 @@ export function useChat({
 						if (exists) return prevMsgs;
 						return [...prevMsgs, errorMsg];
 					});
+					queueMicrotask(() => onMessage?.());
 				}
 			} finally {
 				setIsProcessing(false);
 				processingRef.current = false;
 			}
 		},
-		[input, isProcessing, onSubmit, onInstruction],
+		[onSubmit, onInstruction, onMessage],
 	);
 
 	return {
@@ -144,8 +150,6 @@ export function useChat({
 		input,
 		setInput,
 		isProcessing,
-		messagesEndRef,
-		inputRef,
 		handleSubmit,
 	};
 }
