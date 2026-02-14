@@ -1,22 +1,17 @@
 # ai11y
 
-**ai11y ≠ a11y**
+> **a11y ≠ ai11y**
+>
+> a11y exposes meaning to assistive tech. ai11y exposes meaning to agents. Just
+> like accessibility APIs expose structure, roles, and actions to assistive
+> technologies, ai11y exposes structure, state, and actions to AI agents. Same
+> idea. New consumer.
 
-Accessibility makes interfaces usable for humans. ai11y makes interfaces usable
-for AI.
+With ai11y you expose a structured UI context layer for AI agents. Make existing
+user interfaces understandable and actionable for AI agents.
 
-a11y exposes meaning to assistive tech. ai11y exposes meaning to agents.
-
-A structured UI context layer for AI agents. Makes existing user interfaces
-understandable and actionable for AI agents. The API is **describe → plan →
-act**: capture UI context, get instructions from an agent, execute them on the
-page. The core is JavaScript; React is a thin wrapper.
-
-## Name
-
-Just like accessibility APIs expose structure, roles, and actions to assistive
-technologies, ai11y exposes structure, state, and actions to AI agents. Same
-idea. New consumer.
+The API is **describe → plan → act**: capture UI context, get instructions from
+an agent, execute them on the client.
 
 ## Describe → Plan → Act
 
@@ -34,9 +29,6 @@ ai11y exposes this structure so agents can operate existing UIs.
 - **Act** — perform actions on the UI.  
   _Runtime: local — instructions → DOM actions._
 
-The demo’s **View Context** panel can show the exact JSON payload sent to the
-planner.
-
 ```ts
 import { createClient, plan } from "@ai11y/core";
 
@@ -51,13 +43,9 @@ for (const instruction of instructions ?? []) {
 }
 ```
 
-When `act()` cannot run (e.g. element not found), errors are reported via the
-client’s error reporting and can be inspected in the demo’s context panel or
-your own UI.
-
 ## Usage
 
-### JavaScript (any framework or none)
+### Plain JS
 
 Annotate elements with `data-ai-id`, `data-ai-label`, and optionally
 `data-ai-intent`. Start by marking only the top-level interactive elements (e.g.
