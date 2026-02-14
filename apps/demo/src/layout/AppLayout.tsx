@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/next";
 import dynamic from "next/dynamic";
 import type React from "react";
 import {
@@ -39,6 +40,7 @@ function AppLayoutContent({ children }: AppLayoutProps) {
 export function AppLayout({ children }: AppLayoutProps) {
 	return (
 		<ContextDrawerProvider>
+			<Analytics />
 			<AppLayoutContent>{children}</AppLayoutContent>
 		</ContextDrawerProvider>
 	);

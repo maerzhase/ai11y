@@ -3,6 +3,11 @@
 	"version": "0.0.0",
 	"private": true,
 	"type": "module",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/maerzhase/ui4ai.git",
+		"directory": "apps/server"
+	},
 	"scripts": {
 		"dev": "tsx src/index.ts",
 		"build": "tsc",

@@ -5,7 +5,7 @@ import {
 	plan,
 } from "@ai11y/core";
 import { useAi11yContext, useChat } from "@ai11y/react";
-import { ChevronDown, FileText, Send } from "lucide-react";
+import { ChevronDown, FileText, Github, Send } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useContextDrawer } from "@/context/ContextDrawerContext";
@@ -186,6 +186,15 @@ export function ScrollyHero({ onSuggestionReady }: ScrollyHeroProps = {}) {
 			>
 				<div className="max-w-screen-xl mx-auto px-4 py-3 flex items-center justify-end min-h-[57px] gap-3">
 					<Link
+						href="https://github.com/maerzhase/ui4ai"
+						target="_blank"
+						rel="noopener noreferrer"
+						className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors whitespace-nowrap flex items-center gap-1.5"
+					>
+						<Github className="h-4 w-4" aria-hidden />
+						<span className="hidden sm:inline">GitHub</span>
+					</Link>
+					<Link
 						href="/docs/"
 						target="_blank"
 						rel="noopener noreferrer"
@@ -225,7 +234,7 @@ export function ScrollyHero({ onSuggestionReady }: ScrollyHeroProps = {}) {
 						: "opacity-0 -translate-y-full pointer-events-none"
 				}`}
 			>
-				<div className="bg-background/80 backdrop-blur-xl">
+				<div className="bg-background/80 backdrop-blur-xl border-b border-border/50">
 					<div className="max-w-screen-xl mx-auto px-4 py-3 flex items-center justify-between min-h-[57px]">
 						<div className="flex items-center gap-3">
 							<h1 className="text-lg font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">

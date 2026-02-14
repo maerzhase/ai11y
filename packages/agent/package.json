@@ -1,7 +1,12 @@
 {
 	"name": "@ai11y/agent",
-	"version": "0.0.0",
+	"version": "0.0.1",
 	"type": "module",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/maerzhase/ui4ai.git",
+		"directory": "packages/agent"
+	},
 	"main": "./dist/index.mjs",
 	"types": "./dist/index.d.mts",
 	"exports": {

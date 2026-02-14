@@ -2,6 +2,10 @@
 	"name": "ai11y",
 	"author": "maerzhase3000",
 	"private": true,
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/maerzhase/ui4ai.git"
+	},
 	"scripts": {
 		"dev": "turbo run dev",
 		"build": "turbo run build",

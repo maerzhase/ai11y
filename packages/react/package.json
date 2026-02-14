@@ -1,8 +1,13 @@
 {
 	"name": "@ai11y/react",
 	"author": "maerzhase3000",
-	"version": "0.0.0",
+	"version": "0.0.1",
 	"type": "module",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/maerzhase/ui4ai.git",
+		"directory": "packages/react"
+	},
 	"main": "./dist/index.mjs",
 	"module": "./dist/index.mjs",
 	"types": "./dist/index.d.mts",
