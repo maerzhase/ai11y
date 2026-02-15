@@ -7,8 +7,8 @@
 > technologies, ai11y exposes structure, state, and actions to AI agents. Same
 > idea. New consumer.
 
-With ai11y you expose a structured UI context layer for AI agents. Make existing
-user interfaces understandable and actionable for AI agents.
+With ai11y you expose a structured UI context layer for AI agents to make
+existing user interfaces understandable and actionable for AI agents.
 
 The API is **describe → plan → act**: capture UI context, get instructions from
 an agent, execute them on the client.
