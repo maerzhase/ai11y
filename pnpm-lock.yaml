@@ -25,8 +25,8 @@ importers:
         specifier: ^3.4.2
         version: 3.8.1
       typedoc:
-        specifier: ^0.28.16
-        version: 0.28.16(typescript@5.9.3)
+        specifier: 0.28.17
+        version: 0.28.17(typescript@5.9.3)
 
   apps/demo:
     dependencies:
@@ -2268,8 +2268,8 @@ packages:
     resolution: {integrity: sha512-zAj9jGc7VDvuAo/5Jbos4QTtWz9uUpkMhMKGyTjDJkx//hdL2bM31qQoJSAbU+7JyK5vb0LPzpwf6DUt3zayqg==}
     hasBin: true
 
-  typedoc@0.28.16:
-    resolution: {integrity: sha512-x4xW77QC3i5DUFMBp0qjukOTnr/sSg+oEs86nB3LjDslvAmwe/PUGDWbe3GrIqt59oTqoXK5GRK9tAa0sYMiog==}
+  typedoc@0.28.17:
+    resolution: {integrity: sha512-ZkJ2G7mZrbxrKxinTQMjFqsCoYY6a5Luwv2GKbTnBCEgV2ihYm5CflA9JnJAwH0pZWavqfYxmDkFHPt4yx2oDQ==}
     engines: {node: '>= 18', pnpm: '>= 10'}
     hasBin: true
     peerDependencies:
@@ -4211,7 +4211,7 @@ snapshots:
       turbo-windows-64: 2.7.1
       turbo-windows-arm64: 2.7.1
 
-  typedoc@0.28.16(typescript@5.9.3):
+  typedoc@0.28.17(typescript@5.9.3):
     dependencies:
       '@gerrit0/mini-shiki': 3.22.0
       lunr: 2.3.9
