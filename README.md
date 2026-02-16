@@ -120,6 +120,10 @@ use ARIA where present to enrich context (see Roadmap).
 
 ## Roadmap
 
+- Expose Tools for WebMCP via declartive API —
+  [WebMCP added a proposal](https://github.com/webmachinelearning/webmcp/pull/76)
+  for a declarative API for tools. We will support compiling tools for WebMCP
+  via `ai11y` directly.
 - **Native ARIA support (optional)** — Use ARIA attributes where present to
   enrich UI context.
 - **Linter rule** — Enforce or suggest `data-ai-*` / `Marker` usage in
