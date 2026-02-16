@@ -14,8 +14,8 @@ export function NavigationDemo({
 
 	const routes = [
 		{ path: "/", label: "Home", icon: "🏠" },
-		{ path: "/billing", label: "Billing", icon: "💳" },
-		{ path: "/integrations", label: "Integrations", icon: "🔌" },
+		{ path: "/billing/", label: "Billing", icon: "💳" },
+		{ path: "/integrations/", label: "Integrations", icon: "🔌" },
 	];
 
 	const handleRouteClick = (
