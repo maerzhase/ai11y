@@ -1,15 +1,16 @@
 {
 	"name": "ai11y-demo",
+	"version": "0.0.0",
 	"author": "maerzhase3000",
-	"private": true,
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/maerzhase/ui4ai.git",
 		"directory": "apps/demo"
 	},
+	"private": true,
 	"scripts": {
-		"dev": "next dev --turbo",
 		"build": "next build",
+		"dev": "next dev --turbo",
 		"start": "next start"
 	},
 	"dependencies": {

@@ -1,14 +1,14 @@
 {
 	"name": "@ai11y/ui",
-	"author": "maerzhase3000",
 	"version": "0.0.0",
-	"type": "module",
-	"private": true,
+	"author": "maerzhase3000",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/maerzhase/ui4ai.git",
 		"directory": "packages/ui"
 	},
+	"private": true,
+	"type": "module",
 	"main": "./dist/index.mjs",
 	"types": "./dist/index.d.mts",
 	"exports": {
@@ -19,6 +19,11 @@
 		"./styles.css": "./src/styles.css"
 	},
 	"sideEffects": false,
+	"scripts": {
+		"build": "postcss ./src/styles.css -o ./dist/styles.css --minify && tsdown",
+		"dev": "tsdown --watch",
+		"watch": "tsdown --watch"
+	},
 	"dependencies": {
 		"@base-ui/react": "1.1.0",
 		"class-variance-authority": "0.7.1",
@@ -29,11 +34,6 @@
 	"peerDependencies": {
 		"react": "19.2.3",
 		"react-dom": "19.2.3"
-	},
-	"scripts": {
-		"build": "postcss ./src/styles.css -o ./dist/styles.css --minify && tsdown",
-		"watch": "tsdown --watch",
-		"dev": "tsdown --watch"
 	},
 	"devDependencies": {
 		"@tailwindcss/postcss": "4.1.18",
