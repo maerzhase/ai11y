@@ -211,6 +211,32 @@ pnpm add --save-exact <package> --filter @ai11y/core
 If you accidentally add a dependency without `--save-exact`, manually remove the
 `^` or `~` prefix from the version in `package.json`.
 
+### Keeping Dependencies in Sync
+
+This project uses [syncpack](https://github.com/JamieMason/syncpack) to ensure
+dependencies are consistent across all packages in the monorepo.
+
+Before submitting a PR, check that dependencies are in sync:
+
+```bash
+# Check for dependency mismatches and formatting
+pnpm syncpack
+
+# Auto-fix mismatches and format package.json files
+pnpm syncpack:fix
+
+# Update dependencies to latest versions
+pnpm syncpack:update
+```
+
+Syncpack ensures:
+
+- Shared dependencies use the same version across all packages
+- All versions use exact ranges (no `^` or `~` prefixes)
+- Workspace packages use the `workspace:*` protocol
+- All `package.json` files follow a consistent format (sorted fields,
+  alphabetized scripts/dependencies)
+
 ### Package Development
 
 When working on a specific package:
