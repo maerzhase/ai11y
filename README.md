@@ -1,7 +1,5 @@
 # ai11y
 
-> **a11y != ai11y**
->
 > a11y exposes meaning to assistive tech. ai11y exposes meaning to agents. Just
 > like accessibility APIs expose structure, roles, and actions to assistive
 > technologies, ai11y exposes structure, state, and actions to AI agents. Same
