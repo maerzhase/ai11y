@@ -1,16 +1,46 @@
+/**
+ * OpenAI provider implementation for ai11y agent
+ *
+ * @module
+ * @internal
+ */
+
 import type { Instruction, PlanResponse } from "../types.js";
 
+/**
+ * Parameters for the OpenAI planning function
+ */
 export interface OpenAIParams {
+	/** OpenAI API key */
 	apiKey: string;
+	/** Model identifier (e.g., "gpt-4o-mini") */
 	model: string;
+	/** Optional base URL for OpenAI-compatible APIs */
 	baseURL?: string;
+	/** Sampling temperature (0-2) */
 	temperature: number;
+	/** Maximum tokens to generate */
+	maxTokens?: number;
+	/** User message to process */
 	message: string;
+	/** Formatted context message with page information */
 	contextMessage: string;
+	/** Conversation history */
 	history: Array<{ role: "user" | "assistant"; content: string }>;
+	/** System prompt with tool definitions */
 	systemPrompt: string;
 }
 
+/**
+ * Plans actions using OpenAI API
+ *
+ * @param params - OpenAI parameters including API key, model, messages
+ * @returns Promise resolving to plan response with instructions
+ *
+ * @throws Error if no response is received from OpenAI
+ *
+ * @internal
+ */
 export async function planWithOpenAI(
 	params: OpenAIParams,
 ): Promise<PlanResponse> {
@@ -19,6 +49,7 @@ export async function planWithOpenAI(
 		model,
 		baseURL,
 		temperature,
+		maxTokens,
 		message,
 		contextMessage,
 		history,
@@ -48,6 +79,7 @@ export async function planWithOpenAI(
 		model,
 		messages,
 		temperature,
+		...(maxTokens && { max_tokens: maxTokens }),
 	});
 
 	const assistantMessage = response.choices[0]?.message;
@@ -59,6 +91,21 @@ export async function planWithOpenAI(
 	return parseResponse(content);
 }
 
+/**
+ * Parses the LLM response to extract instructions and reply
+ *
+ * @param content - Raw response content from the LLM
+ * @returns Parsed response with instructions and reply
+ *
+ * @remarks
+ * This function handles two response formats:
+ * 1. Array format: `[{"action": "click", "id": "button"}]`
+ * 2. Object format: `{"instructions": [...], "reply": "Done!"}`
+ *
+ * Any text outside the JSON is treated as the reply message.
+ *
+ * @internal
+ */
 function parseResponse(content: string): PlanResponse {
 	let instructions: Instruction[] = [];
 	let reply = content;

@@ -17,10 +17,9 @@
 		"watch": "tsdown --watch"
 	},
 	"dependencies": {
+		"@ai11y/core": "workspace:*",
+		"fastify": "^5.7.4",
 		"openai": "^4.77.0"
-	},
-	"peerDependencies": {
-		"@ai11y/core": "workspace:*"
 	},
 	"devDependencies": {
 		"tsdown": "0.18.1",

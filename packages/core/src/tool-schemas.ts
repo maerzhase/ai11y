@@ -1,19 +1,58 @@
-export interface OpenAIFunction {
+/**
+ * @ai11y/core
+ *
+ * Provides declarative tool definitions for ai11y capabilities.
+ * Fully compatible with MCP (Model Context Protocol) tool schema.
+ * Used by client-side WebMCP registration and server-side agent.
+ *
+ * @packageDocumentation
+ */
+
+import type { InputSchema } from "@mcp-b/webmcp-types";
+
+/**
+ * ai11y tool definition
+ *
+ * @remarks
+ * Fully MCP-compatible tool definition using InputSchema for parameters.
+ * Follows the Model Context Protocol tool specification.
+ *
+ * @example
+ * ```typescript
+ * const tool: Ai11yTool = {
+ *   name: "ai11y_click",
+ *   description: "Click an element by its ID",
+ *   parameters: {
+ *     type: "object",
+ *     properties: {
+ *       id: { type: "string", description: "Element ID" }
+ *     },
+ *     required: ["id"]
+ *   }
+ * };
+ * ```
+ */
+export interface Ai11yTool {
+	/** Tool name with ai11y_ prefix */
 	name: string;
+	/** Human-readable description of the tool's purpose */
 	description: string;
-	parameters: {
-		type: "object";
-		properties: Record<string, unknown>;
-		required?: string[];
-	};
-	actionFormat?: {
-		action: string;
-		requiredFields: string[];
-		example: Record<string, string>;
-	};
+	/** JSON Schema for tool input parameters (MCP compatible) */
+	parameters: InputSchema;
 }
 
-export const openAITools: OpenAIFunction[] = [
+/**
+ * Pre-defined ai11y tools
+ *
+ * @remarks
+ * These tools are used for:
+ * - Client-side: WebMCP tool registration via navigator.modelContext
+ * - Server-side: System prompt generation for the agent
+ *
+ * Each tool follows the ai11y_ naming convention and uses MCP-compatible
+ * InputSchema for parameter definitions.
+ */
+export const ai11yTools: Ai11yTool[] = [
 	{
 		name: "ai11y_describe",
 		description:
@@ -24,7 +63,6 @@ export const openAITools: OpenAIFunction[] = [
 				level: {
 					type: "string",
 					enum: ["markers", "interactive", "full"],
-					default: "markers",
 					description:
 						"Context level: 'markers' returns explicitly marked elements, 'interactive' returns all clickable/fillable elements, 'full' returns complete page structure.",
 				},
@@ -34,11 +72,6 @@ export const openAITools: OpenAIFunction[] = [
 						"Optional CSS selector to scope context to a specific DOM subtree.",
 				},
 			},
-		},
-		actionFormat: {
-			action: "describe",
-			requiredFields: [],
-			example: {},
 		},
 	},
 	{
@@ -55,11 +88,6 @@ export const openAITools: OpenAIFunction[] = [
 				},
 			},
 			required: ["id"],
-		},
-		actionFormat: {
-			action: "click",
-			requiredFields: ["id"],
-			example: { id: "theme_toggle" },
 		},
 	},
 	{
@@ -81,11 +109,6 @@ export const openAITools: OpenAIFunction[] = [
 			},
 			required: ["id", "value"],
 		},
-		actionFormat: {
-			action: "fillInput",
-			requiredFields: ["id", "value"],
-			example: { id: "fill_demo_email", value: "test@example.com" },
-		},
 	},
 	{
 		name: "ai11y_navigate",
@@ -101,11 +124,6 @@ export const openAITools: OpenAIFunction[] = [
 				},
 			},
 			required: ["route"],
-		},
-		actionFormat: {
-			action: "navigate",
-			requiredFields: ["route"],
-			example: { route: "/billing" },
 		},
 	},
 	{
@@ -123,11 +141,6 @@ export const openAITools: OpenAIFunction[] = [
 			},
 			required: ["id"],
 		},
-		actionFormat: {
-			action: "scroll",
-			requiredFields: ["id"],
-			example: { id: "slide_navigation" },
-		},
 	},
 	{
 		name: "ai11y_highlight",
@@ -143,11 +156,6 @@ export const openAITools: OpenAIFunction[] = [
 				},
 			},
 			required: ["id"],
-		},
-		actionFormat: {
-			action: "highlight",
-			requiredFields: ["id"],
-			example: { id: "hero_title" },
 		},
 	},
 	{
@@ -165,11 +173,6 @@ export const openAITools: OpenAIFunction[] = [
 			},
 			required: ["state"],
 		},
-		actionFormat: {
-			action: "setState",
-			requiredFields: ["state"],
-			example: { state: '{"theme": "dark"}' },
-		},
 	},
 	{
 		name: "ai11y_getState",
@@ -179,14 +182,28 @@ export const openAITools: OpenAIFunction[] = [
 			type: "object",
 			properties: {},
 		},
-		actionFormat: {
-			action: "getState",
-			requiredFields: [],
-			example: {},
-		},
 	},
 ];
 
-export function getToolByName(name: string): OpenAIFunction | undefined {
-	return openAITools.find((tool) => tool.name === name);
+/**
+ * Retrieves a tool definition by name
+ *
+ * @param name - Tool name to look up
+ * @returns The tool definition if found, undefined otherwise
+ *
+ * @example
+ * ```typescript
+ * const tool = getToolByName("ai11y_click");
+ * if (tool) {
+ *   console.log(tool.description);
+ * }
+ * ```
+ */
+export function getToolByName(name: string): Ai11yTool | undefined {
+	return ai11yTools.find((tool) => tool.name === name);
 }
+
+/**
+ * @deprecated Use {@link ai11yTools} instead
+ */
+export const openAITools = ai11yTools;

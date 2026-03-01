@@ -52,7 +52,8 @@ export interface ToolDefinition {
 }
 
 export function act(instruction: Instruction): void {
-	switch (instruction.action) {
+	const action = instruction.action.replace(/^ai11y_/, "");
+	switch (action) {
 		case "click":
 			clickMarker(instruction.id);
 			break;
@@ -71,7 +72,7 @@ export function act(instruction: Instruction): void {
 	}
 }
 
-export type { OpenAIFunction } from "./tool-schemas.js";
+export type { Ai11yTool } from "./tool-schemas.js";
 export * from "./tool-schemas.js";
 
 import "./webmcp.js";
