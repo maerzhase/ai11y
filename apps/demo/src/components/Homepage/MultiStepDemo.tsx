@@ -13,22 +13,25 @@ const MACRO_STEPS: Instruction[] = [
 ];
 
 function stepLabel(instruction: Instruction): string {
-	if (
-		instruction.action === "click" &&
-		instruction.id === "multi_status_toggle"
-	) {
-		return "Toggle Status";
-	}
+	const action = (instruction.action as string).replace(/^ai11y_/, "");
 
-	if (instruction.action === "fillInput" && instruction.id === "multi_email") {
+	if (
+		action === "fillInput" &&
+		"id" in instruction &&
+		instruction.id === "multi_email"
+	) {
 		return "Fill email input";
 	}
 
-	if (instruction.action === "highlight" && instruction.id === "multi_save") {
+	if (
+		action === "highlight" &&
+		"id" in instruction &&
+		instruction.id === "multi_save"
+	) {
 		return "Highlight Multi save";
 	}
 
-	switch (instruction.action) {
+	switch (action) {
 		case "navigate":
 			return `Navigate to ${"route" in instruction ? instruction.route : ""}`;
 		case "scroll":
@@ -66,7 +69,8 @@ export function MultiStepDemo() {
 			]);
 
 			act(instruction);
-			if (instruction.action === "highlight") {
+			const action = (instruction.action as string).replace(/^ai11y_/, "");
+			if (action === "highlight" && "id" in instruction && instruction.id) {
 				addHighlight(instruction.id);
 			}
 

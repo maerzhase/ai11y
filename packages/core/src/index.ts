@@ -7,7 +7,12 @@ import {
 } from "./dom-actions/index.js";
 
 export type { ExtractedElement, FormInfo } from "./dom.js";
-export { type Ai11yContext, type DescribeLevel, getContext } from "./dom.js";
+export {
+	type Ai11yContext,
+	type DescribeLevel,
+	getContext,
+	refreshInViewMarkers,
+} from "./dom.js";
 export {
 	clickMarker,
 	fillInputMarker,
@@ -52,7 +57,12 @@ export interface ToolDefinition {
 }
 
 export function act(instruction: Instruction): void {
-	const action = instruction.action.replace(/^ai11y_/, "");
+	const action = (instruction.action as string).replace(/^ai11y_/, "") as
+		| "click"
+		| "navigate"
+		| "highlight"
+		| "scroll"
+		| "fillInput";
 	switch (action) {
 		case "click":
 			clickMarker(instruction.id);

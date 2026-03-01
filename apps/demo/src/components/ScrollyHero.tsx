@@ -91,7 +91,15 @@ export function ScrollyHero({ onSuggestionReady }: ScrollyHeroProps = {}) {
 					try {
 						act(instruction);
 						console.log("Acted on:", instruction);
-						if (instruction.action === "highlight" && instruction.id) {
+						const action = (instruction.action as string).replace(
+							/^ai11y_/,
+							"",
+						);
+						if (
+							action === "highlight" &&
+							"id" in instruction &&
+							instruction.id
+						) {
 							addHighlight(instruction.id);
 							console.log("Highlighted:", instruction.id);
 						}
@@ -115,7 +123,8 @@ export function ScrollyHero({ onSuggestionReady }: ScrollyHeroProps = {}) {
 
 	const _handleInstruction = (instruction: Instruction) => {
 		act(instruction);
-		if (instruction.action === "highlight") {
+		const action = (instruction.action as string).replace(/^ai11y_/, "");
+		if (action === "highlight" && "id" in instruction && instruction.id) {
 			addHighlight(instruction.id);
 		}
 	};

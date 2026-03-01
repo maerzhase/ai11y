@@ -10,13 +10,13 @@ interface ContextPanelProps {
 
 type SidebarTab = "ui-context" | "events";
 
-const events: { type: string; timestamp: number; payload: unknown }[] = [];
-
 export function ContextPanel({ isOpen, onOpenChange }: ContextPanelProps) {
 	const [context, setContext] = useState<Ai11yContext>(() => getContext());
 	const [activeTab, setActiveTab] = useState<SidebarTab>("ui-context");
 	const [mounted, setMounted] = useState(false);
 	const [rawPayloadOpen, setRawPayloadOpen] = useState(false);
+
+	const events = context.events || [];
 
 	useEffect(() => {
 		setMounted(true);
