@@ -1,7 +1,7 @@
 "use client";
 
 import type { Instruction } from "@ai11y/core";
-import { act } from "@ai11y/core";
+import { useAi11yContext } from "@ai11y/react";
 import { useState } from "react";
 import { MarkerWithHighlight as Marker } from "@/components/Shared/MarkerWithHighlight";
 import { useDemoUi } from "@/context/DemoUiContext";
@@ -13,25 +13,22 @@ const MACRO_STEPS: Instruction[] = [
 ];
 
 function stepLabel(instruction: Instruction): string {
-	const action = (instruction.action as string).replace(/^ai11y_/, "");
-
 	if (
-		action === "fillInput" &&
-		"id" in instruction &&
-		instruction.id === "multi_email"
+		instruction.action === "click" &&
+		instruction.id === "multi_status_toggle"
 	) {
+		return "Toggle Status";
+	}
+
+	if (instruction.action === "fillInput" && instruction.id === "multi_email") {
 		return "Fill email input";
 	}
 
-	if (
-		action === "highlight" &&
-		"id" in instruction &&
-		instruction.id === "multi_save"
-	) {
+	if (instruction.action === "highlight" && instruction.id === "multi_save") {
 		return "Highlight Multi save";
 	}
 
-	switch (action) {
+	switch (instruction.action) {
 		case "navigate":
 			return `Navigate to ${"route" in instruction ? instruction.route : ""}`;
 		case "scroll":
@@ -48,6 +45,7 @@ function stepLabel(instruction: Instruction): string {
 }
 
 export function MultiStepDemo() {
+	const { act } = useAi11yContext();
 	const { addHighlight } = useDemoUi();
 	const [status, setStatus] = useState<"inactive" | "active">("inactive");
 	const [email, setEmail] = useState("");
@@ -69,8 +67,7 @@ export function MultiStepDemo() {
 			]);
 
 			act(instruction);
-			const action = (instruction.action as string).replace(/^ai11y_/, "");
-			if (action === "highlight" && "id" in instruction && instruction.id) {
+			if (instruction.action === "highlight") {
 				addHighlight(instruction.id);
 			}
 

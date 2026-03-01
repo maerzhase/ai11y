@@ -1,6 +1,10 @@
 import type { Instruction } from "@ai11y/core";
-import { act, getContext, plan } from "@ai11y/core";
-import { useChat } from "@ai11y/react";
+import {
+	type AgentAdapterConfig,
+	type LLMAgentConfig,
+	plan,
+} from "@ai11y/core";
+import { useAi11yContext, useChat } from "@ai11y/react";
 import { ChevronDown, FileText, Github, Send } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -15,8 +19,7 @@ interface ScrollyHeroProps {
 }
 
 export function ScrollyHero({ onSuggestionReady }: ScrollyHeroProps = {}) {
-	const describe = getContext;
-	const _track = () => {};
+	const { describe, act, track, agentConfig } = useAi11yContext();
 	const { addHighlight } = useDemoUi();
 	const { isOpen: isContextOpen, setIsOpen: setContextOpen } =
 		useContextDrawer();
@@ -54,77 +57,61 @@ export function ScrollyHero({ onSuggestionReady }: ScrollyHeroProps = {}) {
 		};
 	}, []);
 
-	const historyRef = useRef<
-		Array<{ role: "user" | "assistant"; content: string }>
-	>([]);
-
 	const handleSubmit = async (
 		message: string,
-		_messages: Array<{ type: string; content: string }>,
+		messages: Array<{ type: string; content: string }>,
 	) => {
 		const ui = describe();
 
-		try {
-			const result = await plan(
-				message,
-				{
-					route: ui.route,
-					state: ui.state,
-					markers: ui.markers.map((m) => ({
-						id: m.id,
-						label: m.label,
-						elementType: m.elementType,
-					})),
-				},
-				{
-					history: historyRef.current,
-				},
-			);
-
-			historyRef.current.push({ role: "user", content: message });
-
-			console.log("Plan result:", result);
-
-			if (result.instructions && result.instructions.length > 0) {
-				console.log("Executing instructions:", result.instructions);
-				for (const instruction of result.instructions) {
-					try {
-						act(instruction);
-						console.log("Acted on:", instruction);
-						const action = (instruction.action as string).replace(
-							/^ai11y_/,
-							"",
-						);
-						if (
-							action === "highlight" &&
-							"id" in instruction &&
-							instruction.id
-						) {
-							addHighlight(instruction.id);
-							console.log("Highlighted:", instruction.id);
-						}
-					} catch (e) {
-						console.error("Failed to execute:", e);
-					}
+		const conversationMessages = messages
+			.filter((m, index) => {
+				if (
+					index === messages.length - 1 &&
+					m.type === "user" &&
+					m.content === message
+				) {
+					return false;
 				}
-			} else {
-				console.log("No instructions found in result");
-			}
+				return m.type === "user" || m.type === "assistant";
+			})
+			.map((m) => ({
+				role: m.type === "user" ? ("user" as const) : ("assistant" as const),
+				content: m.content,
+			}));
 
-			const reply = result.reply || "Done!";
-			historyRef.current.push({ role: "assistant", content: reply });
-			return { reply };
-		} catch (error) {
-			return {
-				reply: `Error: ${error instanceof Error ? error.message : "Failed to get plan"}`,
-			};
-		}
+		const adapterConfig: AgentAdapterConfig = {
+			mode: agentConfig?.mode ?? "auto",
+			forceRuleBased: agentConfig?.forceRuleBased,
+			llmConfig:
+				agentConfig?.apiEndpoint !== undefined
+					? ({ apiEndpoint: agentConfig.apiEndpoint } as LLMAgentConfig)
+					: undefined,
+		};
+
+		const response = await plan(
+			ui,
+			message,
+			adapterConfig,
+			conversationMessages,
+		);
+
+		track("agent_message", {
+			input: message,
+			instructions: response.instructions,
+		});
+
+		return {
+			reply: response.reply,
+			instructions:
+				response.instructions && response.instructions.length > 0
+					? response.instructions
+					: undefined,
+		};
 	};
 
-	const _handleInstruction = (instruction: Instruction) => {
+	const handleInstruction = (instruction: Instruction) => {
 		act(instruction);
-		const action = (instruction.action as string).replace(/^ai11y_/, "");
-		if (action === "highlight" && "id" in instruction && instruction.id) {
+		if (instruction.action === "highlight") {
 			addHighlight(instruction.id);
 		}
 	};
@@ -149,6 +136,7 @@ export function ScrollyHero({ onSuggestionReady }: ScrollyHeroProps = {}) {
 		handleSubmit: handleChatSubmit,
 	} = useChat({
 		onSubmit: handleSubmit,
+		onInstruction: handleInstruction,
 		onMessage: scrollMessagesToBottom,
 		initialMessage:
 			"Welcome! I can help you navigate this page, highlight features, and interact with demos. Try saying 'show me navigation' or scroll down to explore!",

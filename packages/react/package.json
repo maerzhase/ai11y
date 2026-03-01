@@ -20,8 +20,7 @@
 		"watch": "tsdown --watch"
 	},
 	"dependencies": {
-		"@ai11y/core": "workspace:*",
-		"@mcp-b/react-webmcp": "^2.0.6"
+		"@ai11y/core": "workspace:*"
 	},
 	"peerDependencies": {
 		"react": "19.2.3",

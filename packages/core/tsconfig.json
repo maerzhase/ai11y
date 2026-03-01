@@ -11,8 +11,7 @@
 		"skipLibCheck": true,
 		"forceConsistentCasingInFileNames": true,
 		"rootDir": "src",
-		"outDir": "dist",
-		"types": ["@mcp-b/webmcp-types"]
+		"outDir": "dist"
 	},
 	"include": ["src/**/*"],
 	"exclude": ["node_modules", "dist"]

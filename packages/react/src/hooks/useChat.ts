@@ -1,3 +1,4 @@
+import type { AgentResponse, Instruction } from "@ai11y/core";
 import { useCallback, useRef, useState } from "react";
 
 export interface Message {
@@ -8,10 +9,8 @@ export interface Message {
 }
 
 export interface UseChatOptions {
-	onSubmit: (
-		message: string,
-		messages: Message[],
-	) => Promise<{ reply: string }>;
+	onSubmit: (message: string, messages: Message[]) => Promise<AgentResponse>;
+	onInstruction?: (instruction: Instruction) => void;
 	onMessage?: () => void;
 	initialMessage?: string;
 }
@@ -26,8 +25,9 @@ export interface UseChatReturn {
 
 export function useChat({
 	onSubmit,
+	onInstruction,
 	onMessage,
-	initialMessage = "Hi! I'm your AI agent. I can help you interact with this page.",
+	initialMessage = "Hi! I'm your AI agent. I can help you navigate, click buttons, and highlight elements. Try saying 'go to billing' or 'click connect stripe'.",
 }: UseChatOptions): UseChatReturn {
 	const [messages, setMessages] = useState<Message[]>([
 		{
@@ -79,6 +79,7 @@ export function useChat({
 			try {
 				const response = await onSubmit(userMessage, updatedMessages);
 
+				// Add agent reply only if we're still processing (prevent duplicates)
 				if (processingRef.current) {
 					messageIdCounterRef.current += 1;
 					const assistantMsg: Message = {
@@ -99,6 +100,12 @@ export function useChat({
 						return [...prevMsgs, assistantMsg];
 					});
 					queueMicrotask(() => onMessage?.());
+
+					if (response.instructions && onInstruction) {
+						for (const instruction of response.instructions) {
+							onInstruction(instruction);
+						}
+					}
 				}
 			} catch (error) {
 				if (processingRef.current) {
@@ -127,7 +134,7 @@ export function useChat({
 				processingRef.current = false;
 			}
 		},
-		[onSubmit, onMessage],
+		[onSubmit, onInstruction, onMessage],
 	);
 
 	return {

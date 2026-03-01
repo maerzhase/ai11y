@@ -7,16 +7,19 @@
  *
  * @module
  * @remarks
- * This module automatically registers all ai11y tools when loaded in a browser
- * environment that supports the WebMCP API (navigator.modelContext).
+ * Call {@link initWebMCP} to register all ai11y tools with the WebMCP API.
+ * The consumer is responsible for loading the WebMCP polyfill (e.g. `@mcp-b/global/iife`)
+ * before calling this function.
  *
  * Tools are registered with the ai11y_ prefix for clarity and to avoid
  * conflicts with other MCP tools.
  *
  * @example
  * ```typescript
- * // Tools are automatically registered when this module is imported
- * import "@ai11y/core/webmcp";
+ * import "@mcp-b/global/iife"; // consumer loads polyfill
+ * import { initWebMCP } from "@ai11y/core";
+ *
+ * initWebMCP(); // registers ai11y tools with navigator.modelContext
  * ```
  *
  * @requires navigator.modelContext (WebMCP API)
@@ -114,36 +117,33 @@ function createToolExecutor(action: string) {
 }
 
 /**
- * Initializes WebMCP tool registration
+ * Registers all ai11y tools with the WebMCP API (`navigator.modelContext`).
  *
  * @remarks
  * This function:
  * 1. Checks if running in a browser environment
- * 2. Verifies navigator.modelContext is available
+ * 2. Verifies `navigator.modelContext` is available (consumer must load the polyfill first)
  * 3. Registers all ai11y tools with the WebMCP API
  *
- * Called automatically when the module is loaded.
+ * Safe to call multiple times — silently no-ops if the environment
+ * doesn't support WebMCP or if already in a non-browser context.
+ *
+ * @example
+ * ```typescript
+ * import "@mcp-b/global/iife"; // consumer loads polyfill
+ * import { initWebMCP } from "@ai11y/core";
+ *
+ * initWebMCP();
+ * ```
  */
-function initWebMCP(): void {
-	console.log("[ai11y] initWebMCP starting...", {
-		hasNavigator: typeof navigator !== "undefined",
-		hasModelContext:
-			typeof navigator !== "undefined" &&
-			typeof navigator.modelContext !== "undefined",
-	});
+export function initWebMCP(): void {
 	if (typeof navigator === "undefined") {
-		console.log("[ai11y] No navigator - skipping WebMCP init");
 		return;
 	}
 	if (typeof navigator.modelContext === "undefined") {
-		console.log("[ai11y] No navigator.modelContext - skipping WebMCP init");
 		return;
 	}
 
-	console.log(
-		"[ai11y] Registering tools:",
-		ai11yTools.map((t) => t.name),
-	);
 	for (const tool of ai11yTools) {
 		const actionName = tool.name.replace("ai11y_", "");
 		navigator.modelContext.registerTool({
@@ -154,5 +154,3 @@ function initWebMCP(): void {
 		});
 	}
 }
-
-initWebMCP();

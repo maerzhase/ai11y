@@ -9,8 +9,9 @@ import React from "react";
 interface MarkerProps {
 	id: string;
 	label: string;
-	intent?: string;
+	intent: string;
 	children: React.ReactElement;
+	/** Mark this element as containing sensitive data that should be redacted from the UI context */
 	sensitive?: boolean;
 }
 

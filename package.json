@@ -6,6 +6,7 @@
 	"scripts": {
 		"build": "turbo run build",
 		"build:demo": "turbo run build --filter=./packages/* && pnpm run docs:build && turbo run build --filter=ai11y-demo",
+		"build:server": "turbo run build --filter=ai11y-server-app",
 		"changeset": "changeset",
 		"ci:publish": "pnpm build && pnpm publish -r --no-git-checks --access public",
 		"dev": "turbo run dev",
@@ -28,8 +29,6 @@
 		"watch": "turbo run watch"
 	},
 	"dependencies": {
-		"@mcp-b/global": "^2.0.8",
-		"@mcp-b/webmcp-polyfill": "^2.0.8",
 		"turbo": "2.7.1"
 	},
 	"devDependencies": {

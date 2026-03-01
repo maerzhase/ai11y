@@ -77,14 +77,14 @@ export const ai11yTools: Ai11yTool[] = [
 	{
 		name: "ai11y_click",
 		description:
-			"Click an interactive element on the page by its marker ID. Use this to activate buttons, toggles, switches, or other clickable elements. Returns confirmation once the click is dispatched.",
+			"Click an interactive element (link, button, etc.) by its marker ID. When the marker is in inViewMarkerIds use only 'ai11y_click'. When the marker is NOT in inViewMarkerIds you MUST call 'ai11y_scroll' first then 'ai11y_click' — both calls required. Never omit the click when the user asked to click.",
 		parameters: {
 			type: "object",
 			properties: {
 				id: {
 					type: "string",
 					description:
-						"The unique marker ID of the element to click (e.g., 'theme_toggle', 'nav_route_billing', 'click_demo_increment')",
+						"The marker ID of the element to click. If NOT in inViewMarkerIds, you must call 'ai11y_scroll' with this id first, then 'ai11y_click' with this same id — two tool calls.",
 				},
 			},
 			required: ["id"],
@@ -93,18 +93,19 @@ export const ai11yTools: Ai11yTool[] = [
 	{
 		name: "ai11y_fillInput",
 		description:
-			"Fill a text input, textarea, or select element with a specific value. Use this for form inputs like email, password, search fields, or any editable text area.",
+			"Fill a form field (input, textarea, or select) with a value by its marker ID. Emits native browser events to trigger React onChange handlers and form validation. For select elements, the value should match one of the available option values. IMPORTANT: Do NOT fill password fields — politely inform the user that sending passwords over the wire is a security risk and they should enter it manually.",
 		parameters: {
 			type: "object",
 			properties: {
 				id: {
 					type: "string",
 					description:
-						"The unique marker ID of the input element (e.g., 'fill_demo_email', 'fill_demo_password')",
+						"The marker ID of the input/textarea/select element to fill.",
 				},
 				value: {
 					type: "string",
-					description: "The text value to fill into the input field",
+					description:
+						"The value to fill the field with. For select elements, this must match one of the available option values.",
 				},
 			},
 			required: ["id", "value"],
@@ -113,14 +114,14 @@ export const ai11yTools: Ai11yTool[] = [
 	{
 		name: "ai11y_navigate",
 		description:
-			"Navigate to a different route within the application. Use this when the user wants to go to a different page or section of the app.",
+			"Navigate to a different route/page using a route path (e.g., '/billing', '/integrations'). Use only when 'navigate to [X]' refers to a route path, not a UI element. If X matches a marker, use 'ai11y_scroll' instead (navigate to element = scroll to it).",
 		parameters: {
 			type: "object",
 			properties: {
 				route: {
 					type: "string",
 					description:
-						"The path to navigate to (e.g., '/', '/billing', '/integrations')",
+						"The route path to navigate to (e.g., '/billing', '/integrations', '/').",
 				},
 			},
 			required: ["route"],
@@ -129,14 +130,14 @@ export const ai11yTools: Ai11yTool[] = [
 	{
 		name: "ai11y_scroll",
 		description:
-			"Scroll the viewport to bring a specific element into view. Use this when the user wants to focus on or reveal content that is not currently visible.",
+			"Scroll to a UI element by its marker ID to bring it into view. Use when user only wants to see/navigate to an element (single scroll). When user asked to CLICK or interact and the element is not in view: you MUST call ai11y_scroll first AND then call the action tool in the same response — never scroll only when they asked for an action. For relative scrolling ('scroll to next'/'previous'): skip markers in inViewMarkerIds.",
 		parameters: {
 			type: "object",
 			properties: {
 				id: {
 					type: "string",
 					description:
-						"The unique marker ID of the element to scroll to (e.g., 'slide_navigation', 'highlight_demo_badge_1')",
+						"The marker ID of the element to scroll to. If user asked to click/interact, you must also call the action tool after this scroll in the same response.",
 				},
 			},
 			required: ["id"],
@@ -145,14 +146,13 @@ export const ai11yTools: Ai11yTool[] = [
 	{
 		name: "ai11y_highlight",
 		description:
-			"Temporarily highlight an element on the page to draw attention to it. The highlight typically fades after a few seconds. Useful for confirming an element's location or for visual feedback.",
+			"Highlight a UI element by its marker ID to draw the user's attention. This will also scroll the element into view. The highlight typically fades after a few seconds.",
 		parameters: {
 			type: "object",
 			properties: {
 				id: {
 					type: "string",
-					description:
-						"The unique marker ID of the element to highlight (e.g., 'hero_title', 'context_panel_toggle')",
+					description: "The marker ID of the element to highlight.",
 				},
 			},
 			required: ["id"],

@@ -1,46 +1,85 @@
-import { getContext } from "@ai11y/core";
-import { useChat } from "@ai11y/react";
+import {
+	type AgentAdapterConfig,
+	type LLMAgentConfig,
+	plan,
+} from "@ai11y/core";
+import { useAi11yContext, useChat } from "@ai11y/react";
 import { AssistPanelPopover, ChatInput, MessageBubble } from "@ai11y/ui";
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
 import { useDemoUi } from "@/context/DemoUiContext";
 
 export function AssistPanel() {
-	const { isPanelOpen, setIsPanelOpen, pendingMessage, clearPendingMessage } =
-		useDemoUi();
+	const { describe, act, track, agentConfig } = useAi11yContext();
+	const {
+		isPanelOpen,
+		setIsPanelOpen,
+		pendingMessage,
+		clearPendingMessage,
+		addHighlight,
+	} = useDemoUi();
 	const [hasNewMessages, setHasNewMessages] = useState(false);
 	const lastSeenCountRef = useRef(0);
 
 	const handleSubmit = async (
-		_message: string,
-		_messages: Array<{ type: string; content: string }>,
+		message: string,
+		messages: Array<{ type: string; content: string }>,
 	) => {
-		const context = getContext(undefined, "markers");
+		const ui = describe();
 
-		const contextDescription = `Page: ${context.page?.title || document.title}
-URL: ${context.page?.url || window.location.href}
-Route: ${context.route}
+		const conversationMessages = messages
+			.filter((m, index) => {
+				if (
+					index === messages.length - 1 &&
+					m.type === "user" &&
+					m.content === message
+				) {
+					return false;
+				}
+				return m.type === "user" || m.type === "assistant";
+			})
+			.map((m) => ({
+				role: m.type === "user" ? ("user" as const) : ("assistant" as const),
+				content: m.content,
+			}));
 
-Markers (${context.markers.length}):
-${context.markers.map((m) => `- ${m.id}: ${m.label} (${m.intent || "no intent"})`).join("\n") || "none"}`;
+		const adapterConfig: AgentAdapterConfig = {
+			mode: agentConfig?.mode ?? "auto",
+			forceRuleBased: agentConfig?.forceRuleBased,
+			llmConfig:
+				agentConfig?.apiEndpoint !== undefined
+					? ({ apiEndpoint: agentConfig.apiEndpoint } as LLMAgentConfig)
+					: undefined,
+		};
 
-		const reply = `I've analyzed the page. Here's what I found:
+		const response = await plan(
+			ui,
+			message,
+			adapterConfig,
+			conversationMessages,
+		);
 
-${contextDescription}
+		track("agent_message", {
+			input: message,
+			instructions: response.instructions,
+		});
 
-To interact with this page, I can use these WebMCP tools:
-- \`describe\` - Get UI context
-- \`click_<id>\` - Click a marked element  
-- \`fillInput_<id> { value }\` - Fill an input
-- \`highlight_<id>\` - Highlight an element
-- \`scroll_<id>\` - Scroll to an element
-- \`navigate_<route>\` - Navigate to a route
-- \`setState\` - Set application state
-- \`getState\` - Get application state
+		return {
+			reply: response.reply,
+			instructions:
+				response.instructions && response.instructions.length > 0
+					? response.instructions
+					: undefined,
+		};
+	};
 
-In a real WebMCP setup, AI agents would call these tools directly via the MCP protocol. This demo shows how ai11y exposes your UI as tools.`;
-
-		return { reply };
+	const handleInstruction = (
+		instruction: import("@ai11y/core").Instruction,
+	) => {
+		act(instruction);
+		if (instruction.action === "highlight") {
+			addHighlight(instruction.id);
+		}
 	};
 
 	const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -54,6 +93,7 @@ In a real WebMCP setup, AI agents would call these tools directly via the MCP pr
 		handleSubmit: handleChatSubmit,
 	} = useChat({
 		onSubmit: handleSubmit,
+		onInstruction: handleInstruction,
 		onMessage: () => {
 			messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
 		},

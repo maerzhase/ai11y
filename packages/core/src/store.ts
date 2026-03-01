@@ -1,21 +1,5 @@
+import type { Ai11yError, Ai11yEvent, Ai11yState } from "./context.js";
 import { notify } from "./events.js";
-
-export interface Ai11yError {
-	error: Error;
-	meta?: {
-		surface?: string;
-		markerId?: string;
-	};
-	timestamp: number;
-}
-
-export interface Ai11yEvent {
-	type: string;
-	payload?: unknown;
-	timestamp: number;
-}
-
-export type Ai11yState = Record<string, unknown>;
 
 let route: string | undefined;
 let state: Ai11yState | undefined;

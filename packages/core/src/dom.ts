@@ -1,99 +1,79 @@
-import type { Marker } from "./marker.js";
+import type { Ai11yContext } from "./context.js";
 import { getMarkers } from "./marker.js";
-import { getError, getEvents, getRoute, getState } from "./store.js";
-import { getAllMarkersSelector, getMarkerSelector } from "./util/attributes.js";
+import { getError, getRoute, getState } from "./store.js";
+import { getAllMarkersSelector, getMarkerId } from "./util/attributes.js";
 
-export type DescribeLevel = "markers" | "interactive" | "full";
+/**
+ * Detects which markers are currently visible in the viewport
+ *
+ * @param root - Optional DOM root element to scan for markers (defaults to document.body)
+ * @returns Array of marker IDs that are currently in view
+ */
+function getInViewMarkerIds(root?: Element): string[] {
+	if (typeof document === "undefined" || typeof window === "undefined") {
+		return [];
+	}
 
-export interface Ai11yContext {
-	markers: Marker[];
-	level: DescribeLevel;
-	route?: string;
-	state?: Record<string, unknown>;
-	error?: unknown;
-	events: Array<{
-		type: string;
-		payload?: unknown;
-		timestamp: number;
-	}>;
-	page?: {
-		url: string;
-		title: string;
-	};
-	inViewMarkerIds: string[];
-}
+	const scanRoot = root ?? document.body;
+	if (!scanRoot) {
+		return [];
+	}
 
-export interface ExtractedElement {
-	id: string;
-	tag: string;
-	text: string;
-	selector: string;
-}
+	const elements = scanRoot.querySelectorAll(getAllMarkersSelector());
+	const inViewIds: string[] = [];
 
-export interface FormInfo {
-	selector: string;
-	inputs: Array<{
-		name: string;
-		type: string;
-		selector: string;
-	}>;
-}
+	for (let i = 0; i < elements.length; i++) {
+		const element = elements[i];
+		const id = getMarkerId(element);
+		if (!id) continue;
 
-const inViewMarkerIdsSet = new Set<string>();
+		const rect = element.getBoundingClientRect();
+		const isInView =
+			rect.top >= 0 &&
+			rect.left >= 0 &&
+			rect.bottom <=
+				(window.innerHeight || document.documentElement.clientHeight) &&
+			rect.right <= (window.innerWidth || document.documentElement.clientWidth);
 
-function getElementByMarkerId(markerId: string): Element | null {
-	if (typeof document === "undefined") return null;
-	return document.querySelector(getMarkerSelector(markerId));
-}
+		const isPartiallyVisible =
+			rect.top <
+				(window.innerHeight || document.documentElement.clientHeight) &&
+			rect.bottom > 0 &&
+			rect.left < (window.innerWidth || document.documentElement.clientWidth) &&
+			rect.right > 0;
 
-function getAllMarkerElements(): NodeListOf<Element> {
-	if (typeof document === "undefined") return {} as NodeListOf<Element>;
-	return document.querySelectorAll(getAllMarkersSelector());
-}
-
-function updateInViewMarkers(): void {
-	if (typeof document === "undefined") return;
-
-	const markers = getMarkers(document.body);
-	inViewMarkerIdsSet.clear();
-
-	const viewportHeight =
-		typeof window !== "undefined" ? window.innerHeight : Infinity;
-	const viewportWidth =
-		typeof window !== "undefined" ? window.innerWidth : Infinity;
-
-	for (const marker of markers) {
-		const element = getElementByMarkerId(marker.id);
-		if (element) {
-			const rect = element.getBoundingClientRect();
-			const isVisible =
-				rect.top >= 0 &&
-				rect.left >= 0 &&
-				rect.bottom <= viewportHeight &&
-				rect.right <= viewportWidth;
-
-			if (isVisible) {
-				inViewMarkerIdsSet.add(marker.id);
-			}
+		if (isInView || isPartiallyVisible) {
+			inViewIds.push(id);
 		}
 	}
+
+	return inViewIds;
 }
 
-export function getContext(
-	root?: Element,
-	level: DescribeLevel = "markers",
-): Ai11yContext {
+/**
+ * Composes a complete Ai11yContext from singleton state and DOM markers
+ *
+ * @param root - Optional DOM root element to scan for markers (defaults to document.body)
+ * @returns A complete Ai11yContext object with markers from DOM and state from singleton
+ *
+ * @example
+ * ```ts
+ * import { setRoute, setState, getContext } from '@ai11y/core';
+ *
+ * setRoute('/billing');
+ * setState({ userId: '123' });
+ * const context = getContext();
+ * ```
+ */
+export function getContext(root?: Element): Ai11yContext {
 	const context: Ai11yContext = {
-		markers: [],
-		level,
-		events: [],
-		inViewMarkerIds: [],
+		markers: getMarkers(root),
+		inViewMarkerIds: getInViewMarkerIds(root),
 	};
 
 	const route = getRoute();
 	const state = getState();
 	const error = getError();
-	const events = getEvents();
 
 	if (route !== undefined) {
 		context.route = route;
@@ -104,29 +84,6 @@ export function getContext(
 	if (error !== undefined) {
 		context.error = error;
 	}
-	if (events !== undefined) {
-		context.events = events;
-	}
-
-	if (typeof document === "undefined") {
-		return context;
-	}
-
-	const doc = root ?? document;
-
-	context.markers = getMarkers(doc as Element);
-	context.page = {
-		url: window.location.href,
-		title: document.title,
-	};
-
-	updateInViewMarkers();
-	context.inViewMarkerIds = Array.from(inViewMarkerIdsSet);
 
 	return context;
-}
-
-export function refreshInViewMarkers(): string[] {
-	updateInViewMarkers();
-	return Array.from(inViewMarkerIdsSet);
 }

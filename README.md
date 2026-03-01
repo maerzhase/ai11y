@@ -1,33 +1,121 @@
 # ai11y
 
-> **a11y ≠ ai11y**
+> **a11y != ai11y**
 >
 > a11y exposes meaning to assistive tech. ai11y exposes meaning to agents. Just
 > like accessibility APIs expose structure, roles, and actions to assistive
 > technologies, ai11y exposes structure, state, and actions to AI agents. Same
 > idea. New consumer.
 
-With ai11y you expose a structured UI context layer for AI agents to make
-existing user interfaces understandable and actionable for AI agents.
+ai11y is a structured UI context layer that makes existing user interfaces
+understandable and actionable for AI agents. It ships MCP-compatible tool
+definitions and registers them via
+[WebMCP](https://github.com/nicolo-ribaudo/tc39-proposal-model-context-protocol)
+so any browser-based AI assistant can discover and operate your UI.
 
-The API is **describe → plan → act**: capture UI context, get instructions from
-an agent, execute them on the client.
+## How it works
 
-## Describe → Plan → Act
+```
+  Your UI                 ai11y                     AI Agent
+ ┌────────┐     ┌──────────────────────┐     ┌────────────────┐
+ │ Markers │────>│  describe()          │────>│                │
+ │ State   │    │  ai11yTools (MCP)    │    │  Browser LLM   │
+ │ Route   │<───│  act(instruction)    │<───│  or Server LLM │
+ └────────┘     │  WebMCP registration │    └────────────────┘
+                └──────────────────────┘
+```
 
-The world runs on user interfaces. Interfaces solve problems by making state,
-constraints, and actions explicit.
+The core loop is **describe -> plan -> act**:
 
-ai11y exposes this structure so agents can operate existing UIs.
+- **Describe** -- observe the current UI context (markers, route, state,
+  errors). _Runtime: local -- DOM -> structured context._
 
-- **Describe** — observe the current UI context.  
-  _Runtime: local — DOM → structured context._
+- **Plan** -- get instructions from the agent. _Runtime: model/server --
+  context + intent -> instructions._
 
-- **Plan** — get instructions from the agent.  
-  _Runtime: model/server — context + intent → instructions._
+- **Act** -- perform actions on the UI (click, scroll, fill, navigate,
+  highlight). _Runtime: local -- instructions -> DOM actions._
 
-- **Act** — perform actions on the UI.  
-  _Runtime: local — instructions → DOM actions._
+## WebMCP -- first-class MCP support
+
+ai11y ships a canonical set of MCP-compatible tool definitions (`ai11yTools`)
+and registers them with the
+[WebMCP API](https://nicolo-ribaudo.github.io/tc39-proposal-model-context-protocol/)
+(`navigator.modelContext`) so browser-based AI assistants can discover and call
+them without any server round-trip.
+
+### Tools
+
+| Tool              | Description                                    |
+| ----------------- | ---------------------------------------------- |
+| `ai11y_describe`  | Get current UI context (markers, route, state) |
+| `ai11y_click`     | Click an interactive element by marker ID      |
+| `ai11y_fillInput` | Fill a form field by marker ID                 |
+| `ai11y_navigate`  | Navigate to a route                            |
+| `ai11y_scroll`    | Scroll an element into view                    |
+| `ai11y_highlight` | Temporarily highlight an element               |
+| `ai11y_setState`  | Update shared application state                |
+| `ai11y_getState`  | Retrieve shared application state              |
+
+All tool definitions follow the MCP `InputSchema` spec and are exported as
+`ai11yTools` from `@ai11y/core`. The same definitions are used for both WebMCP
+registration (client-side) and server-side agent prompt generation -- single
+source of truth.
+
+### Enabling WebMCP
+
+The `Ai11yProvider` registers tools with `navigator.modelContext` automatically.
+The consumer is responsible for loading the WebMCP polyfill before the provider
+mounts:
+
+```tsx
+// Load the polyfill (consumer owns this)
+import "@mcp-b/global/iife";
+
+import { Ai11yProvider } from "@ai11y/react";
+
+function App() {
+  return (
+    <Ai11yProvider onNavigate={(route) => navigate(route)}>
+      <YourApp />
+    </Ai11yProvider>
+  );
+}
+```
+
+The `webmcp` prop (default: `true`) controls whether tools are registered. Pass
+`webmcp={false}` to disable registration while still using the rest of ai11y:
+
+```tsx
+<Ai11yProvider webmcp={false} onNavigate={handleNavigate}>
+  <YourApp />
+</Ai11yProvider>
+```
+
+### Using tool definitions directly
+
+If you are not using React or want to register tools manually:
+
+```ts
+import { ai11yTools, initWebMCP } from "@ai11y/core";
+
+// Option 1: Auto-register all tools with navigator.modelContext
+initWebMCP();
+
+// Option 2: Use the tool definitions for your own integration
+for (const tool of ai11yTools) {
+  console.log(tool.name, tool.description, tool.parameters);
+}
+```
+
+## Usage
+
+### Plain JS
+
+Annotate elements with `data-ai-id`, `data-ai-label`, and optionally
+`data-ai-intent`. Start by marking only the top-level interactive elements (e.g.
+main actions, nav); ai11y still works and you can add more markers over time.
+Create a client and use describe -> plan -> act:
 
 ```ts
 import { createClient, plan } from "@ai11y/core";
@@ -42,16 +130,6 @@ for (const instruction of instructions ?? []) {
   client.act(instruction);
 }
 ```
-
-## Usage
-
-### Plain JS
-
-Annotate elements with `data-ai-id`, `data-ai-label`, and optionally
-`data-ai-intent`. Start by marking only the top-level interactive elements (e.g.
-main actions, nav); ai11y still works and you can add more markers over time.
-Create a client and use describe → plan → act as above. The core reads the DOM
-and executes instructions; no React required.
 
 ### With React
 
@@ -83,7 +161,7 @@ function Chat() {
 }
 ```
 
-Use marker component to annotate your components:
+Use the `Marker` component to annotate your elements:
 
 ```tsx
 <Marker id="save_btn" label="Save" intent="Save the document">
@@ -98,6 +176,18 @@ For natural-language planning, run the plan step on your server with
 client sends `describe()` output and user input; the server returns
 `{ reply, instructions }`. Without a configured endpoint, the client falls back
 to a built-in rule-based planner.
+
+The server agent uses the same `ai11yTools` definitions from `@ai11y/core` to
+generate tool bindings for the LLM.
+
+## Packages
+
+| Package                          | Description                                                      |
+| -------------------------------- | ---------------------------------------------------------------- |
+| [`@ai11y/core`](packages/core)   | Types, tool definitions, DOM context, store, WebMCP registration |
+| [`@ai11y/react`](packages/react) | `Ai11yProvider`, `Marker`, `useAi11yContext`, `useChat`          |
+| [`@ai11y/agent`](packages/agent) | Server-side LLM agent with LangChain (plan step)                 |
+| [`@ai11y/ui`](packages/ui)       | Shared UI components                                             |
 
 ## Security & privacy
 
@@ -120,15 +210,11 @@ use ARIA where present to enrich context (see Roadmap).
 
 ## Roadmap
 
-- **Expose Tools for WebMCP** —
-  [WebMCP added a proposal](https://github.com/webmachinelearning/webmcp/pull/76)
-  for a declarative API for tools. We will support compiling tools for WebMCP
-  via `ai11y` directly.
-- **Native ARIA support (optional)** — Use ARIA attributes where present to
+- **Native ARIA support (optional)** -- Use ARIA attributes where present to
   enrich UI context.
-- **Linter rule** — Enforce or suggest `data-ai-*` / `Marker` usage in
+- **Linter rule** -- Enforce or suggest `data-ai-*` / `Marker` usage in
   codebases.
-- **AI-assisted error handling and recovery** — Detect failures, suggest fixes,
+- **AI-assisted error handling and recovery** -- Detect failures, suggest fixes,
   and automatically retry or roll back actions when possible.
-- **Client-side LLM integration and examples** — Run the plan step in the
+- **Client-side LLM integration and examples** -- Run the plan step in the
   browser with local or hosted models.

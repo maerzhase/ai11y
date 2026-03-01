@@ -1,4 +1,4 @@
-import { type Ai11yContext, getContext } from "@ai11y/react";
+import { useAi11yContext } from "@ai11y/react";
 import { Tabs, TabsList, TabsPanel, TabsTrigger } from "@ai11y/ui";
 import { ChevronDown, X } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -11,12 +11,11 @@ interface ContextPanelProps {
 type SidebarTab = "ui-context" | "events";
 
 export function ContextPanel({ isOpen, onOpenChange }: ContextPanelProps) {
-	const [context, setContext] = useState<Ai11yContext>(() => getContext());
+	const { events, describe, lastError } = useAi11yContext();
+	const [context, setContext] = useState(() => describe());
 	const [activeTab, setActiveTab] = useState<SidebarTab>("ui-context");
 	const [mounted, setMounted] = useState(false);
 	const [rawPayloadOpen, setRawPayloadOpen] = useState(false);
-
-	const events = context.events || [];
 
 	useEffect(() => {
 		setMounted(true);
@@ -24,13 +23,13 @@ export function ContextPanel({ isOpen, onOpenChange }: ContextPanelProps) {
 
 	useEffect(() => {
 		const updateContext = () => {
-			setContext(getContext());
+			setContext(describe());
 		};
 		updateContext();
 		const interval = setInterval(updateContext, 1000);
 
 		return () => clearInterval(interval);
-	}, []);
+	}, [describe]);
 
 	const formatTimestamp = (timestamp: number) => {
 		const date = new Date(timestamp);
@@ -273,6 +272,25 @@ export function ContextPanel({ isOpen, onOpenChange }: ContextPanelProps) {
 								)}
 							</div>
 						</div>
+
+						{lastError && (
+							<div>
+								<div className="text-muted-foreground mb-1">Last Error</div>
+								<div className="p-2 rounded border border-destructive/50 bg-destructive/10">
+									<div className="font-medium text-destructive mb-1">
+										{lastError.error.message}
+									</div>
+									{lastError.meta && (
+										<pre className="text-[10px] text-muted-foreground mt-1">
+											{formatPayload(lastError.meta)}
+										</pre>
+									)}
+									<div className="text-[10px] text-muted-foreground mt-1">
+										{formatTimestamp(lastError.timestamp)}
+									</div>
+								</div>
+							</div>
+						)}
 					</div>
 				</TabsPanel>
 			</Tabs>

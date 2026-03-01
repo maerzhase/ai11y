@@ -1,7 +1,11 @@
 # @ai11y/agent
 
-Runs the plan step for ai11y on the server (LLM + tools). Securely handles LLM
-API calls and provides extensible tool support.
+Runs the **plan** step for ai11y on the server (LLM + tools). Securely handles
+LLM API calls and provides extensible tool support.
+
+The agent uses the canonical `ai11yTools` definitions from `@ai11y/core` as its
+tool registry -- the same definitions used for WebMCP registration on the
+client. Single source of truth, no duplication.
 
 ## Installation
 
@@ -16,15 +20,13 @@ pnpm add @ai11y/agent
 Use `runAgent` with a config and tool registry; wire it to your own HTTP (or
 other) transport:
 
-```typescript
-import {
-  runAgent,
-  createDefaultToolRegistry,
-  type ServerConfig,
-} from "@ai11y/agent";
-import type { AgentRequest } from "@ai11y/agent";
+```ts
+import type { AgentRequest } from "@ai11y/core";
+import { runAgent, createDefaultToolRegistry } from "@ai11y/agent";
+import type { ServerConfig } from "@ai11y/agent";
 
 const config: ServerConfig = {
+  provider: "openai",
   apiKey: process.env.OPENAI_API_KEY!,
   model: "gpt-4o-mini",
 };
@@ -39,57 +41,55 @@ async function handleRequest(request: AgentRequest) {
 
 ### With Fastify
 
-Import the plugin directly from the main package:
+Register the plugin to expose the agent endpoint:
 
-```typescript
+```ts
 import Fastify from "fastify";
-import { ai11yAgentPlugin } from "@ai11y/agent";
+import { ai11yPlugin } from "@ai11y/agent/fastify";
 
 const fastify = Fastify();
 
-await fastify.register(ai11yAgentPlugin, {
+await fastify.register(ai11yPlugin, {
   config: {
+    provider: "openai",
     apiKey: process.env.OPENAI_API_KEY!,
     model: "gpt-4o-mini",
-    baseURL: "https://api.openai.com/v1",
   },
 });
 
 await fastify.listen({ port: 3000 });
 ```
 
-The plugin registers `POST /ai11y/agent` and `GET /ai11y/health`.
+The plugin registers `POST /ai11y/agent` and `GET /ai11y/health`. See
+`apps/server/` for a full example.
 
-### With Next.js API Routes
+## Tool registry
 
-```typescript
-// app/api/ai11y/agent/route.ts
-import { runAgent, createDefaultToolRegistry } from "@ai11y/agent";
-import type { AgentRequest } from "@ai11y/agent";
+The default tool registry (`createDefaultToolRegistry()`) is populated from
+`ai11yTools` in `@ai11y/core`. It registers the following tools with `ai11y_`
+prefixed names:
 
-const config = {
-  apiKey: process.env.OPENAI_API_KEY!,
-  model: "gpt-4o-mini",
-};
+| Tool              | Description                               |
+| ----------------- | ----------------------------------------- |
+| `ai11y_click`     | Click an interactive element by marker ID |
+| `ai11y_fillInput` | Fill a form field by marker ID            |
+| `ai11y_navigate`  | Navigate to a route                       |
+| `ai11y_scroll`    | Scroll an element into view               |
+| `ai11y_highlight` | Highlight an element                      |
 
-const toolRegistry = createDefaultToolRegistry();
+WebMCP-only tools (`ai11y_describe`, `ai11y_setState`, `ai11y_getState`) are
+excluded from the server agent since the server receives context via the request
+body.
 
-export async function POST(request: Request) {
-  const body = (await request.json()) as AgentRequest;
-  const result = await runAgent(body, config, toolRegistry);
-  return Response.json(result);
-}
-```
+## Extending with custom tools
 
-## Extending with Custom Tools
+You can extend the agent with custom tools using the `ToolRegistry`:
 
-You can extend the agent with custom tools using the ToolRegistry:
+```ts
+import type { ToolDefinition, ToolExecutor } from "@ai11y/core";
+import { createDefaultToolRegistry } from "@ai11y/agent";
 
-```typescript
-import { ai11yAgentPlugin, createToolRegistry } from "@ai11y/agent";
-import type { Ai11yContext } from "@ai11y/agent";
-
-const registry = createToolRegistry();
+const registry = createDefaultToolRegistry();
 
 registry.register(
   {
@@ -107,81 +107,9 @@ registry.register(
   },
   async (args, context) => {
     console.log("Sending email:", args);
-    // args: { to: string, subject: string, body: string }
-    // context: { route?: string, state?: Record, markers: [] }
     return { success: true, messageId: "123" };
   },
 );
-
-await fastify.register(ai11yAgentPlugin, {
-  config: {
-    apiKey: process.env.OPENAI_API_KEY!,
-  },
-  toolRegistry: registry,
-});
 ```
 
-## API Reference
-
-### `createDefaultToolRegistry()`
-
-Creates a registry pre-populated with the default ai11y tools:
-
-- `ai11y_describe` - Get current UI context
-- `ai11y_click` - Click an element by marker ID
-- `ai11y_fillInput` - Fill an input by marker ID
-- `ai11y_navigate` - Navigate to a route
-- `ai11y_scroll` - Scroll to an element
-- `ai11y_highlight` - Highlight an element
-- `ai11y_setState` - Set application state
-- `ai11y_getState` - Get application state
-
-### `createToolRegistry()`
-
-Creates an empty registry for custom tools.
-
-### `runAgent(request, config, toolRegistry?)`
-
-Executes the agent with:
-
-- `request`: `{ message, context, history? }`
-- `config`: `{ apiKey, provider?, model?, baseURL?, temperature?, maxTokens? }`
-- `toolRegistry?`: Optional custom tool registry
-
-Returns: `{ instructions: [], reply?: string }`
-
-### `createAgent(config)`
-
-Creates an agent instance with a simpler API for repeated calls.
-
-### `ai11yAgentPlugin`
-
-Fastify plugin that registers `/ai11y/agent` and `/ai11y/health` endpoints.
-
-### ServerConfig
-
-```typescript
-interface ServerConfig {
-  apiKey: string;
-  provider?: "openai" | "anthropic";
-  model?: string;
-  baseURL?: string;
-  temperature?: number;
-  maxTokens?: number;
-}
-```
-
-### ToolRegistry
-
-```typescript
-class ToolRegistry {
-  register(definition: ToolDefinition, executor: ToolExecutor): void;
-  unregister(name: string): boolean;
-  getTool(
-    name: string,
-  ): { definition: ToolDefinition; executor: ToolExecutor } | undefined;
-  getAllTools(): ToolDefinition[];
-  getToolNames(): string[];
-  has(name: string): boolean;
-}
-```
+For API details and types, see the generated docs.
