@@ -8,18 +8,18 @@
 ai11y is a structured UI context layer that makes existing user interfaces
 understandable and actionable for AI agents. It ships MCP-compatible tool
 definitions and registers them via
-[WebMCP](https://github.com/nicolo-ribaudo/tc39-proposal-model-context-protocol)
-so any browser-based AI assistant can discover and operate your UI.
+[WebMCP](https://github.com/webmachinelearning/webmcp) so any browser-based AI
+assistant can discover and operate your UI.
 
 ## How it works
 
 ```
   Your UI                 ai11y                     AI Agent
  ┌────────┐     ┌──────────────────────┐     ┌────────────────┐
- │ Markers │────>│  describe()          │────>│                │
- │ State   │    │  ai11yTools (MCP)    │    │  Browser LLM   │
- │ Route   │<───│  act(instruction)    │<───│  or Server LLM │
- └────────┘     │  WebMCP registration │    └────────────────┘
+ │ Markers│────>│  describe()          │────>│                │
+ │ State  │     │  ai11yTools (MCP)    │     │ Browser LLM    │
+ │ Route  │<────│  act(instruction)    │<────│ or Server LLM  │
+ └────────┘     │  WebMCP registration │     └────────────────┘
                 └──────────────────────┘
 ```
 
@@ -34,11 +34,11 @@ The core loop is **describe -> plan -> act**:
 - **Act** -- perform actions on the UI (click, scroll, fill, navigate,
   highlight). _Runtime: local -- instructions -> DOM actions._
 
-## WebMCP -- first-class MCP support
+## WebMCP Support
 
 ai11y ships a canonical set of MCP-compatible tool definitions (`ai11yTools`)
 and registers them with the
-[WebMCP API](https://nicolo-ribaudo.github.io/tc39-proposal-model-context-protocol/)
+[WebMCP](https://github.com/webmachinelearning/webmcp)
 (`navigator.modelContext`) so browser-based AI assistants can discover and call
 them without any server round-trip.
 
