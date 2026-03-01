@@ -17,6 +17,7 @@
 		"watch": "tsdown --watch"
 	},
 	"devDependencies": {
+		"@mcp-b/webmcp-types": "^2.0.8",
 		"tsdown": "0.18.1",
 		"typescript": "5.9.3"
 	},

@@ -3,15 +3,13 @@
 	"version": "0.0.1",
 	"type": "module",
 	"main": "./dist/index.mjs",
+	"module": "./dist/index.mjs",
 	"types": "./dist/index.d.mts",
 	"exports": {
 		".": {
 			"types": "./dist/index.d.mts",
-			"import": "./dist/index.mjs"
-		},
-		"./fastify": {
-			"types": "./dist/fastify.d.mts",
-			"import": "./dist/fastify.mjs"
+			"import": "./dist/index.mjs",
+			"default": "./dist/index.mjs"
 		}
 	},
 	"scripts": {
@@ -19,19 +17,13 @@
 		"watch": "tsdown --watch"
 	},
 	"dependencies": {
-		"@ai11y/core": "workspace:*",
-		"@langchain/core": "1.1.8",
-		"@langchain/openai": "1.2.0",
-		"zod": "4.2.1"
+		"openai": "^4.77.0"
 	},
 	"peerDependencies": {
-		"fastify": "5.7.4"
+		"@ai11y/core": "workspace:*"
 	},
 	"devDependencies": {
-		"@types/node": "25.0.3",
-		"fastify": "5.7.4",
 		"tsdown": "0.18.1",
-		"tsx": "4.21.0",
 		"typescript": "5.9.3"
 	},
 	"publishConfig": {

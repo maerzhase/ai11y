@@ -1,7 +1,7 @@
 "use client";
 
 import type { Instruction } from "@ai11y/core";
-import { useAi11yContext } from "@ai11y/react";
+import { act } from "@ai11y/core";
 import { useState } from "react";
 import { MarkerWithHighlight as Marker } from "@/components/Shared/MarkerWithHighlight";
 import { useDemoUi } from "@/context/DemoUiContext";
@@ -45,7 +45,6 @@ function stepLabel(instruction: Instruction): string {
 }
 
 export function MultiStepDemo() {
-	const { act } = useAi11yContext();
 	const { addHighlight } = useDemoUi();
 	const [status, setStatus] = useState<"inactive" | "active">("inactive");
 	const [email, setEmail] = useState("");
