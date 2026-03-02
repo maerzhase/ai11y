@@ -1,5 +1,6 @@
 "use client";
 
+import "@mcp-b/global/iife";
 import type { AgentConfig } from "@ai11y/core";
 import { setRoute } from "@ai11y/core";
 import { Ai11yProvider } from "@ai11y/react";
