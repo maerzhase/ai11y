@@ -19,6 +19,7 @@
 		"@ai11y/react": "workspace:*",
 		"@ai11y/ui": "workspace:*",
 		"@fontsource/geist": "5.1.0",
+		"@mcp-b/global": "^2.0.8",
 		"@tailwindcss/postcss": "4.1.18",
 		"@vercel/analytics": "1.6.1",
 		"lucide-react": "0.563.0",

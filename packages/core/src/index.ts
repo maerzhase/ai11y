@@ -52,4 +52,12 @@ export {
 	subscribeToStore,
 	track,
 } from "./store.js";
+// WebMCP integration
+export {
+	type Ai11yTool,
+	ai11yTools,
+	getToolByName,
+	openAITools,
+} from "./tool-schemas.js";
 export * from "./util/index.js";
+export { initWebMCP } from "./webmcp.js";

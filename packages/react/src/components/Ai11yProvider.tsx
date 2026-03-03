@@ -8,6 +8,7 @@ import {
 	getEvents,
 	getRoute,
 	getState,
+	initWebMCP,
 	setState,
 	subscribe,
 	subscribeToStore,
@@ -40,6 +41,14 @@ interface Ai11yProviderProps {
 	initialState?: Ai11yState;
 	onNavigate?: (route: string) => void;
 	agentConfig?: AgentConfig;
+	/**
+	 * Register ai11y tools with the WebMCP API (`navigator.modelContext`).
+	 * The consumer is responsible for loading the WebMCP polyfill
+	 * (e.g. `import "@mcp-b/global/iife"`) before rendering the provider.
+	 *
+	 * @default false
+	 */
+	webmcp?: boolean;
 }
 
 export function Ai11yProvider({
@@ -47,12 +56,19 @@ export function Ai11yProvider({
 	initialState = {},
 	onNavigate,
 	agentConfig,
+	webmcp = false,
 }: Ai11yProviderProps) {
 	const clientRef = useRef(
 		createClient({
 			onNavigate,
 		}),
 	);
+
+	useEffect(() => {
+		if (webmcp) {
+			initWebMCP();
+		}
+	}, [webmcp]);
 
 	useEffect(() => {
 		if (Object.keys(initialState).length > 0) {

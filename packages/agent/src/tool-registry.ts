@@ -1,9 +1,11 @@
 import type {
 	Ai11yContext,
+	Ai11yTool,
 	Instruction,
 	ToolDefinition,
 	ToolExecutor,
 } from "@ai11y/core";
+import { ai11yTools } from "@ai11y/core";
 
 /**
  * Registry for managing tools that can be called by the LLM agent.
@@ -63,7 +65,8 @@ export class ToolRegistry {
 	}
 
 	/**
-	 * Convert OpenAI tool call to our Instruction format
+	 * Convert tool call to our Instruction format.
+	 * Strips the ai11y_ prefix when mapping to instruction actions.
 	 */
 	convertToolCall(toolCall: {
 		type: "function";
@@ -75,23 +78,25 @@ export class ToolRegistry {
 		}
 
 		const args = JSON.parse(toolCall.function.arguments);
+		// Strip the ai11y_ prefix to get the action name
+		const action = toolCall.function.name.replace(/^ai11y_/, "");
 
-		if (toolCall.function.name === "navigate") {
+		if (action === "navigate") {
 			return { action: "navigate", route: args.route };
 		}
-		if (toolCall.function.name === "click") {
-			return { action: "click", id: args.markerId };
+		if (action === "click") {
+			return { action: "click", id: args.id };
 		}
-		if (toolCall.function.name === "highlight") {
-			return { action: "highlight", id: args.markerId };
+		if (action === "highlight") {
+			return { action: "highlight", id: args.id };
 		}
-		if (toolCall.function.name === "scroll") {
-			return { action: "scroll", id: args.markerId };
+		if (action === "scroll") {
+			return { action: "scroll", id: args.id };
 		}
-		if (toolCall.function.name === "fillInput") {
+		if (action === "fillInput") {
 			return {
 				action: "fillInput",
-				id: args.markerId,
+				id: args.id,
 				value: args.value,
 			};
 		}
@@ -108,128 +113,58 @@ export class ToolRegistry {
 }
 
 /**
- * Default tool registry with built-in tools
+ * Convert an Ai11yTool (MCP-compatible) to a ToolDefinition (agent-compatible).
+ * Maps InputSchema to ToolDefinition parameters format.
+ */
+function toToolDefinition(tool: Ai11yTool): ToolDefinition {
+	const properties: Record<string, { type: string; description: string }> = {};
+	if (tool.parameters.properties) {
+		for (const [key, value] of Object.entries(tool.parameters.properties)) {
+			const prop = value as { type?: string; description?: string };
+			properties[key] = {
+				type: prop.type ?? "string",
+				description: prop.description ?? "",
+			};
+		}
+	}
+	return {
+		name: tool.name,
+		description: tool.description,
+		parameters: {
+			type: "object",
+			properties,
+			required: tool.parameters.required as string[] | undefined,
+		},
+	};
+}
+
+/**
+ * Default tool registry populated from the canonical ai11yTools definitions.
+ * Tools use ai11y_ prefixed names and `id` as the parameter name.
  */
 export function createDefaultToolRegistry(): ToolRegistry {
 	const registry = new ToolRegistry();
 
-	registry.register(
-		{
-			name: "click",
-			description:
-				"Click an interactive element (link, button, etc.) by its marker ID. When markerId is in inViewMarkerIds use only 'click'. When markerId is NOT in inViewMarkerIds you MUST call 'scroll' first (same response) then 'click'—both calls required. Never omit the click when the user asked to click.",
-			parameters: {
-				type: "object",
-				properties: {
-					markerId: {
-						type: "string",
-						description:
-							"The ID of the marker to click. If NOT in inViewMarkerIds, you must call 'scroll' with this markerId first, then 'click' with this same markerId—two tool calls.",
-					},
-				},
-				required: ["markerId"],
-			},
-		},
-		async (args) => {
-			return { success: true, markerId: args.markerId };
-		},
-	);
+	// The tools the agent can call. The executor returns a stub result;
+	// the real side-effects happen client-side via instructions.
+	const defaultExecutor: ToolExecutor = async (args) => ({
+		success: true,
+		...args,
+	});
 
-	registry.register(
-		{
-			name: "scroll",
-			description:
-				"Scroll to a UI element by its marker ID to bring it into view. Use when user only wants to see/navigate (single scroll). When user asked to CLICK or interact (increment, press, submit, fill) and the element is not in view: you MUST call scroll first AND then call 'click' (or fillInput etc.) in the same response—never scroll only when they asked for an action. For relative scrolling ('scroll to next'/'previous'): skip markers in inViewMarkerIds.",
-			parameters: {
-				type: "object",
-				properties: {
-					markerId: {
-						type: "string",
-						description:
-							"The ID of the marker to scroll to. If user asked to click/interact, you must also call the action tool (click, fillInput) after this scroll in the same response.",
-					},
-				},
-				required: ["markerId"],
-			},
-		},
-		async (args) => {
-			return { success: true, markerId: args.markerId };
-		},
-	);
+	for (const tool of ai11yTools) {
+		// Skip describe/setState/getState — they are WebMCP-only tools
+		// that the server-side agent doesn't need
+		if (
+			tool.name === "ai11y_describe" ||
+			tool.name === "ai11y_setState" ||
+			tool.name === "ai11y_getState"
+		) {
+			continue;
+		}
 
-	registry.register(
-		{
-			name: "highlight",
-			description:
-				"Highlight a UI element by its marker ID to draw the user's attention. This will also scroll the element into view.",
-			parameters: {
-				type: "object",
-				properties: {
-					markerId: {
-						type: "string",
-						description: "The ID of the marker to highlight",
-					},
-				},
-				required: ["markerId"],
-			},
-		},
-		async (args) => {
-			return { success: true, markerId: args.markerId };
-		},
-	);
-
-	registry.register(
-		{
-			name: "navigate",
-			description:
-				"Navigate to a different route/page using a route path (e.g., '/billing', '/integrations'). Use only when 'navigate to [X]' refers to a route path, not a UI element. If X matches a marker, use 'scroll' instead (navigate to element = scroll to it).",
-			parameters: {
-				type: "object",
-				properties: {
-					route: {
-						type: "string",
-						description:
-							"The route path to navigate to (e.g., '/billing', '/integrations', '/').",
-					},
-				},
-				required: ["route"],
-			},
-		},
-		async (args) => {
-			return { success: true, route: args.route };
-		},
-	);
-
-	registry.register(
-		{
-			name: "fillInput",
-			description:
-				"Fill a form field (input, textarea, or select) with a value by its marker ID. Emits native browser events to trigger React onChange handlers and form validation. Use when the user wants to enter text into a form field or select an option from a dropdown. For select elements, the value should match one of the available option values. IMPORTANT: Do NOT fill password fields - politely inform the user that sending passwords over the wire is a security risk and they should enter it manually.",
-			parameters: {
-				type: "object",
-				properties: {
-					markerId: {
-						type: "string",
-						description:
-							"The ID of the marker for the input/textarea/select element to fill",
-					},
-					value: {
-						type: "string",
-						description:
-							"The value to fill the field with. For select elements, this must match one of the available option values.",
-					},
-				},
-				required: ["markerId", "value"],
-			},
-		},
-		async (args) => {
-			return {
-				success: true,
-				markerId: args.markerId,
-				value: args.value,
-			};
-		},
-	);
+		registry.register(toToolDefinition(tool), defaultExecutor);
+	}
 
 	return registry;
 }
